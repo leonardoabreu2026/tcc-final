@@ -5,16 +5,18 @@ left to right direction
 actor Candidato
 actor Empresa
 actor Administrador
-actor "Usuário" as U
-Candidato -|> U
-Empresa -|> U
-Administrador -|> U
 rectangle "Conecta Vagas DF" {
   usecase "Realizar login" as L
   usecase "Pausar o login após\ntentativas repetidas" as B
   usecase "Encerrar sessão\n(sair)" as S
 }
-U -- L
-U -- S
+actor Sistema
+Candidato -- L
+Empresa -- L
+Administrador -- L
+Candidato -- S
+Empresa -- S
+Administrador -- S
 L <.. B : <<extend>>
+B -- Sistema
 @enduml

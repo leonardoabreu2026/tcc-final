@@ -10,7 +10,7 @@ rectangle "Conecta Vagas DF" {
   usecase "Alterar vaga" as AV
   usecase "Excluir vaga" as EV
   usecase "Recalcular match\nda vaga" as RM
-  usecase "Aplicar o calibrador\n(termos e empresas\njá cadastradas)" as CB
+  usecase "Aplicar os padrões automáticos\n(linha sem pista, área,\nempresa já cadastrada)" as CB
 }
 actor Administrador as A
 E -- CV
@@ -24,4 +24,8 @@ CV <.. LC : <<extend>>
 CV ..> RM : <<include>>
 AV ..> RM : <<include>>
 XT ..> CB : <<include>>
+actor Sistema as SI
+LC -- SI
+CB -- SI
+RM -- SI
 @enduml

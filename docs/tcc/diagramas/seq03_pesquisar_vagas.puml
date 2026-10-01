@@ -4,7 +4,7 @@ mainframe sd Pesquisar vagas
 autonumber "0:"
 hide footbox
 
-actor Visitante as V
+actor Candidato as V
 boundary ":TelaVagas" as T
 control ":VagaController" as C
 entity ":VagaDAO" as D

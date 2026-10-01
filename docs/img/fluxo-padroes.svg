@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="430" viewBox="0 0 960 430" font-family="Arial, Helvetica, sans-serif">
+  <title>Fluxo dos padrões automáticos das máquinas de extração</title>
+  <defs>
+    <marker id="seta" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10" fill="none" stroke="#000000" stroke-width="1"/>
+    </marker>
+  </defs>
+  <rect width="960" height="430" fill="#FFFFFF"/>
+  <rect x="6" y="6" width="948" height="418" fill="none" stroke="#000000" stroke-width="1"/>
+  <path d="M6,30 L262,30 L278,14 L278,6" fill="none" stroke="#000000" stroke-width="1"/>
+  <text x="12" y="23" font-size="13" fill="#000000">act Padrões automáticos da extração</text>
+
+  <g font-size="12" fill="#000000" text-anchor="middle">
+    <rect x="25" y="70" width="160" height="96" fill="#FFFFE0" stroke="#000000" stroke-width="0.8"/>
+    <text x="105" y="96" font-weight="bold">Texto lido</text>
+    <text x="105" y="118">anúncio colado, cartaz</text>
+    <text x="105" y="136">lido pelo OCR ou ficha</text>
+    <text x="105" y="154">de curso ou e-book</text>
+
+    <rect x="215" y="70" width="160" height="96" fill="#FFFFE0" stroke="#000000" stroke-width="0.8"/>
+    <text x="295" y="96" font-weight="bold">Regras do código</text>
+    <text x="295" y="118">títulos de seção e</text>
+    <text x="295" y="136">palavras-chave, como</text>
+    <text x="295" y="154">"VT" para Benefícios</text>
+
+    <rect x="405" y="70" width="160" height="96" fill="#FFFFE0" stroke="#000000" stroke-width="0.8"/>
+    <text x="485" y="96" font-weight="bold">A regra tem pista?</text>
+    <text x="485" y="118">se não tem: linha sem</text>
+    <text x="485" y="136">palavra-chave, área ou</text>
+    <text x="485" y="154">empresa não achada</text>
+
+    <rect x="595" y="70" width="160" height="96" fill="#FFFFE0" stroke="#000000" stroke-width="0.8"/>
+    <text x="675" y="96" font-weight="bold">Padrão decide</text>
+    <text x="675" y="118">o par de palavras vale</text>
+    <text x="675" y="136">mais que a palavra solta;</text>
+    <text x="675" y="154">sem padrão, fica a regra</text>
+
+    <rect x="785" y="70" width="150" height="96" fill="#FFFFE0" stroke="#000000" stroke-width="0.8"/>
+    <text x="860" y="96" font-weight="bold">Formulário</text>
+    <text x="860" y="118">para revisar, com o</text>
+    <text x="860" y="136">quadro "Padrões</text>
+    <text x="860" y="154">automáticos usados"</text>
+
+    <rect x="455" y="235" width="480" height="112" fill="#FFFFFF" stroke="#000000" stroke-width="0.8"/>
+    <text x="695" y="260" font-weight="bold">Padrões montados na hora a partir dos cadastros revisados</text>
+    <text x="695" y="282">vagas: campo de cada linha e área de cada título; cursos: área do título</text>
+    <text x="695" y="301">texto sem acento, em minúsculas, sem pontuação e com número trocado por #</text>
+    <text x="695" y="320">vale se aparece em 2 ou mais cadastros e em 90% deles no mesmo destino</text>
+    <text x="695" y="339">e os nomes conhecidos: empresas e instituições já cadastradas</text>
+
+    <rect x="25" y="235" width="360" height="112" fill="#FFFFFF" stroke="#000000" stroke-width="0.8"/>
+    <text x="205" y="260" font-weight="bold">A empresa ou o administrador revisa e salva</text>
+    <text x="205" y="282">a vaga ou o curso salvo passa a contar</text>
+    <text x="205" y="301">na próxima extração</text>
+    <text x="205" y="320">sem tabela própria, sem tela de ajuste</text>
+    <text x="205" y="339">e sem treino</text>
+  </g>
+  <g stroke="#000000" stroke-width="1" fill="none" marker-end="url(#seta)">
+    <path d="M185,118 L213,118"/>
+    <path d="M375,118 L403,118"/>
+    <path d="M565,118 L593,118"/>
+    <path d="M755,118 L783,118"/>
+    <path d="M675,235 L675,168"/>
+    <path d="M860,166 L860,215 L205,215 L205,233"/>
+    <path d="M385,291 L453,291"/>
+  </g>
+  <text x="480" y="395" text-anchor="middle" font-size="12" fill="#000000">O mesmo texto com os mesmos cadastros dá sempre o mesmo resultado, e o relatório mostra o padrão que valeu.</text>
+</svg>

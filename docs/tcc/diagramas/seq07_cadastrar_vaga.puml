@@ -10,7 +10,7 @@ control ":LeitorCartaz\n(navegador)" as L
 control ":EmpresaController" as C
 control ":OcrImagem" as O
 control ":ExtracaoVaga" as X
-control ":Calibrador" as K
+control ":PadroesExtracao" as K
 entity ":AssinaturaDAO" as S
 entity ":VagaDAO" as D
 control ":MatchService" as M
@@ -23,8 +23,8 @@ T -> C ++ : vagas(acao = ler_cartaz, cartaz, leituras)
 C -> O ++ : leiturasDoNavegador(leituras)
 O --> C -- : leituras validadas
 C -> X ++ : doImagem(cartaz, leituras)
-X -> K ++ : decidir(linha / área) · nomeConhecido("empresa")
-K --> X -- : ajustes do calibrador
+X -> K ++ : decidir(linha sem pista / área) · nomeConhecido("empresa")
+K --> X -- : padrões usados
 X --> C -- : campos da vaga + relatório
 C --> T -- : formulário preenchido
 T --> E -- : exibir para revisão

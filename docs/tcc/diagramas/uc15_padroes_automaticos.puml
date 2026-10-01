@@ -1,0 +1,29 @@
+@startuml
+!include estilo.iuml
+mainframe uc Padrões automáticos das máquinas de extração
+left to right direction
+actor Empresa as E
+actor Administrador as A
+rectangle "Conecta Vagas DF" {
+  usecase "Extrair vaga do anúncio\nou do cartaz" as XV
+  usecase "Extrair curso/e-book\nda ficha" as XC
+  usecase "Aplicar os padrões automáticos\n(só onde a regra não tem pista)" as AP
+  usecase "Montar os padrões dos cadastros\n(2+ cadastros, 90% no mesmo destino)" as MP
+  usecase "Reconhecer empresas e\ninstituições já cadastradas" as NC
+  usecase "Ver os «Padrões automáticos\nusados» no relatório" as VR
+  usecase "Revisar e salvar\n(o cadastro entra nos padrões)" as RS
+}
+E -- XV
+A -- XV
+A -- XC
+E -- RS
+A -- RS
+XV ..> AP : <<include>>
+XC ..> AP : <<include>>
+AP ..> MP : <<include>>
+AP ..> NC : <<include>>
+XV <.. VR : <<extend>>
+actor Sistema as S
+MP -- S
+NC -- S
+@enduml

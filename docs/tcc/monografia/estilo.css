@@ -42,7 +42,7 @@ p.ind { text-indent: 1.25cm; }
 p.sem { text-indent: 0; }
 p.centro { text-align: center; }
 h1, h2, h3 { font-size: 12pt; font-weight: bold; line-height: 18pt; margin: 16pt 0 6pt; text-align: left; break-after: avoid; }
-h1.nova, h2.nova { break-before: page; }
+h1.nova, h2.nova, h3.nova { break-before: page; }
 h4 { font-size: 12pt; font-weight: bold; margin: 14pt 0 2pt; line-height: 18pt; break-after: avoid; text-align: left; }
 h4.dic { text-align: center; text-decoration: underline; margin-top: 14pt; margin-bottom: 0; }
 p.dic-desc { font-size: 10pt; line-height: 12pt; text-align: center; margin-bottom: 3pt; }

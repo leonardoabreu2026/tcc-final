@@ -182,25 +182,9 @@ class TentativaLogin {
   +registrarFalha() : void
   +minutosBloqueio() : int
 }
-class TermoCalibrado {
-  -id : int
-  -contexto : String
-  -termo : String
-  -termoChave : String
-  -destino : String
-  -ativo : boolean
-  -createdAt : DateTime
-  -updatedAt : DateTime
-  --
-  +salvar() : int
-  +alterarAtivo(ativo) : boolean
-  +excluir() : boolean
-  +listarAtivos() : List
-}
 Usuario "1" -- "0..1" Perfil : possui >
 Usuario "1" -- "0..*" Assinatura : contrata >
 Usuario "1" -- "0..*" RedefinicaoSenha : solicita >
-Usuario "0..1" -- "0..*" TermoCalibrado : cadastra >
 Perfil "1" -- "0..*" Curriculo : envia >
 Perfil "1" -- "0..*" Vaga : publica >
 Perfil "1" -- "0..*" Candidatura : realiza >

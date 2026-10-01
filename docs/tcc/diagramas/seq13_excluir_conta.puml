@@ -16,8 +16,7 @@ D --> C -- : 0 (sem pausa)
 C -> D ++ : senhaConfere(id, senha)
 D --> C -- : true
 C -> D ++ : excluir(id)
-note right of D : cascata: perfil, currículos,\ncandidaturas, matches e\nassinaturas; apaga os arquivos\ne as tentativas de login
-D --> C -- : true
+D --> C -- : true (perfil, currículos, candidaturas,\nmatches, assinaturas, arquivos e\ntentativas de login saem junto)
 C -> C : encerrar_sessao()
 C --> T -- : "Sua conta e todos os seus dados\nforam excluídos da plataforma."
 T --> A -- : exibir página inicial

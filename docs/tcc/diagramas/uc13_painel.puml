@@ -5,8 +5,12 @@ left to right direction
 actor Empresa as E
 rectangle "Conecta Vagas DF" {
   usecase "Visualizar painel\ncom indicadores e gráficos" as P
+  usecase "Limpar arquivos sem uso\n(uma vez por dia)" as LA
 }
 actor Administrador as A
 E -- P
 P -- A
+P <.. LA : <<extend>>
+actor Sistema as SI
+LA -- SI
 @enduml

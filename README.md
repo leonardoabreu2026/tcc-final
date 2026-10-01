@@ -321,6 +321,6 @@ Os backups do banco ficam em `storage/backups/<data>/`, junto com um arquivo `CO
 C:\xampp\mysql\bin\mysqldump.exe -u root --single-transaction --databases tcc_final > storage\backups\banco_tcc_final.sql
 ```
 
-Para voltar o código a um ponto conhecido, use as tags do Git: `v1.0-blindada` é a versão anterior ao TCC Final, e `tcc-final-v1.0` é a primeira versão do TCC Final.
+Para voltar o código a um ponto conhecido, use as tags do Git: `v1.0-blindada` é a versão anterior ao TCC Final, `tcc-final-v1.0` é a primeira versão do TCC Final e `tcc-final-v1.1` é a versão final, com os padrões automáticos e a documentação completa.
 
 Quando o site é acessado pelo próprio computador, os erros mostram o detalhe técnico, o que ajuda no desenvolvimento. Quem acessa de outra máquina vê só mensagens amigáveis. Para publicar, defina a variável de ambiente `APP_DEBUG=0`, que desliga o detalhe técnico para todos, inclusive quando o site fica atrás de um proxy.

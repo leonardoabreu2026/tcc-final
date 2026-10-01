@@ -1,0 +1,37 @@
+@startuml
+!include estilo.iuml
+mainframe sd Extração de vaga com os padrões automáticos
+autonumber "0:"
+hide footbox
+
+actor Empresa as E
+boundary ":TelaVagas" as T
+control ":EmpresaController" as C
+control ":ExtracaoVaga" as X
+control ":PadroesExtracao" as P
+database ":Banco (vagas, cursos,\ncategorias, perfis)" as B
+E -> T ++ : colar o anúncio e clicar em "Extrair"
+T -> C ++ : vagas(acao = extrair, texto)
+C -> X ++ : doTexto(texto)
+X -> X : regras do código (seções,\npalavras-chave, padrões de texto)
+opt nenhuma regra achou a empresa
+  X -> P ++ : nomeConhecido("empresa", texto)
+  P -> B ++ : anunciantes das vagas + nomes fantasia
+  B --> P -- : nomes cadastrados
+  P --> X -- : empresa já cadastrada
+end
+loop cada linha solta sem palavra-chave
+  X -> P ++ : decidir("vaga_linha", linha, "descricao")
+  P -> B ++ : vagas cadastradas (uma vez por requisição)
+  B --> P -- : títulos, descrições, requisitos, benefícios e áreas
+  P -> P : montar(): termo em 2+ vagas\ne 90%+ no mesmo campo
+  P --> X -- : campo do padrão (ou a regra)
+end
+opt a regra não reconheceu a área
+  X -> P ++ : decidir("vaga_categoria", título, "")
+  P --> X -- : área do padrão dos títulos
+end
+X --> C -- : campos + "Padrões automáticos usados"
+C --> T -- : formulário preenchido e relatório
+T --> E -- : revisar e salvar (a vaga entra\nnos padrões da próxima extração)
+@enduml

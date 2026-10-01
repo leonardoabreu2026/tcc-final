@@ -12,7 +12,9 @@ rectangle "Conecta Vagas DF" {
   usecase "Publicar / ocultar" as P
   usecase "Excluir curso/e-book" as E
   usecase "Trazer os PDFs para\na biblioteca" as T
-  usecase "Aplicar o calibrador\n(termos e instituições\njá cadastradas)" as CB
+  usecase "Aplicar os padrões automáticos\n(área e instituição)" as CB
+  usecase "Abrir os links da ficha\n(imagem, PDF ou página)" as AL
+  usecase "Tirar a capa da\n1ª página do PDF" as CP
 }
 A -- C
 A -- U
@@ -23,4 +25,10 @@ C <.. X : <<extend>>
 C <.. L : <<extend>>
 C <.. G : <<extend>>
 X ..> CB : <<include>>
+X ..> AL : <<include>>
+AL <.. CP : <<extend>>
+actor Sistema as SI
+AL -- SI
+CP -- SI
+CB -- SI
 @enduml

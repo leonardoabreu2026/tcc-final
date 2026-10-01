@@ -19,8 +19,7 @@ A -> T ++ : clicar em "Excluir"
 T -> C ++ : usuarios(acao = excluir, id)
 C -> C : impedir excluir a própria conta\ne o último administrador
 C -> D ++ : excluir(id)
-note right of D : cascata: perfil, currículos,\nvagas e candidaturas; os termos\ndo calibrador ficam (sem autor)
-D --> C -- : true
+D --> C -- : true (perfil, currículos, vagas e\ncandidaturas saem junto)
 C --> T -- : "Usuário excluído."
 T --> A -- : exibir mensagem
 @enduml

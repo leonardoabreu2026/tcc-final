@@ -4,7 +4,7 @@ mainframe sd Cadastrar conta
 autonumber "0:"
 hide footbox
 
-actor Visitante as V
+actor Candidato as V
 boundary ":TelaCadastro" as T
 control ":AuthController" as C
 entity ":UsuarioDAO" as U

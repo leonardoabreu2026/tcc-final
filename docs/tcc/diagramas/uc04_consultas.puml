@@ -2,7 +2,6 @@
 !include estilo.iuml
 mainframe uc Consultas públicas
 left to right direction
-actor Visitante as V
 actor Candidato as C
 rectangle "Conecta Vagas DF" {
   usecase "Consultar vagas\n(busca e filtros)" as CV
@@ -12,12 +11,12 @@ rectangle "Conecta Vagas DF" {
   usecase "Visualizar detalhe\ndo curso" as DC
   usecase "Baixar o PDF da\nbiblioteca" as BP
 }
-V -- CV
-V -- CC
 C -- CV
 C -- CC
 CV <.. DV : <<extend>>
 DV <.. NM : <<extend>>
 CC <.. DC : <<extend>>
 DC <.. BP : <<extend>>
+actor Sistema as SI
+NM -- SI
 @enduml

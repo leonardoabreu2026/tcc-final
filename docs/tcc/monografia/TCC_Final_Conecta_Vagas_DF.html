@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- Fonte da monografia (docs/tcc/TCC_Final_Conecta_Vagas_DF.pdf). Para gerar o PDF: abra este arquivo no Microsoft Edge ou no Chrome,
-     Ctrl+P > Salvar como PDF, Margens: Padrão, sem "Cabeçalhos e rodapés" e com "Gráficos de plano de fundo".
+     Ctrl+P, Salvar como PDF, margens padrão, sem cabeçalhos e rodapés e com gráficos de plano de fundo.
      Pelo terminal: msedge --headless --no-pdf-header-footer --print-to-pdf=saida.pdf TCC_Final_Conecta_Vagas_DF.html
      Os diagramas vêm de ../diagramas/*.svg. Se um título mudar de página, atualize o número dele no SUMÁRIO. -->
 <html lang="pt-BR"><head><meta charset="utf-8">
@@ -47,7 +47,7 @@
     <p class="b" style="text-align:center">FICHA CATALOGRÁFICA</p>
     <p>Leonardo; Gustavo; Anderson; Vitória.</p>
     <p>CONECTA VAGAS DF / PLATAFORMA DE VAGAS DE EMPREGO E CAPACITAÇÃO PROFISSIONAL DO DISTRITO FEDERAL. [Distrito Federal], 2026.</p>
-    <p>84 pp, 210x297 mm (CEP-ETC/DF — Ceilândia, Técnico em Informática, 2026).</p>
+    <p>83 pp, 210x297 mm (CEP-ETC/DF, Ceilândia, Técnico em Informática, 2026).</p>
     <p>Palavras-chave: Emprego, Vagas, Currículo, Compatibilidade, Capacitação, Extração de Dados, Distrito Federal.</p>
   </div>
 </div>
@@ -86,14 +86,14 @@
 <!-- 8. Resumo -->
 <div class="folha pre fluxo">
   <p class="titulo-pre">RESUMO</p>
-  <p class="ind" style="margin-top:16pt">Este trabalho é o registro das etapas percorridas para o desenvolvimento do Conecta Vagas DF, uma plataforma web de vagas de emprego e capacitação profissional voltada ao Distrito Federal. Neste documento são descritos o planejamento, os requisitos, a modelagem, os diagramas e os demais artefatos pertinentes ao desenvolvimento do sistema. O propósito é reduzir a distância entre quem procura trabalho e quem oferece vagas, já que grande parte das oportunidades do DF circula de forma dispersa, em cartazes, grupos de mensagens e redes sociais, sem organização e sem indicação de quais candidatos são mais compatíveis com cada vaga. O sistema permite que o candidato envie o currículo e tenha o perfil preenchido automaticamente por uma máquina de extração de dados, gera um portfólio profissional e calcula, por meio de uma máquina de match, uma nota de compatibilidade de 0 a 100 entre o candidato e cada vaga, recomendando cursos e e-books gratuitos que cobrem as competências que faltam. As empresas publicam vagas a partir do texto de um anúncio ou da imagem de um cartaz, lida no próprio navegador, sem instalar programas, recebem candidaturas ordenadas pela compatibilidade e consultam um banco de talentos. As máquinas de extração funcionam por regras e o administrador as ajusta, sem mexer no código, pelo calibrador: termos que indicam para onde vai cada trecho do texto, além das empresas e instituições já cadastradas, reconhecidas automaticamente. Os e-books ficam guardados na biblioteca da própria plataforma e o candidato pode excluir a própria conta e todos os seus dados, conforme a LGPD. O projeto foi desenvolvido em PHP no padrão MVC, com banco de dados MySQL/MariaDB e testes automáticos, e está dividido em três partes: o levantamento do problema, a documentação que descreve como o sistema foi projetado e a codificação do sistema.</p>
+  <p class="ind" style="margin-top:16pt">Este trabalho registra as etapas que percorremos para desenvolver o Conecta Vagas DF, uma plataforma web de vagas de emprego e capacitação profissional voltada ao Distrito Federal. Neste documento descrevemos o planejamento, os requisitos, a modelagem, os diagramas e os demais artefatos do desenvolvimento do sistema. O nosso propósito é diminuir a distância entre quem procura trabalho e quem oferece vagas, já que grande parte das oportunidades do DF circula de forma espalhada, em cartazes, grupos de mensagens e redes sociais, sem organização e sem indicar quais candidatos combinam mais com cada vaga. No sistema, o candidato envia o currículo e tem o perfil preenchido automaticamente por uma máquina de extração de dados; a plataforma gera um portfólio profissional e calcula, com uma máquina de match, uma nota de compatibilidade de 0 a 100 entre o candidato e cada vaga, recomendando cursos e e-books gratuitos que cobrem as competências que faltam. As empresas publicam vagas a partir do texto de um anúncio ou da imagem de um cartaz, lida no próprio navegador, sem instalar programas, recebem as candidaturas ordenadas pela compatibilidade e consultam um banco de talentos. As máquinas de extração funcionam por regras e, quando a regra não tem pista, usam padrões automáticos tirados das vagas e dos cursos já cadastrados, isto é, palavras vistas em pelo menos dois cadastros e quase sempre no mesmo campo, sem treinamento e sempre mostrando o padrão usado. Nas fichas de e-books, a plataforma abre cada link e tira a capa da primeira página do PDF. Os e-books ficam guardados na biblioteca da própria plataforma, e o candidato pode excluir a própria conta e todos os seus dados, como pede a LGPD. Desenvolvemos o projeto em PHP, no padrão MVC, com banco de dados MySQL/MariaDB e testes automáticos, e dividimos o trabalho em três partes: o levantamento do problema, a documentação que descreve como o sistema foi projetado e a programação do sistema.</p>
   <p style="margin-top:18pt"><b>PALAVRAS-CHAVE:</b> Emprego, vagas, currículo, compatibilidade, extração de dados, Distrito Federal.</p>
 </div>
 
 <!-- 9. Abstract -->
 <div class="folha pre fluxo">
   <p class="titulo-pre">ABSTRACT</p>
-  <p class="ind" style="margin-top:16pt">This work records the steps taken to develop Conecta Vagas DF, a web platform for job openings and professional training focused on the Federal District of Brazil. This document describes the planning, requirements, modeling, diagrams and other artifacts relevant to the development of the system. The purpose is to reduce the distance between people looking for work and those offering jobs, since most opportunities in the Federal District circulate in a scattered way, on posters, messaging groups and social networks, without organization and without any indication of which candidates best match each opening. The system allows candidates to upload their résumé and have their profile filled in automatically by a data extraction engine, builds a professional portfolio and calculates, through a matching engine, a compatibility score from 0 to 100 between the candidate and each job, recommending free courses and e-books that cover the missing skills. Companies publish jobs from the text of an advertisement or the image of a poster, read inside the browser itself with nothing to install, receive applications sorted by compatibility and search a talent pool. The extraction engines are rule-based, and the administrator tunes them without changing the code through a calibrator: terms that tell where each piece of text belongs, plus the companies and institutions already registered, which are recognized automatically. E-books are stored in the platform's own library, and candidates can delete their own account and all their data, as required by the Brazilian data protection law (LGPD). The project was developed in PHP following the MVC pattern, with a MySQL/MariaDB database and automated tests, and is divided into three parts: the survey of the problem, the documentation describing how the system was designed, and the coding of the system.</p>
+  <p class="ind" style="margin-top:16pt">This work records the steps we took to develop Conecta Vagas DF, a web platform for job openings and professional training focused on the Federal District of Brazil. In this document we describe the planning, requirements, modeling, diagrams and other artifacts of the development of the system. Our purpose is to reduce the distance between people looking for work and those offering jobs, since most opportunities in the Federal District circulate in a scattered way, on posters, messaging groups and social networks, without organization and without showing which candidates best match each opening. In the system, candidates upload their résumé and have their profile filled in automatically by a data extraction engine; the platform builds a professional portfolio and calculates, with a matching engine, a compatibility score from 0 to 100 between the candidate and each job, recommending free courses and e-books that cover the missing skills. Companies publish jobs from the text of an advertisement or the image of a poster, read inside the browser itself with nothing to install, receive applications sorted by compatibility and search a talent pool. The extraction engines are rule-based and, when a rule has no clue, they use automatic patterns taken from the jobs and courses already registered, that is, words seen in at least two records and almost always in the same field, with no training and always showing the pattern used. For e-book records, the platform opens every link and takes the cover from the first page of the PDF. E-books are stored in the platform's own library, and candidates can delete their own account and all their data, as required by the Brazilian data protection law (LGPD). We developed the project in PHP following the MVC pattern, with a MySQL/MariaDB database and automated tests, and divided the work into three parts: the survey of the problem, the documentation describing how the system was designed, and the coding of the system.</p>
   <p style="margin-top:18pt"><b>KEYWORDS:</b> Employment, jobs, résumé, matching, data extraction, Federal District.</p>
 </div>
 
@@ -112,10 +112,10 @@
 <div class="s n1"><span class="t">8. METODOLOGIA E TECNOLOGIAS UTILIZADAS</span><span class="pt"></span><span class="n">19</span></div>
 <div class="s n2"><span class="t">8.1. Papéis Profissionais Envolvidos</span><span class="pt"></span><span class="n">20</span></div>
 <div class="s n2"><span class="t">8.2. Segurança e Proteção de Dados</span><span class="pt"></span><span class="n">21</span></div>
-<div class="s n2"><span class="t">8.3. Calibrador das Máquinas de Extração e Leitura de Cartazes</span><span class="pt"></span><span class="n">22</span></div>
+<div class="s n2"><span class="t">8.3. Padrões Automáticos da Extração e Leitura de Cartazes</span><span class="pt"></span><span class="n">22</span></div>
 <div class="s n1"><span class="t">9. RESULTADOS OBTIDOS / ESPERADOS</span><span class="pt"></span><span class="n">23</span></div>
 <div class="s n1"><span class="t">10. CONSIDERAÇÕES FINAIS</span><span class="pt"></span><span class="n">23</span></div>
-<div class="s n1"><span class="t">11. CONCLUSÃO</span><span class="pt"></span><span class="n">23</span></div>
+<div class="s n1"><span class="t">11. CONCLUSÃO</span><span class="pt"></span><span class="n">24</span></div>
 <div class="s n1"><span class="t">12. REFERÊNCIAS BIBLIOGRÁFICAS</span><span class="pt"></span><span class="n">25</span></div>
 <div class="s n1"><span class="t">13. ANEXOS</span><span class="pt"></span><span class="n">26</span></div>
 <div class="s n2"><span class="t">13.1. Diagrama de Caso de Uso Geral</span><span class="pt"></span><span class="n">26</span></div>
@@ -126,22 +126,22 @@
 <div class="s n3"><span class="t">13.5.1. Modelo Conceitual</span><span class="pt"></span><span class="n">68</span></div>
 <div class="s n3"><span class="t">13.5.2. Modelo Lógico (Diagrama Entidade-Relacionamento)</span><span class="pt"></span><span class="n">69</span></div>
 <div class="s n2"><span class="t">13.6. Dicionário de Dados</span><span class="pt"></span><span class="n">70</span></div>
-<div class="s n2"><span class="t">13.7. Arquitetura do Sistema</span><span class="pt"></span><span class="n">78</span></div>
-<div class="s n2"><span class="t">13.8. Plano de Testes</span><span class="pt"></span><span class="n">80</span></div>
-<div class="s n2"><span class="t">13.9. Matriz de Rastreabilidade</span><span class="pt"></span><span class="n">83</span></div></div>
+<div class="s n2"><span class="t">13.7. Arquitetura do Sistema</span><span class="pt"></span><span class="n">77</span></div>
+<div class="s n2"><span class="t">13.8. Plano de Testes</span><span class="pt"></span><span class="n">79</span></div>
+<div class="s n2"><span class="t">13.9. Matriz de Rastreabilidade</span><span class="pt"></span><span class="n">82</span></div></div>
 </div>
 
 <main>
 
 <!-- página 11 -->
 <h1>1. INTRODUÇÃO</h1>
-<p class="ind">Este trabalho consiste em desenvolver e documentar o Conecta Vagas DF, uma plataforma web que reúne, em um único lugar, vagas de emprego, cursos e e-books de capacitação e os perfis profissionais de candidatos do Distrito Federal, com o objetivo de aproximar quem procura trabalho das empresas que oferecem oportunidades.</p>
-<p class="ind">O que motivou a escolha do tema foi a observação de como as vagas circulam na região: boa parte delas é divulgada em cartazes, grupos de mensagens e perfis de redes sociais, de forma dispersa e sem padrão. O candidato precisa procurar em muitos lugares, não sabe se o seu perfil atende ao que a vaga pede e raramente recebe retorno. A empresa, por sua vez, recebe currículos sem organização e gasta tempo para descobrir quais candidatos são mais adequados.</p>
-<p class="ind">Os principais objetivos específicos são centralizar as vagas do DF, automatizar o preenchimento do perfil a partir do currículo, calcular a compatibilidade entre candidato e vaga, organizar o processo de candidatura com acompanhamento de status e recomendar cursos e e-books que ajudem o candidato a se qualificar. Ao longo do desenvolvimento, o sistema ganhou também um calibrador, com o qual o administrador ajusta a extração de dados sem mexer no código, e um leitor de cartazes que funciona no próprio navegador, sem que ninguém precise instalar programas.</p>
-<p class="ind">O trabalho está dividido em três partes. A primeira é o levantamento do problema e das necessidades de candidatos e empresas. A segunda é a documentação do projeto, que descreve como o software foi projetado: requisitos, casos de uso, classes, sequências, modelo de dados e testes. A terceira parte se refere à codificação do sistema.</p>
-<p class="ind">Ao final do projeto espera-se que o software realize fielmente as funções descritas neste documento e que possa ser utilizado por candidatos, empresas e instituições do Distrito Federal que precisam de uma forma mais organizada de divulgar e encontrar oportunidades.</p>
+<p class="ind">Neste trabalho nós desenvolvemos e documentamos o Conecta Vagas DF, uma plataforma web que reúne num só lugar as vagas de emprego, os cursos e e-books de capacitação e os perfis profissionais dos candidatos do Distrito Federal. A ideia é aproximar quem procura trabalho das empresas que oferecem oportunidades.</p>
+<p class="ind">Escolhemos esse tema depois de observar como as vagas circulam na nossa região. Boa parte delas é divulgada em cartazes, em grupos de mensagens e em perfis de redes sociais, de forma espalhada e sem padrão. O candidato precisa procurar em muitos lugares, não sabe se o seu perfil atende ao que a vaga pede e quase nunca recebe retorno. A empresa, por sua vez, recebe currículos sem organização e perde tempo para descobrir quais candidatos combinam mais com a vaga.</p>
+<p class="ind">Os nossos principais objetivos são centralizar as vagas do DF, preencher o perfil automaticamente a partir do currículo, calcular a compatibilidade entre candidato e vaga, organizar as candidaturas com o acompanhamento do status e recomendar cursos e e-books que ajudem o candidato a se qualificar. Durante o desenvolvimento, o sistema ganhou também os padrões automáticos, tirados dos próprios cadastros, que ajudam a extração de dados quando as regras não têm pista, e um leitor de cartazes que funciona no próprio navegador, sem que ninguém precise instalar programas.</p>
+<p class="ind">Dividimos o trabalho em três partes. A primeira é o levantamento do problema e do que candidatos e empresas precisam. A segunda é a documentação do projeto, onde mostramos como o software foi pensado: requisitos, casos de uso, classes, sequências, modelo de dados e testes. A terceira é a programação do sistema.</p>
+<p class="ind">Ao final, esperamos que o software faça bem as funções descritas neste documento e que possa ser usado por candidatos, empresas e instituições do Distrito Federal que precisam de um jeito mais organizado de divulgar e encontrar oportunidades.</p>
 <h1>2. OBJETIVO GERAL</h1>
-<p class="ind">Desenvolver uma plataforma web que centralize vagas de emprego e cursos de capacitação do Distrito Federal e que indique, de forma automática e explicável, a compatibilidade entre candidatos e vagas, com uma extração de dados que o próprio administrador consegue ajustar para errar cada vez menos.</p>
+<p class="ind">Desenvolver uma plataforma web que centralize vagas de emprego e cursos de capacitação do Distrito Federal e que indique, de forma automática e explicável, a compatibilidade entre candidatos e vagas, com uma extração de dados que usa o que já foi cadastrado para errar cada vez menos.</p>
 <h1>3. OBJETIVOS ESPECÍFICOS</h1>
 <ul>
   <li>Centralizar a divulgação de vagas de emprego do Distrito Federal, com busca e filtros;</li>
@@ -151,7 +151,7 @@
   <li>Organizar o processo de candidatura, com acompanhamento de status e retorno da empresa;</li>
   <li>Permitir que empresas publiquem vagas a partir do texto de um anúncio ou da imagem de um cartaz, lida no próprio navegador, sem instalar programas;</li>
   <li>Recomendar cursos e e-books que cubram as competências que faltam ao candidato, com os e-books disponíveis para baixar na biblioteca da plataforma;</li>
-  <li>Permitir que o administrador ajuste as máquinas de extração sem mexer no código (calibrador), com termos cadastrados e o reconhecimento automático de empresas e instituições já cadastradas;</li>
+  <li>Completar as máquinas de extração com padrões automáticos tirados das vagas e dos cursos já cadastrados, de forma determinística e explicável, e reconhecer as empresas e as instituições já cadastradas;</li>
   <li>Garantir ao usuário o controle dos próprios dados, inclusive a exclusão da própria conta, conforme a LGPD;</li>
   <li>Oferecer ao administrador o controle de usuários, categorias, cursos, vagas, candidaturas e assinaturas;</li>
   <li>Verificar o sistema com testes automáticos executados antes de cada alteração do código.</li>
@@ -162,13 +162,13 @@
 <p class="ind">No Distrito Federal, grande parte das vagas de emprego é divulgada em cartazes afixados em comércios, em grupos de mensagens e em perfis de redes sociais. Algumas perguntas são feitas diariamente por quem procura trabalho: onde estão as vagas da minha região? O meu currículo atende ao que a vaga pede? O que preciso aprender para conseguir essa vaga? A empresa recebeu a minha candidatura?</p>
 <p class="ind">Do lado das empresas, principalmente as pequenas, a situação se repete: os currículos chegam por canais diferentes, sem organização, e não há como saber rapidamente quais candidatos são mais compatíveis com a vaga. Todo esse controle é feito manualmente, o que gasta tempo e aumenta o risco de oportunidades e informações se perderem. Além disso, muitas ferramentas de leitura automática exigem a instalação de programas, o que afasta justamente os pequenos anunciantes, que só têm o celular ou um computador simples.</p>
 <h1>5. JUSTIFICATIVA</h1>
-<p class="ind">Por reunir em uma só plataforma a divulgação de vagas, o perfil profissional do candidato, o acompanhamento das candidaturas e a indicação de cursos, esta solução atende às necessidades de candidatos e empresas de forma organizada. Diferentemente de um simples mural de vagas, o sistema lê o currículo, monta o perfil e explica ao candidato por que ele é, ou não, compatível com cada vaga, indicando o que falta e onde aprender.</p>
-<p class="ind">Além disso, o sistema foi construído com tecnologias gratuitas e amplamente usadas no ensino técnico (PHP, MySQL e XAMPP), sem dependência de serviços pagos e sem exigir a instalação de programas: o leitor de cartazes roda no navegador de quem usa o site. Isso permite sua implantação em escolas, instituições e órgãos da região com baixo custo.</p>
+<p class="ind">Por juntar numa só plataforma a divulgação das vagas, o perfil profissional do candidato, o acompanhamento das candidaturas e a indicação de cursos, a nossa solução atende candidatos e empresas de forma organizada. Diferente de um simples mural de vagas, o sistema lê o currículo, monta o perfil e explica ao candidato por que ele combina ou não com cada vaga, mostrando o que falta e onde aprender.</p>
+<p class="ind">Além disso, usamos tecnologias gratuitas e muito usadas no ensino técnico (PHP, MySQL e XAMPP), sem depender de serviços pagos e sem exigir que alguém instale programas, já que o leitor de cartazes roda no navegador de quem usa o site. Com isso, a plataforma pode ser implantada com baixo custo em escolas, instituições e órgãos da região.</p>
 
 <!-- página 13 -->
 <h1>6. PROPOSTA</h1>
-<p class="ind">Construir um sistema web que permita ao candidato cadastrar-se, enviar o currículo e ter o perfil preenchido automaticamente, visualizar o seu portfólio e a nota de compatibilidade com cada vaga, candidatar-se, acompanhar o retorno das empresas e, quando quiser, excluir a própria conta. As empresas poderão publicar e gerenciar vagas, inclusive a partir do cartaz, receber candidaturas ordenadas pela compatibilidade e consultar o banco de talentos. O administrador controlará usuários, categorias, cursos e e-books, vagas, candidaturas e assinaturas.</p>
-<p class="ind">O sistema também oferecerá planos demonstrativos, sem cobrança real: o Candidato VIP (candidaturas ilimitadas e destaque para as empresas) e a Empresa Premium (vagas ilimitadas, destaque das vagas e banco de talentos completo). Para que a extração (de vaga, de curso ou de currículo) erre cada vez menos, o administrador poderá ajustá-la em um painel próprio, o calibrador, sem mexer no código. Desta forma é possível obter um controle melhor de todo o processo, da divulgação da vaga até o retorno ao candidato.</p>
+<p class="ind">A nossa proposta é construir um sistema web em que o candidato possa se cadastrar, enviar o currículo e ter o perfil preenchido automaticamente, ver o seu portfólio e a nota de compatibilidade com cada vaga, se candidatar, acompanhar o retorno das empresas e, quando quiser, excluir a própria conta. As empresas poderão publicar e gerenciar vagas, inclusive a partir de um cartaz, receber as candidaturas ordenadas pela compatibilidade e consultar o banco de talentos. O administrador vai controlar os usuários, as categorias, os cursos e e-books, as vagas, as candidaturas e as assinaturas.</p>
+<p class="ind">O sistema também terá planos demonstrativos, sem cobrança real: o Candidato VIP, com candidaturas ilimitadas e destaque para as empresas, e a Empresa Premium, com vagas ilimitadas, destaque das vagas e o banco de talentos completo. Para que a extração de vagas e de cursos erre cada vez menos, nos pontos em que as regras não tiverem pista ela vai usar padrões tirados das vagas e dos cursos já cadastrados, que se atualizam sozinhos a cada cadastro salvo. Assim, conseguimos acompanhar melhor todo o processo, da divulgação da vaga até o retorno ao candidato.</p>
 <h1>7. ESCOPO DO SISTEMA</h1>
 <h2>7.1. Requisitos Funcionais</h2>
 <p class="rf-tit"><b>[RF001] Realizar login</b></p>
@@ -176,7 +176,7 @@
 <p class="rf-desc">– O sistema deverá permitir que o usuário (candidato, empresa ou administrador) acesse o sistema com e-mail e senha cadastrados.</p>
 <p class="rf-tit"><b>[RF002] Cadastrar conta</b></p>
 <p class="rf-prio">Prioridade: <span class="cx">☒</span> Essencial <span class="cx">☐</span> Importante <span class="cx">☐</span> Desejável</p>
-<p class="rf-desc">– O sistema deverá permitir que o visitante crie uma conta de candidato ou de empresa, informando nome, e-mail, senha e telefone, com aceite obrigatório do termo de autorização e privacidade (LGPD).</p>
+<p class="rf-desc">– O sistema deverá permitir que o candidato ou a empresa crie a sua conta, informando nome, e-mail, senha e telefone, com aceite obrigatório do termo de autorização e privacidade (LGPD).</p>
 <p class="rf-tit"><b>[RF003] Encerrar sessão</b></p>
 <p class="rf-prio">Prioridade: <span class="cx">☒</span> Essencial <span class="cx">☐</span> Importante <span class="cx">☐</span> Desejável</p>
 <p class="rf-desc">– O sistema deverá permitir que o usuário saia da sua conta (logout) de forma segura.</p>
@@ -281,15 +281,15 @@
 <p class="rf-tit"><b>[RF034] Gerenciar assinaturas</b></p>
 <p class="rf-prio">Prioridade: <span class="cx">☐</span> Essencial <span class="cx">☒</span> Importante <span class="cx">☐</span> Desejável</p>
 <p class="rf-desc">– O sistema deverá permitir que o administrador consulte as assinaturas com filtros e conceda, altere, cancele e exclua assinaturas de candidatos e empresas.</p>
-<p class="rf-tit"><b>[RF035] Calibrar as máquinas de extração</b></p>
+<p class="rf-tit"><b>[RF035] Usar padrões automáticos na extração</b></p>
 <p class="rf-prio">Prioridade: <span class="cx">☐</span> Essencial <span class="cx">☒</span> Importante <span class="cx">☐</span> Desejável</p>
-<p class="rf-desc">– O sistema deverá permitir que o administrador cadastre, altere, ative, desative e exclua termos calibrados ("quando o texto tiver o termo X, mande para Y") para a linha do anúncio, a área da vaga, a área do curso e a seção do currículo, e deverá reconhecer sozinho as empresas e as instituições já cadastradas; o termo vale mais que a regra do código e, entre dois termos, vence o mais longo.</p>
-<p class="rf-tit"><b>[RF036] Testar as máquinas de extração</b></p>
+<p class="rf-desc">– O sistema deverá, onde as regras da extração não tiverem pista (linha da vaga sem palavra-chave, área da vaga ou do curso não reconhecida, empresa ou instituição não achada), decidir pelos padrões tirados das vagas e dos cursos já cadastrados (palavras e pares de palavras vistos em pelo menos 2 cadastros e em pelo menos 90% deles no mesmo destino) e reconhecer as empresas e as instituições já cadastradas.</p>
+<p class="rf-tit"><b>[RF036] Mostrar os padrões usados</b></p>
 <p class="rf-prio">Prioridade: <span class="cx">☐</span> Essencial <span class="cx">☐</span> Importante <span class="cx">☒</span> Desejável</p>
-<p class="rf-desc">– O sistema deverá permitir que o administrador cole um anúncio, uma ficha de curso ou um currículo e veja o resultado da extração com os ajustes do calibrador, sem salvar nada, e deverá mostrar no relatório da extração da vaga o que o calibrador ajustou.</p>
+<p class="rf-desc">– O sistema deverá mostrar no relatório da extração da vaga os padrões automáticos usados (o trecho, para onde foi e o padrão que decidiu), para a revisão antes de publicar.</p>
 <p class="rf-tit"><b>[RF037] Guardar e-books na biblioteca</b></p>
 <p class="rf-prio">Prioridade: <span class="cx">☐</span> Essencial <span class="cx">☒</span> Importante <span class="cx">☐</span> Desejável</p>
-<p class="rf-desc">– O sistema deverá baixar o PDF do e-book da fonte oficial (ou recebê-lo no cadastro) e guardá-lo na biblioteca da plataforma, com o botão "Baixar" e o crédito da fonte original.</p>
+<p class="rf-desc">– O sistema deverá baixar o PDF do e-book da fonte oficial (ou recebê-lo no cadastro) e guardá-lo na biblioteca da plataforma, com o botão "Baixar" e o crédito da fonte original; na prévia do cadastro, deverá abrir cada link da ficha (imagem, PDF ou página) e, no e-book sem imagem, usar como capa a primeira página do PDF.</p>
 <p class="rf-tit"><b>[RF038] Importar fichas em lote</b></p>
 <p class="rf-prio">Prioridade: <span class="cx">☐</span> Essencial <span class="cx">☐</span> Importante <span class="cx">☒</span> Desejável</p>
 <p class="rf-desc">– O sistema deverá permitir que o administrador cole várias fichas de cursos e e-books de uma vez, confira uma prévia e cadastre as marcadas.</p>
@@ -330,15 +330,15 @@
 <p class="rf-desc">– O sistema deverá aceitar currículos em PDF, DOC ou DOCX de até 10 MB, imagens JPG, PNG ou WEBP de até 3 MB (cartazes de até 8 MB) e PDFs da biblioteca de até 25 MB no envio e 150 MB quando baixados da fonte oficial, gravados fora da pasta pública com nome aleatório e tipo conferido pelo conteúdo.</p>
 <p class="rf-tit"><b>[RNF010] Confiabilidade</b></p>
 <p class="rf-prio">Prioridade: <span class="cx">☒</span> Essencial <span class="cx">☐</span> Importante <span class="cx">☐</span> Desejável</p>
-<p class="rf-desc">– O sistema deverá usar transações e chaves estrangeiras com exclusão em cascata para manter a integridade dos dados (na tabela do calibrador, o termo permanece e só perde o autor).</p>
+<p class="rf-desc">– O sistema deverá usar transações e chaves estrangeiras com exclusão em cascata para manter a integridade dos dados.</p>
 <p class="rf-tit"><b>[RNF011] Testabilidade</b></p>
 <p class="rf-prio">Prioridade: <span class="cx">☐</span> Essencial <span class="cx">☐</span> Importante <span class="cx">☒</span> Desejável</p>
 <p class="rf-desc">– O sistema deverá possuir verificação de sintaxe, teste automático rápido (smoke test) e testes de jornada pelo navegador, executados automaticamente antes de cada commit.</p>
-<p class="rf-tit"><b>[RNF012] Previsibilidade do calibrador</b></p>
+<p class="rf-tit"><b>[RNF012] Previsibilidade dos padrões automáticos</b></p>
 <p class="rf-prio">Prioridade: <span class="cx">☐</span> Essencial <span class="cx">☒</span> Importante <span class="cx">☐</span> Desejável</p>
-<p class="rf-desc">– O calibrador deverá ser determinístico (o mesmo texto com os mesmos termos dá sempre o mesmo resultado), registrar cada ajuste com o termo que decidiu e, se a tabela de termos não estiver disponível, deixar a extração seguir só com as regras.</p>
+<p class="rf-desc">– Os padrões automáticos deverão ser determinísticos (o mesmo texto com os mesmos cadastros dá sempre o mesmo resultado), explicáveis (cada decisão registra o padrão que valeu), não usar dados de candidatos (LGPD) e, se o banco não responder, deixar a extração seguir só com as regras.</p>
 <h1>8. METODOLOGIA E TECNOLOGIAS UTILIZADAS</h1>
-<p class="ind">O projeto foi desenvolvido a partir do levantamento das dificuldades de candidatos e empresas do Distrito Federal na divulgação e na busca de vagas, com desenvolvimento orientado a objetos no padrão MVC (Model – View – Controller) e modelagem em UML e no Modelo Entidade-Relacionamento. As tecnologias utilizadas para o desenvolvimento do código do projeto foram:</p>
+<p class="ind">Desenvolvemos o projeto a partir do levantamento das dificuldades de candidatos e empresas do Distrito Federal na divulgação e na busca de vagas. Programamos de forma orientada a objetos, no padrão MVC (Model, View e Controller), e fizemos a modelagem em UML e no Modelo Entidade-Relacionamento. Para o código do projeto, usamos estas tecnologias:</p>
 <ul>
   <li><b>PHP 8.0 ou superior:</b> linguagem utilizada para a programação do sistema (padrão MVC, sem frameworks);</li>
   <li><b>HTML5:</b> construção das páginas;</li>
@@ -346,7 +346,8 @@
   <li><b>JavaScript:</b> comportamento das páginas (filtros, pré-visualizações, carregador e gráficos do painel);</li>
   <li><b>SQL:</b> linguagem utilizada para o banco de dados (MySQL/MariaDB, acesso via PDO);</li>
   <li><b>Tesseract.js (WebAssembly):</b> leitura de texto em imagens de cartazes de vagas, executada no navegador de quem usa o site, sem instalação; o Tesseract OCR no servidor ficou apenas como reserva opcional;</li>
-  <li><b>Calibrador:</b> dicionário de termos cadastrados pelo administrador e de nomes já cadastrados, aplicado sobre as regras das máquinas de extração, em PHP puro, sem bibliotecas externas;</li>
+  <li><b>Padrões automáticos:</b> dicionário de padrões contado na hora a partir das vagas e dos cursos cadastrados, aplicado onde as regras das máquinas de extração não têm pista, em PHP puro, sem bibliotecas externas;</li>
+  <li><b>Leitor de PDF do Windows (via PowerShell):</b> capa dos e-books a partir da primeira página do PDF, sem instalar programas;</li>
   <li><b>APLICATIVOS:</b> Visual Studio Code, XAMPP (Apache, PHP e MySQL), phpMyAdmin, MySQL Workbench, PlantUML, Git e GitHub (com gancho de verificação antes de cada commit);</li>
   <li><b>LINGUAGEM DE MODELAGEM:</b> UML (casos de uso, classes e sequência) e Modelo Entidade-Relacionamento (notação de Chen/Heuser).</li>
 </ul>
@@ -354,7 +355,7 @@
 <!-- página 20 -->
 <p class="sem"><b>WEB SERVER e Sistema de Gerenciamento de Banco de Dados (SGBD):</b> Apache, MySQL/MariaDB, phpMyAdmin e MySQL Workbench.</p>
 <h2>8.1. Papéis Profissionais Envolvidos</h2>
-<p class="ind">Para garantir que o sistema fosse documentado de forma completa, cada artefato deste trabalho foi produzido sob a ótica do profissional responsável por ele em uma equipe de desenvolvimento, conforme o Quadro 1.</p>
+<p class="ind">Para que o sistema fosse documentado de forma completa, produzimos cada artefato deste trabalho pensando no profissional que seria responsável por ele numa equipe de desenvolvimento, como mostra o Quadro 1.</p>
 
 <!-- página 21 -->
 <div class="inteiro">
@@ -368,7 +369,7 @@
 <tr><td>Administrador de Banco de Dados (DBA)</td><td>Modelo conceitual, modelo lógico, dicionário de dados, índices e integridade.</td><td>Anexos 13.5 e 13.6</td></tr>
 <tr><td>Arquiteto de Software</td><td>Arquitetura em camadas (MVC), roteamento e organização de pastas.</td><td>Anexo 13.7</td></tr>
 <tr><td>Desenvolvedor</td><td>Codificação em PHP, SQL, HTML, CSS e JavaScript; máquinas de extração e de match; leitor de cartaz no navegador.</td><td>Código-fonte</td></tr>
-<tr><td>Analista de Dados (Extração)</td><td>Regras das máquinas de extração, calibrador (termos e nomes conhecidos) e testes das extrações.</td><td>Seção 8.3; RF035, RF036 e RNF012</td></tr>
+<tr><td>Analista de Dados (Extração)</td><td>Regras das máquinas de extração, padrões automáticos (2 cadastros, 90%), nomes conhecidos e testes das extrações.</td><td>Seção 8.3; RF035, RF036 e RNF012</td></tr>
 <tr><td>Analista de Segurança</td><td>Senhas, sessão, CSRF, uploads, controle de acesso, cabeçalhos de segurança e LGPD.</td><td>RNF003, RNF004 e Seção 8.2</td></tr>
 <tr><td>Analista de Testes (QA)</td><td>Plano de testes, teste rápido (smoke test), testes de jornada e gancho de commit.</td><td>Anexo 13.8</td></tr>
 <tr><td>Designer de Interface (UX/UI)</td><td>Telas, navegação, responsividade, carregador e mensagens ao usuário.</td><td>RNF005</td></tr>
@@ -377,26 +378,26 @@
 <p class="fonte">Fonte: Autoria própria (2026).</p>
 </div>
 <h2>8.2. Segurança e Proteção de Dados</h2>
-<p class="ind">A segurança foi tratada desde o projeto. As consultas ao banco usam PDO com consultas preparadas, e nenhum valor informado pelo usuário é concatenado ao SQL. As senhas são guardadas com hash bcrypt e o sistema limita o login: 8 senhas erradas para o mesmo e-mail a partir do mesmo IP (ou 20 somando todos os IPs, ou 60 vindas de um mesmo IP) dentro de 5 minutos pausam novas tentativas por 5 minutos. Fora do ambiente local a mensagem é sempre a mesma, para não revelar quais e-mails existem; a tela avisa quando faltam 3 tentativas.</p>
-<p class="ind">A sessão usa cookie próprio, HttpOnly e SameSite, e gera um novo identificador a cada login. A cada requisição a conta é conferida no banco: se o administrador desativar o usuário ou a senha for trocada, o acesso é perdido na hora. Todos os formulários têm token CSRF e todo texto exibido passa por escape de HTML. As respostas levam cabeçalhos de segurança (Content-Security-Policy, X-Frame-Options, X-Content-Type-Options, Referrer-Policy e Permissions-Policy) e a versão do PHP não é anunciada. Só a pasta public é acessível pelo navegador; os arquivos enviados ficam em storage/uploads, com nome aleatório e tipo conferido pelo conteúdo, e só são entregues pelo sistema, com permissão. PDFs baixados da internet para a biblioteca só vêm de endereços públicos, por HTTPS verificado e com limite de tamanho.</p>
+<p class="ind">Pensamos na segurança desde o começo. As consultas ao banco usam PDO com consultas preparadas, e nenhum valor digitado pelo usuário é colado direto no SQL. As senhas são guardadas com hash bcrypt, e o login tem um limite: oito senhas erradas para o mesmo e-mail a partir do mesmo IP (ou 20 somando todos os IPs, ou 60 vindas de um mesmo IP) dentro de cinco minutos pausam novas tentativas por cinco minutos. Fora do computador local, a mensagem de erro é sempre a mesma, para não revelar quais e-mails existem, e a tela avisa quando faltam três tentativas.</p>
+<p class="ind">A sessão usa um cookie próprio, com HttpOnly e SameSite, e ganha um novo identificador a cada login. A cada requisição o sistema confere a conta no banco: se o administrador desativar o usuário ou se a senha for trocada, o acesso cai na hora. Todos os formulários têm token CSRF, e todo texto exibido passa pelo escape de HTML. As respostas levam cabeçalhos de segurança (Content-Security-Policy, X-Frame-Options, X-Content-Type-Options, Referrer-Policy e Permissions-Policy), e a versão do PHP não aparece. Só a pasta public é acessível pelo navegador. Os arquivos enviados ficam em storage/uploads, com nome aleatório e tipo conferido pelo conteúdo, e só são entregues pelo sistema, com permissão. Os PDFs e as imagens que a plataforma baixa da internet só vêm de endereços públicos, por HTTPS verificado e com limite de tamanho.</p>
 
 <!-- página 22 -->
-<p class="ind">Quanto à Lei Geral de Proteção de Dados (Lei nº 13.709/2018), o cadastro exige o aceite do termo de autorização e privacidade, o candidato pode deixar o perfil privado (fora do banco de talentos) e pode excluir a própria conta em "Meu perfil → Seus dados", confirmando com a senha: saem o perfil, os currículos e arquivos, a foto, as candidaturas, os matches e as tentativas de login. A exclusão de um usuário pelo administrador também remove tudo em cascata. O registro do link de troca de senha só existe no modo de demonstração e guarda o e-mail mascarado (ex.: ca*******@conectavagas.com).</p>
-<h2>8.3. Calibrador das Máquinas de Extração e Leitura de Cartazes</h2>
-<p class="ind">As máquinas de extração (de vagas, de cursos e de currículos) funcionam por regras: palavras-chave e padrões escritos no código. Para que errem cada vez menos sem que alguém precise mexer no código, o sistema tem um calibrador, no painel do administrador, com duas partes. A primeira são os termos calibrados: o administrador cadastra "quando o texto tiver o termo X, mande para Y" em quatro contextos — em que campo entra a linha solta do anúncio (descrição, requisitos ou benefícios), qual a área da vaga, qual a área do curso e em que seção entra a linha solta do currículo. Por exemplo, "Uniforme" vai para Benefícios e "Churrasqueiro" indica a área Alimentação. O termo vale mais que a regra do código; entre dois termos que aparecem no texto, vence o mais longo, que é o mais específico; e a comparação é feita por palavra inteira, sem acento e sem diferença entre maiúsculas e minúsculas, com a mesma normalização de termos usada pelo match (MANNING; RAGHAVAN; SCHÜTZE, 2008).</p>
-<p class="ind">A segunda parte é automática: as empresas (anunciante das vagas e nome fantasia das empresas) e as instituições de ensino (dos cursos) que já estão cadastradas são reconhecidas no texto quando nenhuma regra achou o nome, sem nada para treinar. Tudo é determinístico: o mesmo texto com os mesmos termos dá sempre o mesmo resultado, e cada ajuste fica registrado. O relatório da extração da vaga mostra o bloco "Ajustes do calibrador" (o que a regra dizia, para onde a linha foi e qual termo decidiu), e a opção "Testar as máquinas" permite colar um anúncio, uma ficha de curso ou um currículo e ver o resultado sem salvar nada.</p>
-<p class="ind">A leitura de cartazes deixou de depender de programas instalados no servidor: o site entrega o Tesseract.js, que lê a imagem no próprio navegador (em quatro passadas) e envia ao servidor apenas o texto com as posições das palavras. Enquanto o leitor carrega ou lê, um carregador amarelo mostra o andamento; quando está pronto, ele fica azul e o botão é liberado, o que também impede o clique duplo.</p>
+<p class="ind">Para atender à Lei Geral de Proteção de Dados (Lei nº 13.709/2018), o cadastro exige o aceite do termo de autorização e privacidade, o candidato pode deixar o perfil privado (fora do banco de talentos) e pode excluir a própria conta em Meu perfil, na parte Seus dados, confirmando com a senha. Nesse caso saem o perfil, os currículos e os arquivos, a foto, as candidaturas, os matches e as tentativas de login. Quando o administrador exclui um usuário, tudo também é removido em cascata. O registro do link de troca de senha só existe no modo de demonstração e guarda o e-mail mascarado (por exemplo, ca*******@conectavagas.com).</p>
+<h2>8.3. Padrões Automáticos da Extração e Leitura de Cartazes</h2>
+<p class="ind">As nossas máquinas de extração (de vagas, de cursos e de currículos) funcionam por regras: títulos de seção, palavras-chave e padrões que escrevemos no código. Quando a regra não tem pista, como numa linha do anúncio sem nenhuma palavra-chave, numa área de vaga ou de curso que ela não reconhece ou numa empresa ou instituição que ela não acha no texto, o Sistema usa os padrões automáticos, tirados na hora das vagas e dos cursos que já foram cadastrados e revisados por uma pessoa. Para isso, o texto é normalizado caractere por caractere (sem acento, em minúsculas, sem pontuação e com todo número trocado por #), com a mesma normalização de termos que usamos no match (MANNING; RAGHAVAN; SCHÜTZE, 2008), e são consideradas as palavras e os pares de palavras vizinhas. Um termo vira padrão quando aparece em pelo menos dois cadastros diferentes e em pelo menos 90% deles no mesmo destino. A expressão "café da manhã", por exemplo, só aparece nos benefícios das vagas cadastradas, então uma linha nova com ela vai para Benefícios, mesmo sem palavra-chave na regra.</p>
+<p class="ind">Os padrões não ficam guardados em tabela nem dependem de treino. Eles são montados a cada extração, então toda vaga ou curso salvo passa a contar na próxima, e o que é apagado deixa de contar. O Sistema também reconhece as empresas (o anunciante das vagas e o nome fantasia) e as instituições de ensino que já estão cadastradas. O resultado é sempre o mesmo para o mesmo texto e os mesmos cadastros, e o relatório da extração da vaga mostra o quadro "Padrões automáticos usados", com o trecho, para onde ele foi e o padrão que decidiu. Deixamos o currículo de fora porque o perfil do candidato tem dados pessoais (LGPD), então a extração dele segue só as regras. Na ficha de um e-book, a plataforma abre cada link (imagem, PDF ou página) e, quando não há imagem, tira a capa da primeira página do PDF usando o leitor de PDF do próprio Windows, sem instalar programas.</p>
+<p class="ind">A leitura de cartazes também deixou de depender de programas instalados no servidor. O site entrega o Tesseract.js, que lê a imagem no próprio navegador (em quatro passadas) e manda para o servidor só o texto com a posição das palavras. Enquanto o leitor carrega ou lê, um carregador amarelo mostra o andamento; quando ele está pronto, fica azul e o botão é liberado, o que também evita o clique duplo.</p>
 <h1>9. RESULTADOS OBTIDOS / ESPERADOS</h1>
-<p class="ind">Espera-se que ao final do projeto obtenha-se um produto que realize todas as funções especificadas neste documento com eficácia: que o candidato encontre vagas da sua região, tenha o perfil preenchido a partir do currículo e entenda a sua compatibilidade com cada vaga; que a empresa publique vagas com rapidez, até a partir de um cartaz, e receba candidaturas já ordenadas; e que o administrador mantenha a plataforma organizada. A versão implementada conta com 12 tabelas, 13 controladores, 10 classes de acesso a dados, 16 serviços (extração, calibrador, match, competências, portfólio e Pix) e 33 rotas, além de 62 vagas e 64 conteúdos de capacitação de demonstração (43 cursos e 21 e-books, estes com o PDF guardado na biblioteca da plataforma) e das contas de teste de administrador, empresa e candidato.</p>
+<p class="ind">Esperamos entregar um produto que faça bem todas as funções descritas neste documento: que o candidato encontre vagas da sua região, tenha o perfil preenchido a partir do currículo e entenda a sua compatibilidade com cada vaga; que a empresa publique vagas com rapidez, até a partir de um cartaz, e receba as candidaturas já ordenadas; e que o administrador mantenha a plataforma organizada. A versão que implementamos tem 11 tabelas, 12 controladores, 9 classes de acesso a dados, 17 serviços (extração, padrões automáticos, capa de PDF, match, competências, portfólio e Pix) e 32 rotas, além de 62 vagas e 64 conteúdos de capacitação de demonstração (43 cursos e 21 e-books, estes com o PDF guardado na biblioteca da plataforma) e das contas de teste de administrador, empresa e candidato.</p>
 
 <!-- página 23 -->
-<p class="ind">Na varredura final (27/09/2026) foram rastreadas 1.701 páginas nos quatro perfis sem nenhum problema; a bateria de segurança (XSS, injeção de SQL, CSRF, sessão, uploads e permissões) foi aprovada, as tabelas do banco estavam íntegras e não houve erros de PHP no servidor. Na versão final, com o calibrador (01/10/2026), o teste rápido passou em 113 de 113 verificações, inclusive as do calibrador, e os testes de jornada em 18 de 18.</p>
+<p class="ind">Na varredura final, em 27/09/2026, rastreamos 1.701 páginas nos quatro perfis sem nenhum problema. A bateria de segurança (XSS, injeção de SQL, CSRF, sessão, uploads e permissões) foi aprovada, as tabelas do banco estavam íntegras e não houve erros de PHP no servidor. Na versão final, em 01/10/2026, o teste rápido passou em 112 de 112 verificações, inclusive as dos padrões automáticos e da capa do PDF, e os testes de jornada passaram em 18 de 18.</p>
 <h1>10. CONSIDERAÇÕES FINAIS</h1>
-<p class="ind">O objetivo do projeto foi desenvolver uma plataforma que centralizasse vagas e cursos do Distrito Federal e indicasse a compatibilidade entre candidatos e vagas. Os objetivos específicos foram centralizar as vagas, automatizar o preenchimento do perfil a partir do currículo, gerar o portfólio, calcular o match, organizar as candidaturas, permitir a publicação de vagas a partir de anúncios e cartazes, recomendar cursos e e-books, permitir que o administrador ajuste a extração sem mexer no código, garantir o controle dos dados pelo próprio usuário e oferecer controle administrativo. Todas as especificações foram atendidas, conforme demonstram os requisitos funcionais implementados no sistema e o plano de testes.</p>
-<p class="ind">A expectativa na criação do sistema foi alcançada, pois o objetivo principal foi facilitar o dia a dia de quem procura e de quem oferece trabalho. Com o desenvolvimento deste projeto foi possível aprofundar conhecimentos em programação orientada a objetos, banco de dados, segurança de aplicações web, extração de dados de textos e imagens, testes automatizados e modelagem de sistemas e, apesar das dificuldades encontradas, principalmente na leitura de currículos e cartazes em formatos variados, foi possível concretizá-lo.</p>
+<p class="ind">O objetivo do projeto foi desenvolver uma plataforma que juntasse as vagas e os cursos do Distrito Federal e mostrasse a compatibilidade entre candidatos e vagas. Os objetivos específicos foram centralizar as vagas, preencher o perfil a partir do currículo, gerar o portfólio, calcular o match, organizar as candidaturas, permitir a publicação de vagas a partir de anúncios e cartazes, recomendar cursos e e-books, completar a extração com padrões tirados dos próprios cadastros, garantir ao usuário o controle dos seus dados e oferecer o controle administrativo. Todas as especificações foram atendidas, como mostram os requisitos funcionais implementados e o plano de testes.</p>
+<p class="ind">Acreditamos que alcançamos o que esperávamos, porque o nosso objetivo principal era facilitar o dia a dia de quem procura e de quem oferece trabalho. Com este projeto aprofundamos os nossos conhecimentos em programação orientada a objetos, banco de dados, segurança de aplicações web, extração de dados de textos e imagens, testes automatizados e modelagem de sistemas. Tivemos dificuldades, principalmente na leitura de currículos e cartazes em formatos muito diferentes, mas conseguimos concluir o trabalho.</p>
 <h1>11. CONCLUSÃO</h1>
-<p class="ind">Conclui-se que este sistema contribui para organizar a divulgação de vagas e o processo de candidatura no Distrito Federal, trazendo para candidatos e empresas informações que antes estavam dispersas e controladas manualmente, sem exigir que ninguém instale programas.</p>
-<p class="ind">Este projeto estará disponível para atualizações, como o envio real de e-mails, a integração com meios de pagamento para os planos, a ampliação do dicionário de competências usado pelo match e melhorias de acessibilidade (ordem dos títulos e rótulos de alguns campos). Com a continuidade do trabalho, a plataforma poderá ser implantada em escolas, instituições e órgãos da região que precisem aproximar a qualificação profissional das oportunidades de emprego.</p>
+<p class="ind">Concluímos que o sistema ajuda a organizar a divulgação de vagas e o processo de candidatura no Distrito Federal, levando para candidatos e empresas informações que antes estavam espalhadas e eram controladas à mão, sem exigir que ninguém instale programas.</p>
+<p class="ind">O projeto continua aberto a melhorias, como o envio real de e-mails, a integração com meios de pagamento para os planos, a ampliação do dicionário de competências usado pelo match e alguns ajustes de acessibilidade, como a ordem dos títulos. Continuando o trabalho, a plataforma pode ser implantada em escolas, instituições e órgãos da região que queiram aproximar a qualificação profissional das oportunidades de emprego.</p>
 
 <!-- página 24 -->
 <h1 class="nova">12. REFERÊNCIAS BIBLIOGRÁFICAS</h1>
@@ -421,7 +422,7 @@
 <!-- página 25 -->
 <h1 class="nova">13. ANEXOS</h1>
 <h2>13.1. Diagrama de Caso de Uso Geral</h2>
-<p class="ind">O Caso de Uso descreve as interações entre os usuários de um sistema e o sistema propriamente dito. Eles representam a interface externa do sistema e especificam um conjunto de exigências do que o sistema deve fazer. São compostos pelos atores (entidades) que interagem com o sistema relacionando-se com os casos de uso, sendo que cada caso de uso deve estar relacionado com no mínimo um ator. No Conecta Vagas DF os atores são o Visitante, o Candidato, a Empresa e o Administrador; os três últimos são especializações do Usuário autenticado. Nesta versão foram incluídos os casos de uso UC19 (excluir a própria conta), UC20 (gerenciar assinaturas) e UC21 (calibrar as máquinas de extração).</p>
+<p class="ind">O diagrama de caso de uso mostra como as pessoas usam o sistema. Cada caso de uso é uma tarefa que o sistema oferece, e cada ator é quem participa dela; todo caso de uso precisa ter pelo menos um ator. No nosso projeto os atores são quatro: o Candidato, a Empresa, o Administrador e o Sistema. Quem entra no site sem conta para ver vagas e cursos é tratado como um candidato que ainda não se cadastrou. O Sistema aparece como ator quando faz alguma coisa sozinho, como extrair os dados do currículo, calcular o match, aplicar os padrões automáticos, tirar a capa do PDF de um e-book e limpar os arquivos sem uso. Nesta versão incluímos os casos de uso UC19 (excluir a própria conta), UC20 (gerenciar assinaturas) e UC21 (extrair com os padrões automáticos).</p>
 
 <!-- página 26 -->
 <figure class="fig f-geral" data-n="1">
@@ -442,7 +443,7 @@
 <colgroup><col style="width:50.0%"><col style="width:50.0%"></colgroup>
 <tr><td colspan="2"><b>Identificação:</b> UC01</td></tr>
 <tr><td colspan="2"><b>Nome:</b> Realizar login</td></tr>
-<tr><td colspan="2"><b>Atores:</b> Usuário (Candidato, Empresa e Administrador)</td></tr>
+<tr><td colspan="2"><b>Atores:</b> Candidato, Empresa e Administrador; o Sistema pausa o login depois de tentativas repetidas</td></tr>
 <tr><td colspan="2"><b>Pré-condições:</b> O ator deverá estar cadastrado e ativo no sistema.</td></tr>
 <tr><td colspan="2"><b>Pós-condições:</b> O sistema exibirá o painel correspondente ao tipo de usuário.</td></tr>
 <tr><td colspan="2" class="c"><b>Fluxo principal</b></td></tr>
@@ -450,15 +451,15 @@
 <tr><td>Ator</td><td>Sistema</td></tr>
 <tr><td>1. O ator informa e-mail e senha nos respectivos campos e clica no botão "Entrar".</td><td>2. O sistema verifica se o login está em pausa por tentativas repetidas e valida os dados informados.</td></tr>
 <tr><td></td><td>3. O sistema inicia a sessão com um novo identificador e exibe o painel do usuário. O caso de uso é encerrado.</td></tr>
-<tr><td colspan="2" class="c">Fluxo alternativo — dados incorretos</td></tr>
+<tr><td colspan="2" class="c">Fluxo alternativo: dados incorretos</td></tr>
 <tr><td colspan="2" class="cinza c"><b>Sequência típica de eventos</b></td></tr>
 <tr><td>Ator</td><td>Sistema</td></tr>
 <tr><td></td><td>2.1. O sistema verifica que os dados estão incorretos, registra a tentativa e exibe a mensagem "E-mail ou senha inválidos ou conta desativada." (no ambiente local, o motivo exato); quando faltam 3 tentativas ou menos, avisa quantas restam antes da pausa, retornando ao passo 1.</td></tr>
-<tr><td colspan="2" class="c">Fluxo alternativo — login em pausa</td></tr>
+<tr><td colspan="2" class="c">Fluxo alternativo: login em pausa</td></tr>
 <tr><td colspan="2" class="cinza c"><b>Sequência típica de eventos</b></td></tr>
 <tr><td>Ator</td><td>Sistema</td></tr>
 <tr><td></td><td>2.2. O sistema verifica que houve muitas tentativas sem sucesso e exibe a mensagem "Muitas tentativas de login sem sucesso. Por segurança, aguarde N minuto(s) e tente novamente, ou use "Esqueci minha senha"."</td></tr>
-<tr><td colspan="2" class="c">Fluxo alternativo — encerrar sessão</td></tr>
+<tr><td colspan="2" class="c">Fluxo alternativo: encerrar sessão</td></tr>
 <tr><td colspan="2" class="cinza c"><b>Sequência típica de eventos</b></td></tr>
 <tr><td>Ator</td><td>Sistema</td></tr>
 <tr><td>3.1. O ator clica em "Sair".</td><td>3.2. O sistema encerra a sessão e exibe a página inicial.</td></tr>
@@ -475,8 +476,8 @@
 <colgroup><col style="width:50.0%"><col style="width:50.0%"></colgroup>
 <tr><td colspan="2"><b>Identificação:</b> UC02</td></tr>
 <tr><td colspan="2"><b>Nome:</b> Cadastrar conta</td></tr>
-<tr><td colspan="2"><b>Atores:</b> Visitante</td></tr>
-<tr><td colspan="2"><b>Pré-condições:</b> O visitante não deverá estar logado.</td></tr>
+<tr><td colspan="2"><b>Atores:</b> Candidato e Empresa (ainda sem conta)</td></tr>
+<tr><td colspan="2"><b>Pré-condições:</b> O candidato ou a empresa ainda não deverá ter entrado no sistema.</td></tr>
 <tr><td colspan="2"><b>Pós-condições:</b> A conta e o perfil são criados e o usuário entra no sistema.</td></tr>
 <tr><td colspan="2" class="c"><b>Fluxo principal</b></td></tr>
 <tr><td colspan="2" class="cinza c"><b>Sequência típica de eventos</b></td></tr>
@@ -497,7 +498,7 @@
 <colgroup><col style="width:50.0%"><col style="width:50.0%"></colgroup>
 <tr><td colspan="2"><b>Identificação:</b> UC03</td></tr>
 <tr><td colspan="2"><b>Nome:</b> Recuperar senha</td></tr>
-<tr><td colspan="2"><b>Atores:</b> Visitante</td></tr>
+<tr><td colspan="2"><b>Atores:</b> Candidato, Empresa e Administrador</td></tr>
 <tr><td colspan="2"><b>Pré-condições:</b> O ator deverá possuir conta cadastrada.</td></tr>
 <tr><td colspan="2"><b>Pós-condições:</b> A senha é alterada, os links pendentes deixam de valer e as sessões abertas são encerradas.</td></tr>
 <tr><td colspan="2" class="c"><b>Fluxo principal</b></td></tr>
@@ -524,7 +525,7 @@
 <colgroup><col style="width:50.0%"><col style="width:50.0%"></colgroup>
 <tr><td colspan="2"><b>Identificação:</b> UC04</td></tr>
 <tr><td colspan="2"><b>Nome:</b> Consultar vagas</td></tr>
-<tr><td colspan="2"><b>Atores:</b> Visitante e Candidato</td></tr>
+<tr><td colspan="2"><b>Atores:</b> Candidato (com ou sem conta)</td></tr>
 <tr><td colspan="2"><b>Pré-condições:</b> Nenhuma.</td></tr>
 <tr><td colspan="2"><b>Pós-condições:</b> O sistema exibe a lista de vagas abertas que atendem aos filtros.</td></tr>
 <tr><td colspan="2" class="c"><b>Fluxo principal</b></td></tr>
@@ -544,7 +545,7 @@
 <colgroup><col style="width:50.0%"><col style="width:50.0%"></colgroup>
 <tr><td colspan="2"><b>Identificação:</b> UC05</td></tr>
 <tr><td colspan="2"><b>Nome:</b> Consultar cursos e e-books</td></tr>
-<tr><td colspan="2"><b>Atores:</b> Visitante e Candidato</td></tr>
+<tr><td colspan="2"><b>Atores:</b> Candidato (com ou sem conta)</td></tr>
 <tr><td colspan="2"><b>Pré-condições:</b> Nenhuma.</td></tr>
 <tr><td colspan="2"><b>Pós-condições:</b> O sistema exibe a lista de cursos e e-books ativos.</td></tr>
 <tr><td colspan="2" class="c"><b>Fluxo principal</b></td></tr>
@@ -557,7 +558,7 @@
 <tr><td colspan="2" class="cinza c"><b>Sequência típica de eventos</b></td></tr>
 <tr><td>Ator</td><td>Sistema</td></tr>
 <tr><td></td><td>4.1. O sistema não encontra cursos e informa que nenhum conteúdo atende aos filtros.</td></tr>
-<tr><td colspan="2" class="c">Fluxo alternativo — baixar da biblioteca</td></tr>
+<tr><td colspan="2" class="c">Fluxo alternativo: baixar da biblioteca</td></tr>
 <tr><td colspan="2" class="cinza c"><b>Sequência típica de eventos</b></td></tr>
 <tr><td>Ator</td><td>Sistema</td></tr>
 <tr><td>6.1. O ator clica em "Baixar";</td><td>6.2. O sistema entrega o PDF guardado na biblioteca da plataforma, com o crédito da fonte original.</td></tr>
@@ -595,14 +596,14 @@
 <colgroup><col style="width:50.0%"><col style="width:50.0%"></colgroup>
 <tr><td colspan="2"><b>Identificação:</b> UC07</td></tr>
 <tr><td colspan="2"><b>Nome:</b> Enviar currículo (extração)</td></tr>
-<tr><td colspan="2"><b>Atores:</b> Candidato</td></tr>
+<tr><td colspan="2"><b>Atores:</b> Candidato e Sistema (extração)</td></tr>
 <tr><td colspan="2"><b>Pré-condições:</b> O ator deverá estar logado como candidato.</td></tr>
 <tr><td colspan="2"><b>Pós-condições:</b> O currículo é gravado, o perfil é preenchido e o relatório da extração é exibido.</td></tr>
 <tr><td colspan="2" class="c"><b>Fluxo principal</b></td></tr>
 <tr><td colspan="2" class="cinza c"><b>Sequência típica de eventos</b></td></tr>
 <tr><td>Ator</td><td>Sistema</td></tr>
 <tr><td>1. O ator seleciona o arquivo do currículo e clica em "Enviar";</td><td>2. O sistema valida tamanho (até 10 MB), extensão e conteúdo do arquivo;</td></tr>
-<tr><td></td><td>3. O sistema lê o texto do arquivo (PDF, DOCX ou DOC), extrai os dados (as linhas soltas do começo seguem os termos do calibrador) e procura a foto do candidato;</td></tr>
+<tr><td></td><td>3. O sistema lê o texto do arquivo (PDF, DOCX ou DOC), extrai os dados (só pelas regras: o currículo não entra nos padrões automáticos, por ter dados pessoais) e procura a foto do candidato;</td></tr>
 <tr><td></td><td>4. O sistema aplica os dados no perfil e recalcula o match;</td></tr>
 <tr><td></td><td>5. O sistema exibe o relatório da extração e a mensagem "Currículo lido: N dado(s) aplicado(s) ao perfil e o portfólio foi montado..."</td></tr>
 <tr><td>6. O ator marca, no relatório, os dados que deseja substituir e clica em "Aplicar";</td><td>7. O sistema aplica as escolhas e recalcula o match.</td></tr>
@@ -617,7 +618,7 @@
 <colgroup><col style="width:50.0%"><col style="width:50.0%"></colgroup>
 <tr><td colspan="2"><b>Identificação:</b> UC08</td></tr>
 <tr><td colspan="2"><b>Nome:</b> Visualizar portfólio e match</td></tr>
-<tr><td colspan="2"><b>Atores:</b> Candidato</td></tr>
+<tr><td colspan="2"><b>Atores:</b> Candidato e Sistema (cálculo do match)</td></tr>
 <tr><td colspan="2"><b>Pré-condições:</b> O cadastro do candidato deverá estar validado.</td></tr>
 <tr><td colspan="2"><b>Pós-condições:</b> O portfólio e as notas de match são exibidos.</td></tr>
 <tr><td colspan="2" class="c"><b>Fluxo principal</b></td></tr>
@@ -642,7 +643,7 @@
 <tr><td colspan="2" class="c"><b>Fluxo principal</b></td></tr>
 <tr><td colspan="2" class="cinza c"><b>Sequência típica de eventos</b></td></tr>
 <tr><td>Ator</td><td>Sistema</td></tr>
-<tr><td>1. O ator acessa "Meu perfil → Seus dados" e clica em "Excluir minha conta";</td><td>2. O sistema explica o que será apagado e pede a senha e a confirmação;</td></tr>
+<tr><td>1. O ator acessa "Meu perfil", na parte "Seus dados", e clica em "Excluir minha conta";</td><td>2. O sistema explica o que será apagado e pede a senha e a confirmação;</td></tr>
 <tr><td>3. O ator informa a senha, marca a caixa de confirmação e confirma a exclusão;</td><td>4. O sistema confere a senha, com o mesmo limite de tentativas do login;</td></tr>
 <tr><td></td><td>5. O sistema apaga o perfil, os currículos e arquivos, a foto, as candidaturas, os matches e as tentativas de login, encerra a sessão e emite "Sua conta e todos os seus dados foram excluídos da plataforma."</td></tr>
 <tr><td colspan="2" class="c">Fluxo alternativo</td></tr>
@@ -713,14 +714,14 @@
 <colgroup><col style="width:50.0%"><col style="width:50.0%"></colgroup>
 <tr><td colspan="2"><b>Identificação:</b> UC11.1</td></tr>
 <tr><td colspan="2"><b>Nome:</b> Cadastrar vaga</td></tr>
-<tr><td colspan="2"><b>Atores:</b> Empresa e Administrador</td></tr>
+<tr><td colspan="2"><b>Atores:</b> Empresa, Administrador e Sistema (extração e match)</td></tr>
 <tr><td colspan="2"><b>Pré-condições:</b> O ator deverá estar logado; a empresa deverá ter o perfil preenchido.</td></tr>
 <tr><td colspan="2"><b>Pós-condições:</b> A vaga é publicada e o match é calculado com os candidatos.</td></tr>
 <tr><td colspan="2" class="c"><b>Fluxo principal</b></td></tr>
 <tr><td colspan="2" class="cinza c"><b>Sequência típica de eventos</b></td></tr>
 <tr><td>Ator</td><td>Sistema</td></tr>
 <tr><td>1. O ator acessa a aba "Vagas" no painel;</td><td>2. O sistema exibe o formulário de cadastro e a lista de vagas e prepara o leitor de cartaz no navegador (carregador amarelo enquanto carrega, azul quando está pronto);</td></tr>
-<tr><td>3. O ator cola o texto do anúncio ou escolhe a imagem do cartaz e clica em "Extrair";</td><td>4. O sistema lê o cartaz no próprio navegador (carregador amarelo com a porcentagem), envia o texto lido ao servidor, extrai título, empresa, salário, cidade, tipo, nível, requisitos, benefícios e contato, aplica o calibrador e preenche o formulário, com o relatório da extração e os "Ajustes do calibrador";</td></tr>
+<tr><td>3. O ator cola o texto do anúncio ou escolhe a imagem do cartaz e clica em "Extrair";</td><td>4. O sistema lê o cartaz no próprio navegador (carregador amarelo com a porcentagem), envia o texto lido ao servidor, extrai título, empresa, salário, cidade, tipo, nível, requisitos, benefícios e contato, usa os padrões automáticos onde a regra não tem pista e preenche o formulário, com o relatório da extração e os "Padrões automáticos usados";</td></tr>
 <tr><td>5. O ator revisa os dados e clica em "Publicar";</td><td>6. O sistema valida os dados, verifica vaga duplicada e o limite do plano;</td></tr>
 <tr><td></td><td>7. O sistema grava a vaga, calcula o match e emite "Vaga publicada! Match calculado com N candidato(s)."</td></tr>
 <tr><td colspan="2" class="c">Fluxo alternativo</td></tr>
@@ -934,7 +935,7 @@
 <tr><td colspan="2"><b>Nome:</b> Excluir usuário</td></tr>
 <tr><td colspan="2"><b>Atores:</b> Administrador</td></tr>
 <tr><td colspan="2"><b>Pré-condições:</b> O administrador deverá pesquisar o usuário.</td></tr>
-<tr><td colspan="2"><b>Pós-condições:</b> O usuário e todos os seus dados são removidos; os termos do calibrador que ele cadastrou ficam, sem o autor.</td></tr>
+<tr><td colspan="2"><b>Pós-condições:</b> O usuário e todos os seus dados são removidos.</td></tr>
 <tr><td colspan="2" class="c"><b>Fluxo principal</b></td></tr>
 <tr><td colspan="2" class="cinza c"><b>Sequência típica de eventos</b></td></tr>
 <tr><td>Ator</td><td>Sistema</td></tr>
@@ -1056,14 +1057,14 @@
 <colgroup><col style="width:50.0%"><col style="width:50.0%"></colgroup>
 <tr><td colspan="2"><b>Identificação:</b> UC17.1</td></tr>
 <tr><td colspan="2"><b>Nome:</b> Cadastrar curso/e-book</td></tr>
-<tr><td colspan="2"><b>Atores:</b> Administrador</td></tr>
+<tr><td colspan="2"><b>Atores:</b> Administrador e Sistema (links da ficha e capa do PDF)</td></tr>
 <tr><td colspan="2"><b>Pré-condições:</b> O administrador deverá estar logado.</td></tr>
 <tr><td colspan="2"><b>Pós-condições:</b> O conteúdo fica disponível na página de cursos; o PDF do e-book fica na biblioteca.</td></tr>
 <tr><td colspan="2" class="c"><b>Fluxo principal</b></td></tr>
 <tr><td colspan="2" class="cinza c"><b>Sequência típica de eventos</b></td></tr>
 <tr><td>Ator</td><td>Sistema</td></tr>
 <tr><td>1. O administrador acessa a aba "Cursos e e-books";</td><td>2. O sistema exibe o formulário e a lista;</td></tr>
-<tr><td>3. O administrador cola o texto de divulgação ou a ficha da pesquisa e clica em "Extrair" (opcional);</td><td>4. O sistema preenche título, instituição, link, PDF, carga horária, preço, modalidade, nível e categoria (a área e a instituição também podem vir do calibrador);</td></tr>
+<tr><td>3. O administrador cola o texto de divulgação ou a ficha da pesquisa e clica em "Extrair" (opcional);</td><td>4. O sistema preenche título, instituição, link, PDF, carga horária, preço, modalidade, nível e categoria (a área e a instituição que a regra não reconhece vêm dos padrões automáticos do catálogo); abre cada link da ficha e, no e-book sem imagem, tira a capa da 1ª página do PDF;</td></tr>
 <tr><td>5. O administrador revisa, envia o PDF do e-book (opcional) e clica em "Salvar";</td><td>6. O sistema valida, baixa a imagem e o PDF indicados, guarda o PDF na biblioteca com o crédito da fonte e emite "Conteúdo salvo."</td></tr>
 <tr><td colspan="2" class="c">Fluxo alternativo</td></tr>
 <tr><td colspan="2" class="cinza c"><b>Sequência típica de eventos</b></td></tr>
@@ -1089,7 +1090,7 @@
 <tr><td colspan="2" class="cinza c"><b>Sequência típica de eventos</b></td></tr>
 <tr><td>Ator</td><td>Sistema</td></tr>
 <tr><td></td><td>4.1. O sistema informa que existem campos obrigatórios em branco.</td></tr>
-<tr><td colspan="2" class="c">Fluxo alternativo — publicar ou ocultar</td></tr>
+<tr><td colspan="2" class="c">Fluxo alternativo: publicar ou ocultar</td></tr>
 <tr><td colspan="2" class="cinza c"><b>Sequência típica de eventos</b></td></tr>
 <tr><td>Ator</td><td>Sistema</td></tr>
 <tr><td>1.1. O administrador clica em "Ocultar" (ou "Publicar");</td><td>1.2. O sistema emite "Conteúdo ocultado: saiu da área pública." (ou "Conteúdo publicado: já aparece para os usuários.")</td></tr>
@@ -1117,13 +1118,13 @@
 <colgroup><col style="width:50.0%"><col style="width:50.0%"></colgroup>
 <tr><td colspan="2"><b>Identificação:</b> UC17.4</td></tr>
 <tr><td colspan="2"><b>Nome:</b> Importar fichas em lote</td></tr>
-<tr><td colspan="2"><b>Atores:</b> Administrador</td></tr>
+<tr><td colspan="2"><b>Atores:</b> Administrador e Sistema (links da ficha e capa do PDF)</td></tr>
 <tr><td colspan="2"><b>Pré-condições:</b> O administrador deverá estar logado.</td></tr>
 <tr><td colspan="2"><b>Pós-condições:</b> Os conteúdos marcados na prévia são cadastrados e publicados.</td></tr>
 <tr><td colspan="2" class="c"><b>Fluxo principal</b></td></tr>
 <tr><td colspan="2" class="cinza c"><b>Sequência típica de eventos</b></td></tr>
 <tr><td>Ator</td><td>Sistema</td></tr>
-<tr><td>1. O administrador cola várias fichas separadas por "---" e clica em "Extrair";</td><td>2. O sistema lê as fichas e emite "N fichas lidas. Confira a prévia e cadastre as marcadas.";</td></tr>
+<tr><td>1. O administrador cola várias fichas separadas por "---" e clica em "Extrair";</td><td>2. O sistema lê as fichas, abre cada link (imagem, PDF ou página), tira a capa do PDF dos e-books sem imagem, avisa os links que não abriram como deveriam e emite "N fichas lidas. Confira a prévia e cadastre as marcadas.";</td></tr>
 <tr><td>3. O administrador confere a prévia, desmarca o que não quer e clica em "Cadastrar";</td><td>4. O sistema baixa imagens e PDFs, cadastra e publica os marcados e emite "N conteúdo(s) cadastrado(s) e publicado(s); M com o PDF na biblioteca (botão "Baixar")..."</td></tr>
 <tr><td colspan="2" class="c">Fluxo alternativo</td></tr>
 <tr><td colspan="2" class="cinza c"><b>Sequência típica de eventos</b></td></tr>
@@ -1159,7 +1160,7 @@
 <colgroup><col style="width:50.0%"><col style="width:50.0%"></colgroup>
 <tr><td colspan="2"><b>Identificação:</b> UC18</td></tr>
 <tr><td colspan="2"><b>Nome:</b> Visualizar painel</td></tr>
-<tr><td colspan="2"><b>Atores:</b> Empresa e Administrador</td></tr>
+<tr><td colspan="2"><b>Atores:</b> Empresa, Administrador e Sistema (limpeza diária dos arquivos sem uso)</td></tr>
 <tr><td colspan="2"><b>Pré-condições:</b> O ator deverá estar logado.</td></tr>
 <tr><td colspan="2"><b>Pós-condições:</b> O painel com indicadores é exibido.</td></tr>
 <tr><td colspan="2" class="c"><b>Fluxo principal</b></td></tr>
@@ -1198,25 +1199,25 @@
 <tr><td>Ator</td><td>Sistema</td></tr>
 <tr><td></td><td>4.1. A conta está bloqueada; o sistema emite "Esta conta está bloqueada: ative-a antes de conceder um plano.";</td></tr>
 <tr><td></td><td>4.2. A duração está fora de 1 a 3660 dias ou o valor é inválido; o sistema informa o erro.</td></tr>
-<tr><td colspan="2" class="c">Fluxo alternativo — alterar</td></tr>
+<tr><td colspan="2" class="c">Fluxo alternativo: alterar</td></tr>
 <tr><td colspan="2" class="cinza c"><b>Sequência típica de eventos</b></td></tr>
 <tr><td>Ator</td><td>Sistema</td></tr>
 <tr><td>3.1. O administrador clica em "Editar", altera valor, datas ou situação e salva;</td><td>3.2. O sistema valida e emite "Assinatura atualizada."</td></tr>
-<tr><td colspan="2" class="c">Fluxo alternativo — cancelar</td></tr>
+<tr><td colspan="2" class="c">Fluxo alternativo: cancelar</td></tr>
 <tr><td colspan="2" class="cinza c"><b>Sequência típica de eventos</b></td></tr>
 <tr><td>Ator</td><td>Sistema</td></tr>
 <tr><td>3.3. O administrador clica em "Cancelar";</td><td>3.4. O sistema emite "Assinatura cancelada: a conta voltou ao plano gratuito (o histórico fica guardado)."</td></tr>
-<tr><td colspan="2" class="c">Fluxo alternativo — excluir</td></tr>
+<tr><td colspan="2" class="c">Fluxo alternativo: excluir</td></tr>
 <tr><td colspan="2" class="cinza c"><b>Sequência típica de eventos</b></td></tr>
 <tr><td>Ator</td><td>Sistema</td></tr>
 <tr><td>3.5. O administrador clica em "Excluir";</td><td>3.6. O sistema emite "Assinatura excluída do histórico."</td></tr>
 </table>
 
 <!-- página 53 -->
-<h4 class="uc">Diagrama de caso de uso específico calibrar as máquinas de extração</h4>
+<h4 class="uc">Diagrama de caso de uso específico padrões automáticos da extração</h4>
 <figure class="fig f-uc" data-n="15">
-  <p class="legenda"><b>Figura 15 – Caso de uso específico – calibrar as máquinas de extração</b></p>
-  <img src="../diagramas/uc15_calibrador.svg" alt="">
+  <p class="legenda"><b>Figura 15 – Caso de uso específico – padrões automáticos da extração</b></p>
+  <img src="../diagramas/uc15_padroes_automaticos.svg" alt="">
   <p class="fonte">Fonte: Autoria própria (2026).</p>
 </figure>
 
@@ -1224,35 +1225,34 @@
 <table>
 <colgroup><col style="width:50.0%"><col style="width:50.0%"></colgroup>
 <tr><td colspan="2"><b>Identificação:</b> UC21</td></tr>
-<tr><td colspan="2"><b>Nome:</b> Calibrar as máquinas de extração</td></tr>
-<tr><td colspan="2"><b>Atores:</b> Administrador (os ajustes valem nas extrações de Candidato, Empresa e Administrador)</td></tr>
-<tr><td colspan="2"><b>Pré-condições:</b> O administrador deverá estar logado.</td></tr>
-<tr><td colspan="2"><b>Pós-condições:</b> O termo fica gravado e já vale na próxima extração.</td></tr>
+<tr><td colspan="2"><b>Nome:</b> Extrair com os padrões automáticos</td></tr>
+<tr><td colspan="2"><b>Atores:</b> Empresa, Administrador e Sistema</td></tr>
+<tr><td colspan="2"><b>Pré-condições:</b> O ator deverá estar logado; os padrões saem das vagas e dos cursos já cadastrados.</td></tr>
+<tr><td colspan="2"><b>Pós-condições:</b> O formulário é preenchido e o relatório mostra os padrões automáticos usados; nada é salvo sem revisão.</td></tr>
 <tr><td colspan="2" class="c"><b>Fluxo principal</b></td></tr>
 <tr><td colspan="2" class="cinza c"><b>Sequência típica de eventos</b></td></tr>
 <tr><td>Ator</td><td>Sistema</td></tr>
-<tr><td>1. O administrador acessa a aba "Calibrador" do painel (admin/pages/calibrador.php);</td><td>2. O sistema exibe como o calibrador funciona, o formulário de novo termo, o "Testar as máquinas", a lista de termos calibrados e os nomes conhecidos (empresas e instituições já cadastradas);</td></tr>
-<tr><td>3. O administrador informa o termo (ex.: "Uniforme"), escolhe para onde ele vai (ex.: Vaga — Benefícios) e clica em "Salvar termo";</td><td>4. O sistema valida o destino, grava o termo e emite "Termo salvo: já vale na próxima extração."</td></tr>
-<tr><td colspan="2" class="c">Fluxo alternativo — testar as máquinas</td></tr>
+<tr><td>1. O ator cola o anúncio (ou envia o cartaz) na aba "Vagas" e clica em "Extrair";</td><td>2. O sistema aplica as regras do código (títulos de seção, palavras-chave e padrões de texto);</td></tr>
+<tr><td></td><td>3. Para as linhas soltas sem palavra-chave, a área não reconhecida e a empresa não achada, o sistema monta os padrões a partir das vagas cadastradas (termo visto em pelo menos 2 vagas e em 90% delas no mesmo campo) e decide pelo padrão mais específico;</td></tr>
+<tr><td></td><td>4. O sistema preenche o formulário e mostra no relatório da extração o bloco "Padrões automáticos usados", com o trecho, para onde foi e o padrão que valeu;</td></tr>
+<tr><td>5. O ator revisa e salva a vaga;</td><td>6. O sistema grava a vaga, que passa a contar nos padrões da próxima extração.</td></tr>
+<tr><td colspan="2" class="c">Fluxo alternativo: sem padrão</td></tr>
 <tr><td colspan="2" class="cinza c"><b>Sequência típica de eventos</b></td></tr>
 <tr><td>Ator</td><td>Sistema</td></tr>
-<tr><td>4.1. O administrador escolhe a máquina (vaga, curso ou currículo), cola um texto e clica em "Testar";</td><td>4.2. O sistema roda a extração e exibe os campos e a lista "Ajustes do calibrador" (o que a regra dizia e qual termo decidiu), sem salvar nada.</td></tr>
-<tr><td colspan="2" class="c">Fluxo alternativo — termo repetido ou inválido</td></tr>
+<tr><td></td><td>3.1. Nenhum padrão casa com o trecho, ou o padrão concorda com a regra; vale o palpite da regra (a linha fica na descrição).</td></tr>
+<tr><td colspan="2" class="c">Fluxo alternativo: curso ou e-book</td></tr>
 <tr><td colspan="2" class="cinza c"><b>Sequência típica de eventos</b></td></tr>
 <tr><td>Ator</td><td>Sistema</td></tr>
-<tr><td></td><td>4.3. O termo já existe nesse contexto; o sistema emite "Esse termo já está calibrado nesse contexto (vai para "X"). Edite o que já existe.";</td></tr>
-<tr><td></td><td>4.4. O termo está vazio ou o destino não foi escolhido; o sistema informa o que falta e retorna ao passo 3.</td></tr>
-<tr><td colspan="2" class="c">Fluxo alternativo — editar, desativar ou excluir</td></tr>
+<tr><td>1.1. O administrador cola a ficha na aba "Cursos e e-books" e clica em "Extrair";</td><td>3.2. A área que a regra não reconhece vem do padrão dos títulos do catálogo, e a instituição não achada, das instituições já cadastradas.</td></tr>
+<tr><td colspan="2" class="c">Fluxo alternativo: banco indisponível</td></tr>
 <tr><td colspan="2" class="cinza c"><b>Sequência típica de eventos</b></td></tr>
 <tr><td>Ator</td><td>Sistema</td></tr>
-<tr><td>4.5. O administrador clica em "Editar", altera o termo ou o destino e salva;</td><td>4.6. O sistema grava a alteração e emite "Termo salvo: já vale na próxima extração."</td></tr>
-<tr><td>4.7. O administrador desliga a chave "Ativo" do termo;</td><td>4.8. O sistema emite "Termo desativado: fica guardado, mas a extração não usa."</td></tr>
-<tr><td>4.9. O administrador clica em "Excluir" e confirma;</td><td>4.10. O sistema emite "Termo excluído: a extração volta a seguir só a regra nesse caso."</td></tr>
+<tr><td></td><td>3.3. O sistema não consegue ler os cadastros; a extração segue só com as regras e o erro vai para o log.</td></tr>
 </table>
 
 <!-- página 55 -->
 <h2 class="nova">13.3. Diagrama de Classes</h2>
-<p class="ind">O diagrama de classes é usado quando está sendo desenvolvido um modelo de sistema orientado a objetos, para mostrar as classes do sistema, seus atributos, métodos e as associações entre elas. As classes deste diagrama representam os objetos do domínio do Conecta Vagas DF, implementados como DTOs e classes de acesso a dados (DAO); a classe TermoCalibrado representa os termos do calibrador das máquinas de extração, cadastrados por um usuário administrador.</p>
+<p class="ind">O diagrama de classes mostra as classes do sistema, com os seus atributos, os seus métodos e as associações entre elas. As classes deste diagrama representam os objetos do domínio do Conecta Vagas DF, que no código viraram DTOs e classes de acesso a dados (DAO). Os padrões automáticos das máquinas de extração não aparecem como classe de domínio porque não têm tabela: eles são montados na hora pelo serviço PadroesExtracao.</p>
 <figure class="fig f-classes" data-n="16">
   <p class="legenda"><b>Figura 16 – Diagrama de Classes do domínio</b></p>
   <img src="../diagramas/classes.svg" alt="">
@@ -1261,7 +1261,7 @@
 
 <!-- página 56 -->
 <h2 class="nova">13.4. Diagramas de Sequência</h2>
-<p class="ind">Os diagramas de sequência mostram a troca de mensagens entre o ator e os objetos do sistema ao longo do tempo, seguindo o padrão Boundary (tela), Control (controlador ou serviço) e Entity (classe de acesso a dados). Os diagramas mais largos estão em páginas na horizontal.</p>
+<p class="ind">Os diagramas de sequência mostram a troca de mensagens entre o ator e os objetos do sistema ao longo do tempo. Seguimos o padrão Boundary (a tela), Control (o controlador ou o serviço) e Entity (a classe de acesso a dados). Os diagramas mais largos ficaram em páginas na horizontal.</p>
 <figure class="fig f-seq" data-n="17">
   <p class="legenda"><b>Figura 17 – Diagrama de Sequência realizar login</b></p>
   <img src="../diagramas/seq01_login.svg" alt="">
@@ -1358,23 +1358,23 @@
 <!-- página 65 -->
 <section class="paisagem">
 <figure class="fig f-seq" data-n="31">
-  <p class="legenda"><b>Figura 31 – Diagrama de Sequência calibrar as máquinas de extração</b></p>
-  <img src="../diagramas/seq15_calibrar.svg" alt="">
+  <p class="legenda"><b>Figura 31 – Diagrama de Sequência extração de vaga com os padrões automáticos</b></p>
+  <img src="../diagramas/seq15_extracao_padroes.svg" alt="">
   <p class="fonte">Fonte: Autoria própria (2026).</p>
 </figure>
 </section>
 
 <!-- página 66 -->
 <h2 class="nova">13.5. Modelo Entidade-Relacionamento</h2>
-<p class="ind">O modelo de dados foi feito em duas etapas. O modelo conceitual (Figura 32) representa os dados do sistema independentemente do SGBD, na notação de Chen adaptada por Heuser: entidades em retângulos, relacionamentos em losangos, atributos em círculos (identificador preenchido) e cardinalidades mínima e máxima. PERFIL é especializado de forma exclusiva e total em CANDIDATO e EMPRESA, CANDIDATURA é uma entidade associativa entre CANDIDATO e VAGA e COMBINA guarda a nota do match entre os dois. Na área tracejada fica o calibrador das máquinas de extração: TERMO CALIBRADO se liga ao USUÁRIO que o cadastrou pelo relacionamento CADASTRA, com cardinalidade (0,1) do lado do usuário, porque o termo continua valendo se a conta for excluída. TENTATIVA DE LOGIN não se relaciona com outras entidades: é o controle de força-bruta por e-mail e IP.</p>
-<p class="ind">O modelo lógico (Figura 33) transforma o modelo conceitual nas 12 tabelas do MySQL/MariaDB e foi gerado a partir do arquivo database/schema.sql, para mostrar exatamente as colunas e os tipos do banco. A especialização de PERFIL foi implementada em uma única tabela (perfis), diferenciada pelo tipo do usuário; o relacionamento COMBINA virou a tabela matches e a entidade associativa CANDIDATURA virou a tabela candidaturas, ambas com chave única (perfil_candidato_id, vaga_id). As chaves estrangeiras usam ON DELETE CASCADE, exceto na tabela calibracao_extracao, que usa ON DELETE SET NULL: o termo calibrado só perde o autor, e quem exclui a própria conta leva junto todos os seus dados pessoais, conforme a LGPD.</p>
+<p class="ind">Fizemos o modelo de dados em duas etapas. O modelo conceitual (Figura 32) mostra os dados do sistema sem depender do SGBD, na notação de Chen adaptada por Heuser: entidades em retângulos, relacionamentos em losangos, atributos em círculos (o identificador fica preenchido) e as cardinalidades mínima e máxima. PERFIL é especializado de forma exclusiva e total em CANDIDATO e EMPRESA, CANDIDATURA é uma entidade associativa entre CANDIDATO e VAGA, e COMBINA guarda a nota do match entre os dois. Os padrões automáticos das máquinas de extração não são uma entidade, porque são montados na hora a partir de VAGA, CURSO, CATEGORIA e PERFIL, como indica a nota no diagrama. TENTATIVA DE LOGIN não se relaciona com as outras entidades: ela é o controle contra força bruta por e-mail e IP.</p>
+<p class="ind">O modelo lógico (Figura 33) transforma o modelo conceitual nas 11 tabelas do MySQL/MariaDB. Nós o geramos a partir do arquivo database/schema.sql, para mostrar exatamente as colunas e os tipos do banco. A especialização de PERFIL virou uma tabela só (perfis), diferenciada pelo tipo do usuário; o relacionamento COMBINA virou a tabela matches, e a entidade associativa CANDIDATURA virou a tabela candidaturas, as duas com chave única (perfil_candidato_id, vaga_id). As chaves estrangeiras que ligam os dados ao usuário usam ON DELETE CASCADE, então quem exclui a própria conta leva junto todos os seus dados pessoais, como pede a LGPD.</p>
 
 <!-- página 67 -->
 <section class="paisagem">
 <h3>13.5.1. Modelo Conceitual</h3>
-<p class="sem">Diagrama Entidade-Relacionamento na notação de Chen/Heuser, com a área do calibrador das máquinas de extração tracejada.</p>
+<p class="sem">Diagrama Entidade-Relacionamento na notação de Chen e Heuser (os padrões automáticos não têm entidade própria).</p>
 <figure class="fig f-outra" data-n="32">
-  <p class="legenda"><b>Figura 32 – Modelo Conceitual (desenhado a lápis)</b></p>
+  <p class="legenda"><b>Figura 32 – Modelo Conceitual</b></p>
   <img src="../diagramas/modelo_conceitual.svg" alt="">
   <p class="fonte">Fonte: Autoria própria (2026).</p>
 </figure>
@@ -1382,10 +1382,10 @@
 
 <!-- página 68 -->
 <section class="paisagem">
-<h3>13.5.2. Modelo Lógico (Diagrama Entidade-Relacionamento)</h3>
+<h3 class="nova">13.5.2. Modelo Lógico (Diagrama Entidade-Relacionamento)</h3>
 <p class="sem">Tabelas, colunas, tipos e chaves do banco tcc_final (PK = chave primária, FK = chave estrangeira, NN = obrigatório, UQ = único).</p>
 <figure class="fig f-outra" data-n="33">
-  <p class="legenda"><b>Figura 33 – Modelo Lógico — Diagrama Entidade-Relacionamento</b></p>
+  <p class="legenda"><b>Figura 33 – Modelo Lógico (Diagrama Entidade-Relacionamento)</b></p>
   <img src="../diagramas/logico.svg" alt="">
   <p class="fonte">Fonte: Autoria própria (2026).</p>
 </figure>
@@ -1393,7 +1393,7 @@
 
 <!-- página 69 -->
 <h2 class="nova">13.6. Dicionário de Dados</h2>
-<p class="ind">O dicionário de dados descreve cada atributo das 12 tabelas do banco tcc_final (MySQL/MariaDB, InnoDB, utf8mb4), todas criadas pelo arquivo database/schema.sql.</p>
+<p class="ind">O dicionário de dados descreve cada atributo das 11 tabelas do banco tcc_final (MySQL/MariaDB, InnoDB, utf8mb4). Todas são criadas pelo arquivo database/schema.sql.</p>
 <h4 class="dic">Tabela usuarios</h4>
 <p class="dic-desc">Contas de acesso (candidato, empresa ou administrador).</p>
 <table class="dic">
@@ -1417,7 +1417,7 @@
 <thead><tr><td class="claro"><b>Atributo</b></td><td class="claro"><b>Descrição</b></td><td class="claro"><b>Tipo</b></td><td class="claro"><b>Tamanho</b></td><td class="claro"><b>Formato</b></td><td class="claro"><b>Restrições</b></td></tr>
 </thead>
 <tr><td><b>id</b></td><td>Código que identifica o registro no banco</td><td>INT</td><td>11</td><td>Número</td><td>PK, NOT NULL, AUTO_INCREMENT</td></tr>
-<tr><td><b>usuario_id</b></td><td>Código do usuário dono do perfil</td><td>INT</td><td>11</td><td>Número</td><td>FK → usuarios.id, NOT NULL, UNIQUE, ON DELETE CASCADE</td></tr>
+<tr><td><b>usuario_id</b></td><td>Código do usuário dono do perfil</td><td>INT</td><td>11</td><td>Número</td><td>FK para usuarios.id, NOT NULL, UNIQUE, ON DELETE CASCADE</td></tr>
 <tr><td><b>titulo_profissional</b></td><td>Cargo ou título profissional do candidato</td><td>VARCHAR</td><td>255</td><td>Texto</td><td>NULL</td></tr>
 <tr><td><b>bio</b></td><td>Resumo profissional ou descrição da empresa</td><td>TEXT</td><td>—</td><td>Texto</td><td>NULL</td></tr>
 <tr><td><b>data_nascimento</b></td><td>Data de nascimento do candidato</td><td>DATE</td><td>—</td><td>dd/mm/aaaa</td><td>NULL</td></tr>
@@ -1469,8 +1469,8 @@
 <thead><tr><td class="claro"><b>Atributo</b></td><td class="claro"><b>Descrição</b></td><td class="claro"><b>Tipo</b></td><td class="claro"><b>Tamanho</b></td><td class="claro"><b>Formato</b></td><td class="claro"><b>Restrições</b></td></tr>
 </thead>
 <tr><td><b>id</b></td><td>Código que identifica o registro no banco</td><td>INT</td><td>11</td><td>Número</td><td>PK, NOT NULL, AUTO_INCREMENT</td></tr>
-<tr><td><b>perfil_empresa_id</b></td><td>Código do perfil da empresa que publicou</td><td>INT</td><td>11</td><td>Número</td><td>FK → perfis.id, NOT NULL, ON DELETE CASCADE</td></tr>
-<tr><td><b>categoria_id</b></td><td>Código da categoria da vaga</td><td>INT</td><td>11</td><td>Número</td><td>FK → categorias.id, NULL, ON DELETE SET NULL</td></tr>
+<tr><td><b>perfil_empresa_id</b></td><td>Código do perfil da empresa que publicou</td><td>INT</td><td>11</td><td>Número</td><td>FK para perfis.id, NOT NULL, ON DELETE CASCADE</td></tr>
+<tr><td><b>categoria_id</b></td><td>Código da categoria da vaga</td><td>INT</td><td>11</td><td>Número</td><td>FK para categorias.id, NULL, ON DELETE SET NULL</td></tr>
 <tr><td><b>titulo</b></td><td>Título (cargo) da vaga</td><td>VARCHAR</td><td>255</td><td>Texto</td><td>NOT NULL</td></tr>
 <tr><td><b>anunciante</b></td><td>Empresa do anúncio (curadoria, ex.: lida do cartaz)</td><td>VARCHAR</td><td>150</td><td>Texto</td><td>NULL</td></tr>
 <tr><td><b>descricao</b></td><td>Descrição das atividades</td><td>TEXT</td><td>—</td><td>Texto</td><td>NULL</td></tr>
@@ -1501,7 +1501,7 @@
 <thead><tr><td class="claro"><b>Atributo</b></td><td class="claro"><b>Descrição</b></td><td class="claro"><b>Tipo</b></td><td class="claro"><b>Tamanho</b></td><td class="claro"><b>Formato</b></td><td class="claro"><b>Restrições</b></td></tr>
 </thead>
 <tr><td><b>id</b></td><td>Código que identifica o registro no banco</td><td>INT</td><td>11</td><td>Número</td><td>PK, NOT NULL, AUTO_INCREMENT</td></tr>
-<tr><td><b>categoria_id</b></td><td>Código da categoria do curso</td><td>INT</td><td>11</td><td>Número</td><td>FK → categorias.id, NULL, ON DELETE SET NULL</td></tr>
+<tr><td><b>categoria_id</b></td><td>Código da categoria do curso</td><td>INT</td><td>11</td><td>Número</td><td>FK para categorias.id, NULL, ON DELETE SET NULL</td></tr>
 <tr><td><b>titulo</b></td><td>Título do curso ou e-book</td><td>VARCHAR</td><td>255</td><td>Texto</td><td>NOT NULL</td></tr>
 <tr><td><b>descricao</b></td><td>Descrição do conteúdo (com o crédito da fonte, no e-book da biblioteca)</td><td>TEXT</td><td>—</td><td>Texto</td><td>NULL</td></tr>
 <tr><td><b>tipo</b></td><td>Tipo de conteúdo</td><td>ENUM</td><td>—</td><td>'curso', 'ebook', 'video'</td><td>NOT NULL, DEFAULT 'curso'</td></tr>
@@ -1525,7 +1525,7 @@
 <thead><tr><td class="claro"><b>Atributo</b></td><td class="claro"><b>Descrição</b></td><td class="claro"><b>Tipo</b></td><td class="claro"><b>Tamanho</b></td><td class="claro"><b>Formato</b></td><td class="claro"><b>Restrições</b></td></tr>
 </thead>
 <tr><td><b>id</b></td><td>Código que identifica o registro no banco</td><td>INT</td><td>11</td><td>Número</td><td>PK, NOT NULL, AUTO_INCREMENT</td></tr>
-<tr><td><b>perfil_id</b></td><td>Código do perfil do candidato</td><td>INT</td><td>11</td><td>Número</td><td>FK → perfis.id, NOT NULL, ON DELETE CASCADE</td></tr>
+<tr><td><b>perfil_id</b></td><td>Código do perfil do candidato</td><td>INT</td><td>11</td><td>Número</td><td>FK para perfis.id, NOT NULL, ON DELETE CASCADE</td></tr>
 <tr><td><b>titulo</b></td><td>Título do currículo</td><td>VARCHAR</td><td>255</td><td>Texto</td><td>NULL</td></tr>
 <tr><td><b>arquivo_pdf</b></td><td>Caminho do arquivo enviado</td><td>VARCHAR</td><td>255</td><td>Texto</td><td>NOT NULL</td></tr>
 <tr><td><b>arquivo_tipo</b></td><td>Formato do arquivo</td><td>VARCHAR</td><td>20</td><td>pdf, doc, docx</td><td>NOT NULL</td></tr>
@@ -1541,8 +1541,8 @@
 <thead><tr><td class="claro"><b>Atributo</b></td><td class="claro"><b>Descrição</b></td><td class="claro"><b>Tipo</b></td><td class="claro"><b>Tamanho</b></td><td class="claro"><b>Formato</b></td><td class="claro"><b>Restrições</b></td></tr>
 </thead>
 <tr><td><b>id</b></td><td>Código que identifica o registro no banco</td><td>INT</td><td>11</td><td>Número</td><td>PK, NOT NULL, AUTO_INCREMENT</td></tr>
-<tr><td><b>perfil_candidato_i d</b></td><td>Código do perfil do candidato</td><td>INT</td><td>11</td><td>Número</td><td>FK → perfis.id, NOT NULL, ON DELETE CASCADE</td></tr>
-<tr><td><b>vaga_id</b></td><td>Código da vaga</td><td>INT</td><td>11</td><td>Número</td><td>FK → vagas.id, NOT NULL, UNIQUE (perfil_candidato_id, vaga_id), ON DELETE CASCADE</td></tr>
+<tr><td><b>perfil_candidato_i d</b></td><td>Código do perfil do candidato</td><td>INT</td><td>11</td><td>Número</td><td>FK para perfis.id, NOT NULL, ON DELETE CASCADE</td></tr>
+<tr><td><b>vaga_id</b></td><td>Código da vaga</td><td>INT</td><td>11</td><td>Número</td><td>FK para vagas.id, NOT NULL, UNIQUE (perfil_candidato_id, vaga_id), ON DELETE CASCADE</td></tr>
 <tr><td><b>pontuacao</b></td><td>Nota de compatibilidade (0 a 100)</td><td>DECIMAL</td><td>5,2</td><td>000,00</td><td>NOT NULL, DEFAULT 0</td></tr>
 <tr><td><b>nivel</b></td><td>Faixa da nota</td><td>ENUM</td><td>—</td><td>'excelente', 'alto', 'medio', 'baixo'</td><td>NOT NULL, DEFAULT 'baixo'</td></tr>
 <tr><td><b>detalhes</b></td><td>Explicação da nota (competências atendidas e faltantes, cargo, local, nível)</td><td>TEXT</td><td>—</td><td>JSON</td><td>NULL</td></tr>
@@ -1558,7 +1558,7 @@
 <thead><tr><td class="claro"><b>Atributo</b></td><td class="claro"><b>Descrição</b></td><td class="claro"><b>Tipo</b></td><td class="claro"><b>Tamanho</b></td><td class="claro"><b>Formato</b></td><td class="claro"><b>Restrições</b></td></tr>
 </thead>
 <tr><td><b>id</b></td><td>Código que identifica o registro no banco</td><td>INT</td><td>11</td><td>Número</td><td>PK, NOT NULL, AUTO_INCREMENT</td></tr>
-<tr><td><b>usuario_id</b></td><td>Código do usuário assinante</td><td>INT</td><td>11</td><td>Número</td><td>FK → usuarios.id, NOT NULL, ON DELETE CASCADE</td></tr>
+<tr><td><b>usuario_id</b></td><td>Código do usuário assinante</td><td>INT</td><td>11</td><td>Número</td><td>FK para usuarios.id, NOT NULL, ON DELETE CASCADE</td></tr>
 <tr><td><b>plano</b></td><td>Plano assinado</td><td>ENUM</td><td>—</td><td>'assinante', 'empresa'</td><td>NOT NULL</td></tr>
 <tr><td><b>valor</b></td><td>Valor do plano</td><td>DECIMAL</td><td>10,2</td><td>0.000,00</td><td>NOT NULL, DEFAULT 0</td></tr>
 <tr><td><b>data_inicio</b></td><td>Início da vigência</td><td>DATE</td><td>—</td><td>dd/mm/aaaa</td><td>NOT NULL</td></tr>
@@ -1573,9 +1573,9 @@
 <thead><tr><td class="claro"><b>Atributo</b></td><td class="claro"><b>Descrição</b></td><td class="claro"><b>Tipo</b></td><td class="claro"><b>Tamanho</b></td><td class="claro"><b>Formato</b></td><td class="claro"><b>Restrições</b></td></tr>
 </thead>
 <tr><td><b>id</b></td><td>Código que identifica o registro no banco</td><td>INT</td><td>11</td><td>Número</td><td>PK, NOT NULL, AUTO_INCREMENT</td></tr>
-<tr><td><b>perfil_candidato_i d</b></td><td>Código do perfil do candidato</td><td>INT</td><td>11</td><td>Número</td><td>FK → perfis.id, NOT NULL, ON DELETE CASCADE</td></tr>
-<tr><td><b>vaga_id</b></td><td>Código da vaga</td><td>INT</td><td>11</td><td>Número</td><td>FK → vagas.id, NOT NULL, UNIQUE (perfil_candidato_id, vaga_id), ON DELETE CASCADE</td></tr>
-<tr><td><b>curriculo_id</b></td><td>Código do currículo enviado</td><td>INT</td><td>11</td><td>Número</td><td>FK → curriculos.id, NULL, ON DELETE SET NULL</td></tr>
+<tr><td><b>perfil_candidato_i d</b></td><td>Código do perfil do candidato</td><td>INT</td><td>11</td><td>Número</td><td>FK para perfis.id, NOT NULL, ON DELETE CASCADE</td></tr>
+<tr><td><b>vaga_id</b></td><td>Código da vaga</td><td>INT</td><td>11</td><td>Número</td><td>FK para vagas.id, NOT NULL, UNIQUE (perfil_candidato_id, vaga_id), ON DELETE CASCADE</td></tr>
+<tr><td><b>curriculo_id</b></td><td>Código do currículo enviado</td><td>INT</td><td>11</td><td>Número</td><td>FK para curriculos.id, NULL, ON DELETE SET NULL</td></tr>
 <tr><td><b>carta_apresentaca o</b></td><td>Carta de apresentação</td><td>TEXT</td><td>—</td><td>Texto</td><td>NULL</td></tr>
 <tr><td><b>status</b></td><td>Etapa da candidatura</td><td>ENUM</td><td>—</td><td>'enviada', 'em_analise', 'entrevista', 'aprovado', 'rejeitado', 'cancelada'</td><td>NOT NULL, DEFAULT 'enviada'</td></tr>
 <tr><td><b>observacao_empre sa</b></td><td>Retorno da empresa ao candidato</td><td>TEXT</td><td>—</td><td>Texto</td><td>NULL</td></tr>
@@ -1602,34 +1602,18 @@
 <thead><tr><td class="claro"><b>Atributo</b></td><td class="claro"><b>Descrição</b></td><td class="claro"><b>Tipo</b></td><td class="claro"><b>Tamanho</b></td><td class="claro"><b>Formato</b></td><td class="claro"><b>Restrições</b></td></tr>
 </thead>
 <tr><td><b>id</b></td><td>Código que identifica o registro no banco</td><td>INT</td><td>11</td><td>Número</td><td>PK, NOT NULL, AUTO_INCREMENT</td></tr>
-<tr><td><b>usuario_id</b></td><td>Código do usuário</td><td>INT</td><td>11</td><td>Número</td><td>FK → usuarios.id, NOT NULL, ON DELETE CASCADE</td></tr>
+<tr><td><b>usuario_id</b></td><td>Código do usuário</td><td>INT</td><td>11</td><td>Número</td><td>FK para usuarios.id, NOT NULL, ON DELETE CASCADE</td></tr>
 <tr><td><b>token_hash</b></td><td>Hash SHA-256 do token do link</td><td>CHAR</td><td>64</td><td>Hexadecimal</td><td>NOT NULL, UNIQUE</td></tr>
 <tr><td><b>expira_em</b></td><td>Data e hora de expiração do link (30 minutos)</td><td>DATETIME</td><td>—</td><td>dd/mm/aaaa hh:mm</td><td>NOT NULL</td></tr>
 <tr><td><b>usado_em</b></td><td>Data e hora em que o link foi usado</td><td>DATETIME</td><td>—</td><td>dd/mm/aaaa hh:mm</td><td>NULL</td></tr>
 <tr><td><b>ip</b></td><td>IP de quem solicitou</td><td>VARCHAR</td><td>45</td><td>IPv4/IPv6</td><td>NULL</td></tr>
 <tr><td><b>created_at</b></td><td>Data e hora de criação do registro</td><td>DATETIME</td><td>—</td><td>dd/mm/aaaa hh:mm</td><td>NOT NULL, DEFAULT CURRENT_TIMESTAMP</td></tr>
 </table>
-<h4 class="dic">Tabela calibracao_extracao</h4>
-<p class="dic-desc">Termos do calibrador das máquinas de extração ("quando o texto tiver o termo, mande para o destino").</p>
-<table class="dic">
-<colgroup><col style="width:18.0%"><col style="width:21.0%"><col style="width:11.9%"><col style="width:9.4%"><col style="width:13.6%"><col style="width:26.0%"></colgroup>
-<thead><tr><td class="claro"><b>Atributo</b></td><td class="claro"><b>Descrição</b></td><td class="claro"><b>Tipo</b></td><td class="claro"><b>Tamanho</b></td><td class="claro"><b>Formato</b></td><td class="claro"><b>Restrições</b></td></tr>
-</thead>
-<tr><td><b>id</b></td><td>Código que identifica o registro no banco</td><td>INT</td><td>11</td><td>Número</td><td>PK, NOT NULL, AUTO_INCREMENT</td></tr>
-<tr><td><b>contexto</b></td><td>Onde o termo age: vaga_linha, vaga_categoria, curso_categoria ou curriculo_linha</td><td>VARCHAR</td><td>30</td><td>Texto</td><td>NOT NULL, UNIQUE (com termo_chave)</td></tr>
-<tr><td><b>termo</b></td><td>Palavra ou expressão, como o administrador digitou (ex.: "Uniforme")</td><td>VARCHAR</td><td>120</td><td>Texto</td><td>NOT NULL</td></tr>
-<tr><td><b>termo_chave</b></td><td>Termo normalizado (minúsculo, sem acento), usado na comparação</td><td>VARCHAR</td><td>120</td><td>Texto</td><td>NOT NULL, UNIQUE (com contexto)</td></tr>
-<tr><td><b>destino</b></td><td>Campo da vaga, área (categoria) ou seção do currículo para onde o termo manda</td><td>VARCHAR</td><td>100</td><td>Texto</td><td>NOT NULL</td></tr>
-<tr><td><b>ativo</b></td><td>Indica se a extração usa o termo</td><td>TINYINT</td><td>1</td><td>0 ou 1</td><td>NOT NULL, DEFAULT 1</td></tr>
-<tr><td><b>usuario_id</b></td><td>Código do administrador que cadastrou o termo</td><td>INT</td><td>11</td><td>Número</td><td>FK → usuarios.id, NULL, ON DELETE SET NULL</td></tr>
-<tr><td><b>created_at</b></td><td>Data e hora de criação do registro</td><td>DATETIME</td><td>—</td><td>dd/mm/aaaa hh:mm</td><td>NOT NULL, DEFAULT CURRENT_TIMESTAMP</td></tr>
-<tr><td><b>updated_at</b></td><td>Data e hora da última alteração</td><td>DATETIME</td><td>—</td><td>dd/mm/aaaa hh:mm</td><td>NOT NULL, DEFAULT CURRENT_TIMESTAMP, ON UPDATE CURRENT_TIMESTAMP</td></tr>
-</table>
 
 <!-- página 78 -->
 <section class="paisagem">
 <h2>13.7. Arquitetura do Sistema</h2>
-<p class="sem">O sistema segue o padrão MVC em PHP puro. Todas as requisições passam pelo arquivo public/index.php (front controller), que abre a sessão, confere a conta logada, envia os cabeçalhos de segurança e usa o roteador para chamar a ação do controller correspondente. Os 13 controllers consultam os models (10 DAOs) e os services (regras de negócio: extração, calibrador, match, competências, portfólio e Pix) e exibem as views. No navegador, o Tesseract.js, servido pelo próprio site, lê a imagem do cartaz e envia ao servidor só o texto com a posição das palavras; os arquivos enviados ficam em storage/uploads, fora da pasta pública.</p>
+<p class="sem">O sistema segue o padrão MVC em PHP puro. Todas as requisições passam pelo arquivo public/index.php (o front controller), que abre a sessão, confere a conta logada, envia os cabeçalhos de segurança e usa o roteador para chamar a ação certa do controller. Os 12 controllers consultam os models (9 DAOs) e os services (as regras de negócio: extração, padrões automáticos, capa de PDF, match, competências, portfólio e Pix) e exibem as views. No navegador, o Tesseract.js, servido pelo próprio site, lê a imagem do cartaz e manda para o servidor só o texto com a posição das palavras. Os arquivos enviados ficam em storage/uploads, fora da pasta pública.</p>
 <figure class="fig f-outra" data-n="34">
   <p class="legenda"><b>Figura 34 – Arquitetura em camadas (MVC)</b></p>
   <img src="../diagramas/arquitetura.svg" alt="">
@@ -1651,11 +1635,11 @@
 <tr><td>cursos.php</td><td>CursoController::lista</td><td>Todos</td></tr>
 <tr><td>curso.php</td><td>CursoController::detalhe</td><td>Todos</td></tr>
 <tr><td>planos.php</td><td>PlanosController::index</td><td>Todos (assinar: logado)</td></tr>
-<tr><td>login.php</td><td>AuthController::login</td><td>Visitante</td></tr>
-<tr><td>cadastro.php</td><td>AuthController::cadastro</td><td>Visitante</td></tr>
+<tr><td>login.php</td><td>AuthController::login</td><td>Candidato, Empresa e Administrador (sem login)</td></tr>
+<tr><td>cadastro.php</td><td>AuthController::cadastro</td><td>Candidato e Empresa (sem conta)</td></tr>
 <tr><td>view/usuario/logout.php</td><td>AuthController::logout</td><td>Logado</td></tr>
-<tr><td>esqueci_senha.php</td><td>PasswordController::esqueci</td><td>Visitante</td></tr>
-<tr><td>redefinir_senha.php</td><td>PasswordController::redefinir</td><td>Visitante (com o link)</td></tr>
+<tr><td>esqueci_senha.php</td><td>PasswordController::esqueci</td><td>Candidato, Empresa e Administrador (sem login)</td></tr>
+<tr><td>redefinir_senha.php</td><td>PasswordController::redefinir</td><td>quem recebeu o link</td></tr>
 <tr><td>view/perfil/index.php</td><td>PerfilController::index</td><td>Logado</td></tr>
 <tr><td>view/perfil/salvar.php</td><td>PerfilController::salvar</td><td>Candidato</td></tr>
 <tr><td>view/perfil/portfolio.php</td><td>PerfilController::portfolio</td><td>Candidato; empresa e administrador (perfil público ou candidatura)</td></tr>
@@ -1672,7 +1656,6 @@
 <tr><td>admin/pages/categorias.php</td><td>AdminController::categorias</td><td>Administrador</td></tr>
 <tr><td>admin/pages/cursos.php</td><td>AdminController::cursos</td><td>Administrador</td></tr>
 <tr><td>admin/pages/assinaturas.php</td><td>AdminController::assinaturas</td><td>Administrador</td></tr>
-<tr><td>admin/pages/calibrador.php</td><td>CalibradorController::painel</td><td>Administrador</td></tr>
 <tr><td>admin/pages/vagas.php</td><td>EmpresaController::vagas</td><td>Empresa e Administrador</td></tr>
 <tr><td>admin/pages/candidaturas.php</td><td>EmpresaController::candidaturas</td><td>Empresa e Administrador</td></tr>
 <tr><td>admin/pages/talentos.php</td><td>EmpresaController::talentos</td><td>Empresa e Administrador</td></tr>
@@ -1683,7 +1666,7 @@
 <!-- página 80 -->
 <p class="fonte">Fonte: Autoria própria (2026).</p>
 <h2>13.8. Plano de Testes</h2>
-<p class="ind">O plano de testes reúne os casos de teste funcionais e de segurança executados no sistema, além dos testes automáticos tests/smoke.php (teste rápido) e tests/jornadas.php (uma conta temporária usa o sistema pelo navegador e é apagada no fim), que rodam antes de cada commit pelo gancho .githooks/pre-commit. Os casos abaixo foram executados e aprovados na varredura final de 27/09/2026; os do calibrador (CT25 e CT26) e os testes automáticos foram conferidos de novo na versão final, em 01/10/2026.</p>
+<p class="ind">O plano de testes reúne os casos de teste funcionais e de segurança que executamos no sistema, além dos testes automáticos tests/smoke.php (o teste rápido) e tests/jornadas.php (em que uma conta temporária usa o sistema pelo navegador e é apagada no fim). Esses testes rodam antes de cada commit, pelo gancho .githooks/pre-commit. Executamos e aprovamos os casos abaixo na varredura final de 27/09/2026; os casos dos padrões automáticos e da capa do PDF (CT25, CT26, CT30 e CT31) e os testes automáticos foram conferidos de novo na versão final, em 01/10/2026.</p>
 <p class="legenda"><b>Quadro 3 – Casos de teste</b></p>
 <table>
 <colgroup><col style="width:7.0%"><col style="width:21.0%"><col style="width:26.0%"><col style="width:30.0%"><col style="width:16.1%"></colgroup>
@@ -1704,20 +1687,22 @@
 <tr><td>CT13</td><td>Empresa altera vaga de outra empresa</td><td>Acesso a ?edit= de vaga alheia</td><td>Acesso negado (HTTP 403)</td><td>RF021, RNF003</td></tr>
 <tr><td>CT14</td><td>Atualizar status da candidatura</td><td>Status "entrevista" com retorno</td><td>Candidato vê o novo status e o retorno</td><td>RF018, RF024</td></tr>
 <tr><td>CT15</td><td>Download de currículo sem permissão</td><td>download.php por outro candidato ou empresa sem vínculo</td><td>Acesso negado (HTTP 403)</td><td>RF026, RNF003</td></tr>
-<tr><td>CT16</td><td>Excluir usuário</td><td>Exclusão pelo administrador</td><td>Remoção em cascata de perfil, currículos, vagas e candidaturas; termos do calibrador ficam sem autor</td><td>RF029, RNF010</td></tr>
+<tr><td>CT16</td><td>Excluir usuário</td><td>Exclusão pelo administrador</td><td>Remoção em cascata de perfil, currículos, vagas e candidaturas; as vagas dele deixam de contar nos padrões automáticos</td><td>RF029, RNF010</td></tr>
 <tr><td>CT17</td><td>Formulário sem token CSRF</td><td>POST sem o campo csrf</td><td>Página de erro 403</td><td>RNF003</td></tr>
-<tr><td>CT18</td><td>Teste automático (smoke test)</td><td>php tests/smoke.php</td><td>Todas as verificações com "OK" (113 de 113)</td><td>RNF011</td></tr>
-<tr><td>CT19</td><td>Leitura de cartaz no navegador</td><td>Imagem JPG de um cartaz em Painel → Vagas</td><td>Carregador amarelo com %, depois azul; formulário preenchido, sem instalar programas</td><td>RF023, RNF005, RNF007</td></tr>
+<tr><td>CT18</td><td>Teste automático (smoke test)</td><td>php tests/smoke.php</td><td>Todas as verificações com "OK" (112 de 112)</td><td>RNF011</td></tr>
+<tr><td>CT19</td><td>Leitura de cartaz no navegador</td><td>Imagem JPG de um cartaz no painel, em Vagas</td><td>Carregador amarelo com %, depois azul; formulário preenchido, sem instalar programas</td><td>RF023, RNF005, RNF007</td></tr>
 <tr><td>CT20</td><td>Extrair com a caixa vazia</td><td>"Extrair" sem texto e sem cartaz</td><td>Mensagem pedindo o texto; nenhum relatório em branco</td><td>RF023</td></tr>
 <tr><td>CT21</td><td>Excluir a própria conta</td><td>Senha correta e caixa de confirmação marcada</td><td>Conta e dados removidos (perfil, currículos, candidaturas, matches, tentativas de login); sessão encerrada</td><td>RF033, RNF004</td></tr>
 <tr><td>CT22</td><td>Excluir conta sem permissão</td><td>Senha errada; ou id de outra conta enviado no formulário</td><td>Conta não excluída; o id enviado é ignorado</td><td>RF033, RNF003</td></tr>
 <tr><td>CT23</td><td>Biblioteca de e-books</td><td>"Trazer os PDFs para a biblioteca"</td><td>E-books com o botão "Baixar" e o crédito da fonte original</td><td>RF007, RF037</td></tr>
 <tr><td>CT24</td><td>Importar fichas em lote</td><td>Três fichas separadas por "---"</td><td>Prévia com 3 itens e cadastro dos marcados</td><td>RF031, RF038</td></tr>
-<tr><td>CT25</td><td>Termo calibrado</td><td>Termo "Uniforme" → Benefícios e anúncio com "Uniforme fornecido pela empresa"</td><td>A linha vai para Benefícios e o termo aparece nos "Ajustes do calibrador"</td><td>RF035, RF036, RNF012</td></tr>
+<tr><td>CT25</td><td>Padrão automático de linha</td><td>Vagas cadastradas com "Uniforme" nos Benefícios e anúncio novo com "Uniforme fornecido pela empresa"</td><td>A linha vai para Benefícios e aparece em "Padrões automáticos usados"</td><td>RF035, RF036, RNF012</td></tr>
 <tr><td>CT26</td><td>Nome conhecido</td><td>Anúncio que só cita uma empresa já cadastrada ("Padaria Pão Quente")</td><td>Empresa preenchida, com "empresa já cadastrada" no relatório</td><td>RF023, RF035</td></tr>
 <tr><td>CT27</td><td>Conceder assinatura (administrador)</td><td>Premium por 30 dias a uma empresa ativa</td><td>Assinatura ativa e benefícios liberados</td><td>RF034</td></tr>
 <tr><td>CT28</td><td>Testes de jornada</td><td>php tests/jornadas.php</td><td>18 de 18 com "OK"; a conta temporária é apagada no fim</td><td>RNF011</td></tr>
 <tr><td>CT29</td><td>Varredura completa</td><td>Rastrear todas as páginas nos 4 perfis</td><td>1.701 páginas sem erro</td><td>RNF005, RNF011</td></tr>
+<tr><td>CT30</td><td>Capa do e-book pelo PDF</td><td>PDF com imagem na 1ª página</td><td>Capa gerada pela 1ª página (leitor do Windows ou, sem ele, a imagem da página)</td><td>RF037, RF038</td></tr>
+<tr><td>CT31</td><td>A regra continua mandando</td><td>Linha com palavra-chave de requisito ("Experiência com uniforme")</td><td>A linha fica em Requisitos, mesmo com padrão de outro campo</td><td>RF035, RNF012</td></tr>
 </table>
 
 <!-- página 81 -->
@@ -1745,15 +1730,15 @@
 <tr><td>RF024, RF026</td><td>UC12</td><td>EmpresaController::candidaturas; ArquivoController::download</td><td>candidaturas, curriculos</td></tr>
 <tr><td>RF025</td><td>UC13</td><td>EmpresaController::talentos</td><td>perfis</td></tr>
 <tr><td>RF027, RF028</td><td>UC14.1, UC14.2</td><td>PlanosController::index; AssinaturaDAO</td><td>assinaturas, vagas</td></tr>
-<tr><td>RF029</td><td>UC15.1 a UC15.4</td><td>AdminController::usuarios</td><td>usuarios (cascata), calibracao_extracao (sem autor)</td></tr>
+<tr><td>RF029</td><td>UC15.1 a UC15.4</td><td>AdminController::usuarios</td><td>usuarios (cascata)</td></tr>
 <tr><td>RF030</td><td>UC16.1 a UC16.4</td><td>AdminController::categorias</td><td>categorias</td></tr>
 <tr><td>RF031</td><td>UC17.1 a UC17.3</td><td>AdminController::cursos; ExtracaoCurso</td><td>cursos</td></tr>
 <tr><td>RF032</td><td>UC18</td><td>AdminController::painel</td><td>vagas, candidaturas, matches, usuarios</td></tr>
 <tr><td>RF033</td><td>UC19</td><td>PerfilController::excluirConta; UsuarioDAO::senhaConfere</td><td>usuarios (cascata), tentativas_login</td></tr>
 <tr><td>RF034</td><td>UC20</td><td>AdminController::assinaturas; AssinaturaDAO</td><td>assinaturas</td></tr>
-<tr><td>RF035</td><td>UC21 (UC07, UC11.1, UC17.1)</td><td>CalibradorController::painel; Calibrador; CalibracaoDAO; ExtracaoVaga / ExtracaoCurso / ExtracaoCurriculo</td><td>calibracao_extracao, vagas, perfis, cursos</td></tr>
-<tr><td>RF036</td><td>UC21</td><td>CalibradorController::painel (Testar as máquinas); admin/vagas (Ajustes do calibrador)</td><td>calibracao_extracao</td></tr>
-<tr><td>RF037</td><td>UC05, UC17.5</td><td>AdminController::cursos; ImagemRemota; CursoDAO::guardarNaBiblioteca</td><td>cursos</td></tr>
+<tr><td>RF035</td><td>UC21 (UC11.1, UC17.1)</td><td>ExtracaoVaga; ExtracaoCurso; PadroesExtracao</td><td>vagas, cursos, categorias, perfis</td></tr>
+<tr><td>RF036</td><td>UC21</td><td>EmpresaController::vagas; admin/vagas (Padrões automáticos usados)</td><td>vagas</td></tr>
+<tr><td>RF037</td><td>UC05, UC17.5</td><td>AdminController::cursos; ImagemRemota; CapaPdf; CursoDAO::guardarNaBiblioteca</td><td>cursos</td></tr>
 <tr><td>RF038</td><td>UC17.4</td><td>AdminController::cursos; ExtracaoCurso</td><td>cursos</td></tr>
 <tr><td>RF039</td><td>—</td><td>HomeController::index; Pix</td><td>—</td></tr>
 </table>

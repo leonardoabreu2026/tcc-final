@@ -4,7 +4,7 @@ mainframe sd Realizar login
 autonumber "0:"
 hide footbox
 
-actor Usuario
+actor Candidato as Usuario
 boundary ":TelaLogin" as T
 control ":AuthController" as C
 entity ":UsuarioDAO" as D
