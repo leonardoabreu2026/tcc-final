@@ -240,9 +240,13 @@ final class ExtracaoCurso {
         foreach ($categorias as $cat) if (Competencias::normalizar($cat) === $n('categoria')) $areaDaFicha = $cat;
         $r['calibrador'] = array_values(array_filter($r['calibrador'], fn($m) => $m['campo'] !== 'categoria'));   // o doTexto já opinou; decide de novo com a descrição da ficha
         if ($areaDaFicha !== '') $r['categoria'] = $areaDaFicha; else $r = self::categoriaSugerida($r);
-        $r['imagem'] = self::capa($r['instituicao'], $r['url'], $r['tipo']);   // banner da instituição (reserva)
-        // Imagem que a pesquisa trouxe (capa do e-book / imagem do curso): só o link; baixa ao cadastrar (ImagemRemota).
+        // Imagem que a pesquisa trouxe (capa do e-book / imagem do curso): o link é baixado ao cadastrar (ImagemRemota);
+        // um caminho do próprio site que existe (assets/img/... ou assets/uploads/...) entra direto (imagem_propria).
+        // Sem nenhum dos dois: o banner da instituição como reserva (e, sem ele, a imagem padrão ao salvar).
         $r['imagem_url'] = self::primeiroLink($c['imagem'] ?? '');
+        $local = $r['imagem_url'] === '' ? caminho_imagem_valido((string)($c['imagem'] ?? '')) : '';
+        $r['imagem_propria'] = $local !== '' && (($up = caminho_upload($local)) !== null ? is_file($up) : is_file(PUBLIC_DIR.'/'.$local));
+        $r['imagem'] = $r['imagem_propria'] ? $local : self::capa($r['instituicao'], $r['url'], $r['tipo']);
         return $r;
     }
 

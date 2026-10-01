@@ -4,7 +4,7 @@ Peça a uma IA de pesquisa (Perplexity, ChatGPT, Gemini, Copilot, Claude) que pe
 
 - **uma ficha** → preenche o formulário: revise e clique em **Salvar conteúdo**;
 - **várias fichas** (separadas por `---`) → prévia: confira e clique em **Cadastrar marcados**;
-- **com imagem** na ficha, ela é conferida e baixada; **sem imagem**, o conteúdo entra com a **imagem padrão** da plataforma e aparece na lista como *trocar imagem* (use Editar quando tiver a imagem certa);
+- **com imagem** na ficha (link direto da imagem ou caminho do site, como `assets/img/ebooks/capa.jpg`), ela é conferida e salva; **sem imagem** — ou se o link não baixar —, o conteúdo entra com a **imagem padrão** da plataforma (nunca deixa de cadastrar por causa da imagem) e aparece na lista como *trocar imagem* (use Editar quando tiver a imagem certa);
 - **PDF na nossa biblioteca**: com o campo **PDF:** na ficha (ou o link do e-book apontando para o PDF), o cadastro baixa o PDF para a biblioteca da plataforma e o botão vira **Baixar**; também dá para enviar o arquivo à mão. Conteúdo que fica na web mostra **Acessar**. Os e-books antigos que ainda abrem no site de origem vêm todos de uma vez pelo botão **Trazer os PDFs para a biblioteca** (painel → Cursos e e-books).
 
 > Gerado em 27/09/2026 com as áreas cadastradas. Criou ou renomeou áreas? Rode `C:\xampp\php\php.exe docs\gerar_prompts.php`.
