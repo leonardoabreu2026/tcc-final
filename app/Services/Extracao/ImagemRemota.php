@@ -36,9 +36,8 @@ final class ImagemRemota {
             $itens[$i]['imagem_url'] = $u = (string)($it['imagem_url'] ?? '');
             if ($u !== '' && !isset($validas[$u])) $itens[$i]['imagem_url'] = '';
             // 2. Sem imagem: procura na página do conteúdo (link direto de PDF não tem página para olhar).
-            //    Ficha com caminho de imagem do próprio site (imagem_propria) já tem a imagem certa: não procura.
             $link = (string)($it['url'] ?? '');
-            if ($itens[$i]['imagem_url'] === '' && empty($it['imagem_propria']) && $link !== '' && !preg_match('/\.pdf($|[?#])/i', $link)) $paginas[$i] = $link;
+            if ($itens[$i]['imagem_url'] === '' && $link !== '' && !preg_match('/\.pdf($|[?#])/i', $link)) $paginas[$i] = $link;
         }
         if (!$paginas) return $itens;
         $respostas = self::buscar(array_values($paginas), self::LIMITE_PAGINA, true);

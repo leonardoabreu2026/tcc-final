@@ -244,7 +244,7 @@ final class AdminController extends Controller {
      * admin/pages/cursos.php — CRUD de cursos, e-books e vídeos, com UMA caixa de extração:
      *  - cola-se a ficha da IA de pesquisa (ou o texto de divulgação): 1 ficha → preenche o formulário para revisar;
      *    várias fichas → prévia para cadastrar as marcadas (importação em lote);
-     *  - com imagem na ficha (link ou caminho do site), ela é salva; sem imagem, ou se o link não baixar, o conteúdo entra com a imagem padrão da
+     *  - com imagem na ficha, ela é conferida e baixada; sem imagem, o conteúdo entra com a imagem padrão da
      *    plataforma (CursoDAO::imagemPadrao) e aparece na lista como "trocar imagem", para ajustar depois;
      *  - a área e a instituição sugeridas podem vir do Calibrador (termos do administrador e instituições já cadastradas).
      */
@@ -366,8 +366,8 @@ final class AdminController extends Controller {
                 $cat = $extraido['categoria'] ? $catDao->buscarPorNome($extraido['categoria'], 'curso') : null;
                 $imgLink = (string)($extraido['imagem_url'] ?? '');
                 $form = $extraido + ['id' => $id, 'categoria_id' => $cat['id'] ?? null, 'ativo' => 1];
-                // Imagem: a do link (baixada ao salvar) ou o caminho que veio na ficha; sem ela, o banner da instituição (ou a padrão, ao salvar).
-                $form['imagem'] = $imgLink !== '' ? '' : ((string)($extraido['imagem'] ?? '') ?: ExtracaoCurso::capa($extraido['instituicao'], $extraido['url'], $extraido['tipo']));
+                // Imagem: a do link (baixada ao salvar); sem ela, o banner da instituição (ou a padrão, ao salvar).
+                $form['imagem'] = $imgLink !== '' ? '' : ExtracaoCurso::capa($extraido['instituicao'], $extraido['url'], $extraido['tipo']);
                 $form['imagem_url'] = $imgLink;
             } else {
                 $d = [
@@ -427,20 +427,18 @@ final class AdminController extends Controller {
                 // e só quando não veio arquivo nem caminho.
                 $imgLink = mb_substr(post_str('imagem_url'), 0, 500);
                 if ($imgLink !== '' && !url_http_valida($imgLink)) $erros[] = 'O link da imagem precisa começar com http:// ou https://.';
-                $baixada = ''; $avisoImagem = '';
+                $baixada = '';
                 if (!$erros && $img === null && $d['imagem'] === '' && $imgLink !== '') {
                     set_time_limit(120);
                     $baixada = ImagemRemota::baixar([$imgLink], 'curso')[$imgLink] ?? '';
-                    // Link que não baixou (site bloqueou, não é JPG/PNG/WEBP...) não impede o cadastro: entra a reserva abaixo.
-                    if ($baixada !== '') $d['imagem'] = $baixada;
-                    else $avisoImagem = ' Não deu para baixar a imagem do link.';
+                    if ($baixada === '') $erros[] = 'Não foi possível baixar a imagem do link (precisa ser uma imagem JPG, PNG ou WEBP pública). Apague o link para cadastrar com a imagem padrão, envie o arquivo ou escolha um caminho.';
+                    else $d['imagem'] = $baixada;
                 }
                 // Sem imagem nenhuma: entra com o banner da instituição ou a imagem padrão da plataforma (troca depois).
                 $usouPadrao = false;
                 if (!$erros && $d['imagem'] === '') {
                     $d['imagem'] = ExtracaoCurso::capa($d['instituicao'], $d['url'], $d['tipo']) ?: CursoDAO::imagemPadrao($d['tipo']);
                     $usouPadrao = CursoDAO::ehImagemPadrao($d['imagem']);
-                    if ($avisoImagem !== '' && !$usouPadrao) $avisoImagem .= ' Entrou com a imagem da instituição: use Editar para trocar.';
                 }
                 if ($erros) {
                     if ($img) { apagar_upload_sem_uso($img); $d['imagem'] = $existente['imagem'] ?? ''; } // não deixa arquivo órfão
@@ -453,7 +451,7 @@ final class AdminController extends Controller {
                     if ($ok && $existente && ($existente['imagem'] ?? '') !== $d['imagem']) apagar_upload_sem_uso((string)$existente['imagem']);
                     if ($ok && $existente && ($existente['url'] ?? '') !== $d['url']) apagar_upload_sem_uso((string)$existente['url']);   // PDF antigo da biblioteca
                     if (!$ok && is_string($pdf)) apagar_upload_sem_uso($pdf);
-                    flash($ok ? 'ok' : 'erro', $ok ? 'Conteúdo salvo.'.$avisoPdf.$avisoImagem.($usouPadrao ? ' Entrou com a imagem padrão da plataforma: quando tiver a imagem certa, use Editar para trocar.' : '') : 'Não foi possível salvar.');
+                    flash($ok ? 'ok' : 'erro', $ok ? 'Conteúdo salvo.'.$avisoPdf.($usouPadrao ? ' Entrou com a imagem padrão da plataforma: quando tiver a imagem certa, use Editar para trocar.' : '') : 'Não foi possível salvar.');
                     redirect('admin/pages/cursos.php'.painel_qs());   // volta para a mesma aba, filtros e ordem
                 }
             }
