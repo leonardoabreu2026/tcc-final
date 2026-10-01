@@ -8,11 +8,9 @@ rectangle "Conecta Vagas DF" {
   usecase "Alterar usuário" as U
   usecase "Ativar / desativar\nusuário" as T
   usecase "Excluir usuário" as E
-  usecase "Esquecer as lições\ndo usuário (LGPD)" as L
 }
 A -- C
 A -- U
 A -- T
 A -- E
-E ..> L : <<include>>
 @enduml

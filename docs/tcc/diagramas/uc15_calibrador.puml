@@ -1,0 +1,27 @@
+@startuml
+!include estilo.iuml
+mainframe uc Calibrar as máquinas de extração
+left to right direction
+actor Candidato as C
+actor Empresa as E
+actor Administrador as A
+rectangle "Conecta Vagas DF" {
+  usecase "Extrair vaga, curso\nou currículo" as X
+  usecase "Aplicar o calibrador\n(termo mais longo vence)" as AC
+  usecase "Reconhecer empresas e\ninstituições já cadastradas" as NC
+  usecase "Cadastrar termo\n(termo → destino)" as CT
+  usecase "Editar, ativar ou\ndesativar termo" as ET
+  usecase "Excluir termo" as XT
+  usecase "Testar as máquinas\n(nada é salvo)" as TM
+}
+C -- X
+E -- X
+A -- X
+A -- CT
+A -- ET
+A -- XT
+A -- TM
+X ..> AC : <<include>>
+TM ..> AC : <<include>>
+AC ..> NC : <<include>>
+@enduml

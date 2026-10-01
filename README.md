@@ -1,11 +1,15 @@
-# Conecta Vagas DF
+# TCC Final — Conecta Vagas DF
 
 Plataforma de vagas de emprego e capacitação profissional do Distrito Federal —
-Trabalho de Conclusão de Curso (TCC).
+Trabalho de Conclusão de Curso (TCC). No site, a marca continua **Conecta Vagas DF**.
 
 **PHP 8.0 ou mais novo, puro (padrão MVC)** · **MySQL/MariaDB (PDO)** · **XAMPP** · sem frameworks e sem dependências externas.
 Testado no PHP 8.0.30 do XAMPP; o código não usa recursos do 8.1 em diante. Para publicar na internet, use PHP 8.2
 ou mais novo (o 8.0 não recebe mais correções de segurança).
+
+**De onde veio**: este projeto herdou o **conecta-vagas-df-tcc** (pasta `C:\xampp\htdocs\conecta vagas df tcc`, banco
+`conecta_vagas_df_v2`), congelado na tag **`v1.0-blindada`**. O TCC Final segue a partir dele com pasta, banco
+(`tcc_final`) e endereço próprios; a versão antiga não é alterada.
 
 ## O que o sistema faz
 
@@ -14,16 +18,30 @@ ou mais novo (o 8.0 não recebe mais correções de segurança).
 | Visitante | Vagas e cursos/e-books com busca e filtros; página de cada vaga e curso; planos. |
 | Candidato | Envia o currículo (PDF/DOCX/DOC) e a **máquina de extração** preenche o perfil; com o cadastro completo, ganha um **portfólio** automático e a **máquina de match** (nota de 0 a 100, explicada, com cada vaga); candidata-se e acompanha o retorno das empresas. |
 | Empresa | Publica vagas (envia o **cartaz** ou cola o anúncio e a **extração de vagas** preenche o formulário — o leitor de cartaz roda no navegador, sem instalar nada), recebe candidaturas ordenadas pelo match e consulta o banco de talentos. |
-| Administrador | Gerencia usuários, categorias, cursos/e-books (com **extração de cursos**), vagas e candidaturas, e acompanha a **máquina de aprendizado**. |
+| Administrador | Gerencia usuários, categorias, cursos/e-books (com **extração de cursos**), vagas, candidaturas e assinaturas, e ajusta as máquinas de extração pelo **Calibrador**. |
 
 Planos demonstrativos (sem cobrança real): **Candidato VIP** e **Empresa Premium**.
 
-## Novidades desta versão (27/09/2026)
+## Novidades do TCC Final (01/10/2026)
+
+- **Calibrador das máquinas de extração** (Painel → **Calibrador**): o administrador ajusta as regras da extração
+  sem mexer no código — ver a seção [Calibrador](#calibrador-ajustar-a-extração-sem-programar) e o
+  **[docs/CALIBRADOR.md](docs/CALIBRADOR.md)**.
+- **Testar as máquinas**: cola-se um anúncio, uma ficha de curso ou um currículo e vê-se o que a extração faz, com o
+  que o calibrador ajustou. Nada é salvo.
+- **Relatório da extração da vaga** com o bloco **Ajustes do calibrador** (o que a regra dizia, para onde foi e qual
+  termo decidiu).
+- **Banco próprio `tcc_final`**, com **12 tabelas** (entra `calibracao_extracao`) e 12 termos de exemplo no `seed.sql`.
+- **Acessibilidade**: rótulos ligados aos campos nos perfis do candidato e da empresa.
+- **Documentação**: diagramas UML e modelos de dados refeitos, e a monografia em
+  [docs/tcc/TCC_Final_Conecta_Vagas_DF.pdf](docs/tcc/TCC_Final_Conecta_Vagas_DF.pdf).
+
+### Herdado da versão de 27/09/2026
 
 - **Leitor de cartaz sem instalação**: o OCR roda no navegador (Tesseract.js servido pelo próprio site). Ninguém
   instala nada, nem no servidor nem no computador; o Tesseract do servidor virou reserva opcional.
 - **Carregador**: amarelo enquanto carrega ou lê (com %), azul quando está pronto, em toda máquina de extração;
-  também impede o clique duplo. O "Extrair" com a caixa vazia não gera mais relatório em branco.
+  também impede o clique duplo. O "Extrair" com a caixa vazia não gera relatório em branco.
 - **Cartaz mais bem lido**: shopping não vira empresa, marca em linhas separadas é confirmada pelo e-mail do
   cartaz ("Smile & Face"), palavra grudada pelo OCR é separada, "R$ 700 VT/VR" não conta como salário e até
   3 cargos em letra grande entram no título.
@@ -33,15 +51,12 @@ Planos demonstrativos (sem cobrança real): **Candidato VIP** e **Empresa Premiu
 - **LGPD**: o candidato exclui a própria conta e todos os dados dele (Meu perfil → Seus dados); o log de troca de
   senha só existe no modo de demonstração e com o e-mail mascarado.
 - **Testes de jornada** (`tests/jornadas.php`): uma conta temporária usa o sistema pelo navegador — cadastro,
-  login, currículo, candidatura, extração, troca de senha e exclusão da conta — e é apagada no fim. Roda antes de
-  cada commit, junto da sintaxe e do teste rápido.
-- **Correções**: erro no cadastro em lote de e-books (recurso do PHP 8.1 no XAMPP 8.0), entrega de PDF grande em
-  internet lenta, prévia do cartaz quebrada, importação do banco no PowerShell e versão do PHP no README.
+  login, currículo, candidatura, extração, troca de senha e exclusão da conta — e é apagada no fim.
 
-**Varredura final (27/09/2026)**: 1.701 páginas rastreadas nos 4 perfis sem nenhum problema; teste rápido 119/119;
-jornadas 18/18; bateria de segurança (XSS, SQL injection, CSRF, sessão, uploads, permissões) aprovada; 114/114
-tabelas íntegras; nenhum erro de PHP no servidor; páginas sem transbordar no celular. Ressalvas conhecidas, para
-depois da banca: ajustes de acessibilidade (pulos de título, rótulos de alguns campos) e ícone da aba (favicon).
+Varredura final da versão herdada (27/09/2026): 1.701 páginas rastreadas nos 4 perfis sem nenhum problema; bateria de
+segurança (XSS, SQL injection, CSRF, sessão, uploads, permissões) aprovada; nenhum erro de PHP no servidor; páginas sem
+transbordar no celular. Ressalvas conhecidas, para depois da banca: ajustes de acessibilidade (pulos de título) e ícone
+da aba (favicon).
 
 ## Dia da apresentação (roteiro rápido)
 
@@ -49,11 +64,14 @@ depois da banca: ajustes de acessibilidade (pulos de título, rótulos de alguns
 2. XAMPP: **Start** no Apache e no MySQL.
 3. Clique duplo em `tests\verificar.bat` e espere **TUDO CERTO**.
 4. Abra uma vez **Painel → Vagas** (o leitor de cartaz fica carregado e fica azul).
-5. Ao terminar: **Stop** no MySQL antes de fechar o XAMPP ou desligar o computador.
+5. Para mostrar o Calibrador: siga o roteiro de 5 minutos em [docs/CALIBRADOR.md](docs/CALIBRADOR.md#10-roteiro-para-a-apresentação-5-minutos)
+   (cadastrar termo → Testar as máquinas → ver no relatório da extração).
+6. Ao terminar: **Stop** no MySQL antes de fechar o XAMPP ou desligar o computador.
 
 ## Instalação (XAMPP no Windows)
 
-1. Copie a pasta do projeto para `C:\xampp\htdocs\` (qualquer nome, inclusive com espaços).
+1. Copie a pasta do projeto para `C:\xampp\htdocs\` — nesta máquina: **`C:\xampp\htdocs\tcc-final`**
+   (qualquer nome funciona, inclusive com espaços).
 2. No **XAMPP Control Panel**, inicie **Apache** e **MySQL**.
    O `mod_rewrite` do Apache (já ativo no XAMPP) é necessário.
 3. Importe o banco — primeiro a estrutura, depois os dados de demonstração:
@@ -63,10 +81,10 @@ depois da banca: ajustes de acessibilidade (pulos de título, rótulos de alguns
      C:\xampp\mysql\bin\mysql.exe -u root --default-character-set=utf8mb4 < database\schema.sql
      C:\xampp\mysql\bin\mysql.exe -u root --default-character-set=utf8mb4 < database\seed.sql
      ```
-   O `schema.sql` apaga e recria **só** o banco `conecta_vagas_df_v2`.
+   O `schema.sql` apaga e recria **só** o banco `tcc_final` (o `conecta_vagas_df_v2` da versão herdada não é tocado).
 4. Se o MySQL tiver senha, ajuste `DB_PASS` em `config/config.php`.
-5. Acesse `http://localhost/<pasta do projeto>/` — nesta máquina: **`http://localhost/conecta%20vagas%20df%20tcc/`**
-   (espaços no nome da pasta viram `%20`).
+5. Acesse `http://localhost/<pasta do projeto>/` — nesta máquina: **`http://localhost/tcc-final/`**
+   (se a pasta tiver espaços, eles viram `%20` no endereço).
 6. Confira se está tudo certo: `C:\xampp\php\php.exe tests\smoke.php`
 7. **Biblioteca de e-books** (precisa de internet, uma vez só): entre como administrador → **Cursos e e-books** →
    **Trazer os PDFs para a biblioteca**. Os PDFs dos e-books são baixados para `storage/uploads/` (arquivos
@@ -111,7 +129,7 @@ Troque as senhas antes de publicar o sistema.
 ## Estrutura de pastas
 
 ```
-TCC_GUSTAVO/
+tcc-final/
 ├── .htaccess              manda todas as requisições para public/ (o endereço no navegador não muda)
 ├── index.php              reserva: sem mod_rewrite, redireciona para public/
 ├── README.md              este arquivo
@@ -121,18 +139,18 @@ TCC_GUSTAVO/
 │   ├── DTO/               objetos que levam os dados do formulário até o banco
 │   ├── Models/            acesso ao banco, uma classe por tabela (M do MVC)
 │   ├── Services/          regras de negócio: match, competências, portfólio e extração
-│   │   ├── Extracao/      leitura de PDF/DOCX/DOC e extração de currículo, vaga e curso
-│   │   └── Aprendizado/   aprendizado de máquina das extrações (Naive Bayes que aprende com as revisões)
+│   │   └── Extracao/      leitura de PDF/DOCX/DOC, extração de currículo, vaga e curso e o Calibrador
 │   └── Views/             telas em HTML + PHP (V do MVC): layouts, partes reutilizáveis e páginas
-├── config/config.php      configurações (banco, depuração, limites, pastas)
+├── config/config.php      configurações (banco tcc_final, depuração, limites, pastas)
 ├── database/
-│   ├── schema.sql         estrutura do banco (tabelas, chaves, índices)
-│   ├── seed.sql           dados de demonstração (contas, vagas, cursos)
+│   ├── schema.sql         estrutura do banco (12 tabelas, chaves, índices)
+│   ├── seed.sql           dados de demonstração (contas, vagas, cursos, termos do Calibrador)
 │   └── resetar_senhas.php volta as senhas das contas de teste e libera o login (só pelo terminal)
 ├── docs/ARQUITETURA.md    como o sistema funciona por dentro (leia para a apresentação)
-├── docs/APRENDIZADO.md    a máquina de aprendizado: ideia, algoritmo, arquivos e roteiro de demonstração
+├── docs/CALIBRADOR.md     o Calibrador das máquinas de extração: contextos, precedência e roteiro de demonstração
 ├── docs/PESQUISA_CURSOS.md  pesquisa guiada: de onde vêm os links dos novos cursos e e-books
 ├── docs/PROMPTS_PESQUISA.md prompt padrão para as IAs de pesquisa (gerado por docs/gerar_prompts.php)
+├── docs/tcc/              monografia em PDF (fonte HTML em monografia/) e diagramas (PlantUML .puml + .svg + .png)
 ├── .githooks/pre-commit   blindagem: antes de cada commit confere a sintaxe e roda o teste rápido
 ├── public/                ÚNICA pasta servida pelo Apache
 │   ├── index.php          front controller: porta de entrada de todas as páginas + tabela de rotas
@@ -143,7 +161,7 @@ TCC_GUSTAVO/
 │   ├── logs/              registros internos (ex.: links de redefinição de senha, só no modo de demonstração)
 │   └── backups/           cópias do banco e dos uploads (fora do git), com COMO_RESTAURAR.txt
 └── tests/
-    ├── smoke.php          teste rápido: classes, regras, banco e páginas
+    ├── smoke.php          teste rápido: classes, regras, calibrador, banco e páginas
     ├── jornadas.php       o sistema usado como uma pessoa usa: cadastro, login, currículo, candidatura,
     │                      extração de vagas e cursos, troca de senha e exclusão da conta (conta temporária)
     ├── amostras/          leituras reais de cartazes feitas pelo leitor do navegador (usadas nos testes)
@@ -165,8 +183,28 @@ Exemplo: o navegador pede `/vagas.php`.
 Os endereços são os mesmos das versões anteriores (`vaga.php?id=3`, `view/perfil/index.php`,
 `admin/pages/vagas.php`...): links e favoritos antigos continuam funcionando.
 
-Detalhes — camadas, tabela completa de rotas, máquinas de extração e de match, regras dos planos,
+Detalhes — camadas, tabela completa de rotas, máquinas de extração e de match, calibrador, regras dos planos,
 segurança e o mapa "onde estava → onde está": **[docs/ARQUITETURA.md](docs/ARQUITETURA.md)**.
+
+## Calibrador: ajustar a extração sem programar
+
+As máquinas de extração (cartaz/anúncio de vaga, ficha de curso e currículo) funcionam por **regras** escritas no
+código. O **Calibrador** (Painel → **Calibrador**, só administrador) ajusta essas regras sem mexer no código:
+
+- **Termos calibrados** (o administrador cadastra): "quando o texto tiver o termo X, mande para Y", em 4 contextos —
+  linha do anúncio → campo da vaga (Descrição, Requisitos ou Benefícios), área da vaga, área do curso e linha solta do
+  currículo → seção. Ex.: `Uniforme` → Benefícios; `Churrasqueiro` → Alimentação; `Ensino médio` → Formação.
+- **Regras de decisão**: o termo vale mais que a regra do código; entre dois termos que casam, **vence o mais longo**
+  (o mais específico); casa por **palavra inteira**, sem acento e sem maiúscula; linha que já está debaixo de um título
+  de seção não muda de lugar; termo desativado fica guardado sem uso.
+- **Nomes conhecidos** (automático): empresas (anunciante das vagas e nome fantasia das empresas) e instituições (dos
+  cursos) já cadastradas são reconhecidas sozinhas quando nenhuma regra acha o nome. Nada para treinar.
+- **Testar as máquinas**: cola um texto e vê a extração e os ajustes — nada é salvo. No uso real, o relatório da
+  extração da vaga mostra o bloco **Ajustes do calibrador**.
+
+É tudo determinístico (regras + dicionário): o mesmo texto com os mesmos termos dá sempre o mesmo resultado, e cada
+ajuste mostra o termo que decidiu. Tabela `calibracao_extracao`; detalhes e roteiro de demonstração em
+**[docs/CALIBRADOR.md](docs/CALIBRADOR.md)**.
 
 ## Cadastrar cursos e e-books (com ajuda de outra IA)
 
@@ -182,15 +220,13 @@ Em **Painel → Cursos e e-books** há uma caixa só, **Extrair**:
 4. **Baixar × Acessar**: envie o PDF do e-book no cadastro e ele fica na **biblioteca** da plataforma (botão
    **Baixar**, baixa direto); conteúdo que fica em outro site mostra **Acessar** (abre em nova aba).
 
-Fontes oficiais para pesquisar: [docs/PESQUISA_CURSOS.md](docs/PESQUISA_CURSOS.md).
+A área do curso e a instituição sugeridas também passam pelo Calibrador (termos de `curso_categoria` e instituições
+já cadastradas). Fontes oficiais para pesquisar: [docs/PESQUISA_CURSOS.md](docs/PESQUISA_CURSOS.md).
 
-## Manutenção automática (ninguém precisa calibrar nada)
+## Manutenção automática
 
-Ao abrir a **visão geral** do painel, no máximo uma vez por dia, o sistema sozinho:
-- faz a **máquina de aprendizado estudar** o que foi cadastrado e revisado (vagas, cursos e perfis públicos),
-  recalibrar a confiança e conferir o desempenho **recente**: se ela começar a errar, volta a valer a regra até ela
-  provar de novo. Correção contraditória também se resolve sozinha (vale a mais recente). Ela não aparece no menu;
-- **limpa arquivos órfãos** de `storage/uploads` (sem registro que os use e com mais de 24 h).
+Ao abrir a **visão geral** do painel, no máximo uma vez por dia, o sistema **limpa arquivos órfãos** de
+`storage/uploads` (sem registro que os use e com mais de 24 h).
 
 **Foto do currículo**: ao enviar o currículo (PDF ou DOCX), a foto é encontrada pelo padrão de foto de currículo
 (tons de pele, fotografia, proporção de retrato — ignora logotipos, ícones e página escaneada) e vira a foto do
@@ -198,10 +234,10 @@ perfil; se o perfil já tiver foto, a do currículo aparece no relatório para o
 
 ## Blindagem do código (antes e depois de mexer)
 
-- **Clique duplo em `tests\verificar.bat`**: confere a sintaxe de todos os PHP, roda o teste rápido e as jornadas
-  (`tests/jornadas.php`: uma conta temporária faz cadastro, login, currículo, candidatura e exclusão da conta pelo
-  navegador, e é apagada no fim — nada fica no banco). No fim
-  aparece **TUDO CERTO** ou o que quebrou (com arquivo e linha). Faça isso depois de cada alteração.
+- **Clique duplo em `tests\verificar.bat`**: confere a sintaxe de todos os PHP, roda o teste rápido (inclusive os
+  testes do Calibrador) e as jornadas (`tests/jornadas.php`: uma conta temporária faz cadastro, login, currículo,
+  candidatura e exclusão da conta pelo navegador, e é apagada no fim — nada fica no banco). No fim aparece
+  **TUDO CERTO** ou o que quebrou (com arquivo e linha). Faça isso depois de cada alteração.
 - **Commit protegido**: o gancho `.githooks/pre-commit` roda a mesma verificação antes de cada commit (pelo
   terminal ou pelo VS Code). Se algo quebrou, o commit é **barrado** e o motivo aparece; os relatórios completos
   ficam em `.git/smoke_ultimo.txt` e `.git/jornadas_ultimo.txt`. Precisa do Apache e do MySQL ligados. Emergência: `git commit --no-verify`.
@@ -209,8 +245,9 @@ perfil; se o perfil já tiver foto, a do currículo aparece no relatório para o
   ```
   git config core.hooksPath .githooks
   ```
-- Quebrou e não sabe onde? Volte ao último ponto estável: `git checkout teste-cliente-2026-09-26`
-  (o banco volta pelo backup, ver "Backup e restauração").
+- Quebrou e não sabe onde? Todo commit passou pela verificação: veja `git log --oneline` e volte ao último que estava
+  bom com `git checkout <commit>` (o banco volta pelo backup, ver "Backup e restauração"). A tag `v1.0-blindada` é a
+  versão herdada, de antes do TCC Final.
 
 ## Segurança (resumo)
 
@@ -218,27 +255,39 @@ perfil; se o perfil já tiver foto, a do currículo aparece no relatório para o
 - Token CSRF em todo formulário; SQL sempre com parâmetros (`?`); todo texto na tela passa por `e()`.
 - Cada ação confere a permissão: candidato só mexe no que é dele, empresa só nas próprias vagas e
   candidaturas, e o currículo só abre para o dono, para a empresa que o recebeu ou para empresa Premium.
+  O Calibrador é só do administrador.
 - Só `public/` é servida e, dentro dela, só o `index.php` executa PHP. Configuração, banco, backups,
   documentos, `.git` e arquivos ocultos respondem 403.
 - Cabeçalhos: `Content-Security-Policy` (formulários só para o próprio site), `X-Frame-Options`,
   `X-Content-Type-Options`, `Referrer-Policy` e `Permissions-Policy`; a versão do PHP não é anunciada.
 - **LGPD**: consentimento no cadastro; o candidato exclui a própria conta em **Meu perfil → Seus dados → Excluir
-  minha conta** (confirma com a senha) — saem o perfil, os currículos e arquivos, a foto, as candidaturas, o match,
-  as tentativas de login e as lições que a máquina aprendeu com ele. Os logs não guardam e-mail inteiro.
+  minha conta** (confirma com a senha) — saem o perfil, os currículos e arquivos, a foto, as candidaturas, o match
+  e as tentativas de login. Os logs não guardam e-mail inteiro. Os termos do Calibrador não têm dado pessoal: se a
+  conta do administrador que os cadastrou sair, eles ficam sem autor.
 - Detalhes em [docs/ARQUITETURA.md](docs/ARQUITETURA.md) (seção de segurança).
 
 ## Backup e restauração
 
-- Ponto de restauração do código: tag `teste-cliente-2026-09-26` (`git checkout teste-cliente-2026-09-26`).
+- Ponto de partida do código: tag `v1.0-blindada` (versão herdada); depois dela, cada commit do TCC Final passou pela
+  verificação.
 - Banco e arquivos enviados: `storage/backups/<data>/` tem o `.sql` do banco, o `uploads.zip` e o passo a
   passo (`COMO_RESTAURAR.txt`). Para voltar o banco, dentro da pasta do backup:
   ```
-  C:\xampp\mysql\bin\mysql.exe -u root < banco_conecta_vagas_df_v2.sql
+  C:\xampp\mysql\bin\mysql.exe -u root < banco_tcc_final.sql
   ```
 - Fazer um backup novo:
   ```
-  C:\xampp\mysql\bin\mysqldump.exe -u root --single-transaction --databases conecta_vagas_df_v2 > storage\backups\banco.sql
+  C:\xampp\mysql\bin\mysqldump.exe -u root --single-transaction --databases tcc_final > storage\backups\banco_tcc_final.sql
   ```
+
+## Documentação do TCC
+
+- Monografia: [docs/tcc/TCC_Final_Conecta_Vagas_DF.pdf](docs/tcc/TCC_Final_Conecta_Vagas_DF.pdf). O fonte fica em
+  `docs/tcc/monografia/TCC_Final_Conecta_Vagas_DF.html` (+ `estilo.css`): para gerar o PDF de novo, abra no Edge →
+  Ctrl+P → Salvar como PDF, sem "Cabeçalhos e rodapés" e com "Gráficos de plano de fundo".
+- Diagramas (casos de uso, classes, sequência, arquitetura, modelo lógico) em `docs/tcc/diagramas/`: o fonte é o
+  `.puml` (PlantUML, com o estilo comum em `estilo.iuml`); o `.svg` e o `.png` saem dele com
+  `java -jar plantuml.jar -tsvg arquivo.puml` e `-tpng`. O modelo conceitual (desenhado a lápis) só tem `.svg`/`.png`.
 
 ## Depuração e produção
 

@@ -19,22 +19,22 @@ node "Servidor Apache (XAMPP) + PHP 8.0 ou superior" {
   package "app/Controllers (C) — 13" {
     [Home · Vaga · Curso · Planos\nAuth · Password] as CP
     [Perfil · Currículo\nCandidatura · Arquivo] as CC
-    [Admin · Empresa · Aprendizado] as CA
+    [Admin · Empresa · Calibrador] as CA
   }
   package "app/Services (regras de negócio)" {
     [Extracao: LeitorDocumento · PdfTexto · DocxTexto\nOcrImagem · ExtracaoCurriculo/Vaga/Curso\nImagemRemota · FontesCursos · PromptsPesquisa] as EX
-    [Aprendizado: MaquinaAprendizado\nNaiveBayes · Calibracao\nCorrecaoHumana · Tokenizador] as ML
+    [Extracao/Calibrador\n(termos do administrador +\nnomes já cadastrados)] as CAL
     [MatchService · Competencias\nPortfolio · Pix] as MS
   }
   package "app/Views (V)" {
     [layouts · partials · home · vagas\ncursos · perfil · auth · planos · admin] as VW
   }
   package "app/Models (M) — DAO" {
-    [UsuarioDAO · PerfilDAO · VagaDAO · CursoDAO\nCategoriaDAO · CurriculoDAO · CandidaturaDAO\nMatchDAO · AssinaturaDAO · AprendizadoDAO] as DAO
+    [UsuarioDAO · PerfilDAO · VagaDAO · CursoDAO\nCategoriaDAO · CurriculoDAO · CandidaturaDAO\nMatchDAO · AssinaturaDAO · CalibracaoDAO] as DAO
   }
   folder "storage/uploads\n(currículos, fotos, cartazes,\nPDFs da biblioteca)" as UP
 }
-database "MySQL / MariaDB\nconecta_vagas_df_v2\n(16 tabelas)" as BD
+database "MySQL / MariaDB\ntcc_final\n(12 tabelas)" as BD
 cloud "Sites oficiais\n(imagens e PDFs\ndos cursos)" as WEB
 NAV --> HT : HTTP
 NAV ..> OCR
@@ -49,7 +49,9 @@ CP --> VW
 CC --> EX
 CC --> MS
 CA --> EX
-CA --> ML
+CA --> CAL
+EX ..> CAL : ajustes
+CAL ..> DAO
 CA --> DAO
 CC --> DAO
 CP --> DAO

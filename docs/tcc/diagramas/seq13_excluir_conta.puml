@@ -8,7 +8,6 @@ actor Candidato as A
 boundary ":TelaPerfil" as T
 control ":PerfilController" as C
 entity ":UsuarioDAO" as D
-control ":MaquinaAprendizado" as M
 A -> T ++ : abrir "Excluir minha conta",\ndigitar a senha e confirmar
 T -> C ++ : excluirConta(senha, confirmo)
 C -> C : validar_csrf()
@@ -16,8 +15,6 @@ C -> D ++ : minutosBloqueioLogin(ip, email)
 D --> C -- : 0 (sem pausa)
 C -> D ++ : senhaConfere(id, senha)
 D --> C -- : true
-C -> M ++ : esquecerDoUsuario(id)
-M --> C -- : lições apagadas
 C -> D ++ : excluir(id)
 note right of D : cascata: perfil, currículos,\ncandidaturas, matches e\nassinaturas; apaga os arquivos\ne as tentativas de login
 D --> C -- : true

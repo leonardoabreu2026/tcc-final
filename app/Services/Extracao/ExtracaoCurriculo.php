@@ -67,7 +67,7 @@ final class ExtracaoCurriculo {
         'estado civil' => 'sensivel', 'cpf' => 'sensivel', 'rg' => 'sensivel', 'nacionalidade' => 'sensivel', 'naturalidade' => 'sensivel', 'filhos' => 'sensivel', 'sexo' => 'sensivel', 'genero' => 'sensivel', 'religiao' => 'sensivel',
     ];
 
-    /** Palavras de dado pessoal no cabeçalho (texto normalizado): a máquina de aprendizado não mexe nessas linhas. */
+    /** Palavras de dado pessoal no cabeçalho (texto normalizado): o calibrador não mexe nessas linhas. */
     private const DADOS_PESSOAIS = '/\b(\d{1,2} anos|solteir[oa]|casad[oa]|divorciad[oa]|viuv[oa]|uniao estavel|brasileir[oa]|nacionalidade|naturalidade|'
         .'estado civil|filhos?|rua|avenida|av|quadra|qd|qnm|qnn|qr|conjunto|conj|casa|lote|lt|cep|bairro|setor|residencial|condominio|apto|apartamento|bloco|chacara)\b/';
 
@@ -169,15 +169,6 @@ final class ExtracaoCurriculo {
         $comport = array_values(array_diff(array_intersect($todas, Competencias::COMPORTAMENTAIS), Competencias::extrair(implode("\n", $itensComp))));
         $r['competencias'] = self::juntarLista($itensComp, count($itensComp) < 3 ? $comport : []);
         return $r;
-    }
-
-    /**
-     * Linhas do currículo como a extração enxerga (texto limpo, uma por linha). A máquina de aprendizado
-     * guarda essas linhas para comparar com o perfil que o candidato salvar depois.
-     * @return list<string>
-     */
-    public static function linhasDoTexto(string $texto): array {
-        return array_map([self::class, 'semMarcador'], self::linhas(LeitorDocumento::limpar($texto)));
     }
 
     /**

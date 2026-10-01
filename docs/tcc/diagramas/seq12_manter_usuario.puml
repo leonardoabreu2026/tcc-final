@@ -7,7 +7,6 @@ hide footbox
 actor Administrador as A
 boundary ":TelaUsuarios" as T
 control ":AdminController" as C
-control ":MaquinaAprendizado" as M
 entity ":UsuarioDAO" as D
 A -> T ++ : preencher dados do usuário
 T -> C ++ : usuarios(acao = salvar, dados)
@@ -19,9 +18,8 @@ T --> A -- : exibir mensagem
 A -> T ++ : clicar em "Excluir"
 T -> C ++ : usuarios(acao = excluir, id)
 C -> C : impedir excluir a própria conta\ne o último administrador
-C -> M ++ : esquecerDoUsuario(id)
-M --> C -- : lições apagadas
 C -> D ++ : excluir(id)
+note right of D : cascata: perfil, currículos,\nvagas e candidaturas; os termos\ndo calibrador ficam (sem autor)
 D --> C -- : true
 C --> T -- : "Usuário excluído."
 T --> A -- : exibir mensagem

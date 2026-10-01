@@ -9,6 +9,7 @@ boundary ":TelaPerfil" as T
 control ":CurriculoController" as C
 control ":LeitorDocumento" as L
 control ":ExtracaoCurriculo" as X
+control ":Calibrador" as K
 entity ":CurriculoDAO" as CV
 control ":AplicacaoCurriculo" as AP
 control ":MatchService" as M
@@ -18,6 +19,8 @@ C -> C : validar tamanho, extensão e conteúdo
 C -> L ++ : ler texto e foto do arquivo
 L --> C -- : texto e foto
 C -> X ++ : extrair(texto)
+X -> K ++ : decidir("curriculo_linha", linha solta)
+K --> X -- : seção do termo calibrado
 X --> C -- : dados do currículo
 C -> CV ++ : salvar(currículo)
 CV --> C -- : curriculoId
@@ -25,7 +28,6 @@ C -> AP ++ : calcular(perfil, dados) / salvarFoto()
 AP --> C -- : campos aplicados
 C -> M ++ : recalcular(perfilId)
 M --> C -- : nº de vagas analisadas
-C -> C : guardarSugestao("curriculo")
 C --> T -- : relatório da extração
 T --> A -- : exibir relatório
 @enduml

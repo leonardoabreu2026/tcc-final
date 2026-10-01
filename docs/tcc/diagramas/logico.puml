@@ -1,6 +1,6 @@
 @startuml
 !include estilo.iuml
-mainframe Modelo Lógico — conecta_vagas_df_v2 (MySQL/MariaDB)
+mainframe Modelo Lógico — tcc_final (MySQL/MariaDB)
 hide circle
 skinparam linetype ortho
 skinparam ClassBackgroundColor #FFFFFF
@@ -167,59 +167,22 @@ entity redefinicoes_senha {
   ip : VARCHAR(45)
   created_at : DATETIME NN
 }
-entity aprendizado_exemplos {
+entity calibracao_extracao {
   PK <b>id</b> : INT(11)
   --
-  modelo : VARCHAR(40) NN UQ
-  classe : VARCHAR(100) NN
-  texto : VARCHAR(500) NN
-  chave : CHAR(40) NN UQ
-  vezes : INT(11) NN
+  contexto : VARCHAR(30) NN UQ
+  termo : VARCHAR(120) NN
+  termo_chave : VARCHAR(120) NN UQ
+  destino : VARCHAR(100) NN
+  ativo : TINYINT(1) NN
   FK <i>usuario_id</i> : INT(11)
   created_at : DATETIME NN
-  updated_at : DATETIME NN
-}
-entity aprendizado_palavras {
-  PK <b>modelo</b> : VARCHAR(40)
-  PK <b>classe</b> : VARCHAR(100)
-  PK <b>palavra</b> : VARCHAR(100)
-  --
-  contagem : INT(11) NN
-}
-entity aprendizado_revisoes {
-  PK <b>id</b> : INT(11)
-  --
-  origem : VARCHAR(20) NN
-  campos : INT(11) NN
-  campos_certos : INT(11) NN
-  linhas : INT(11) NN
-  linhas_certas : INT(11) NN
-  licoes : INT(11) NN
-  FK <i>usuario_id</i> : INT(11)
-  created_at : DATETIME NN
-}
-entity aprendizado_provas {
-  PK <b>modelo</b> : VARCHAR(40)
-  --
-  provas : INT(11) NN
-  acertos : INT(11) NN
-  updated_at : DATETIME NN
-}
-entity aprendizado_calibracao {
-  PK <b>modelo</b> : VARCHAR(40)
-  --
-  temperatura : DECIMAL(8,3) NN
-  licoes : INT(11) NN
-  amostras : INT(11) NN
-  nll_antes : DECIMAL(10,4) NN
-  nll_depois : DECIMAL(10,4) NN
   updated_at : DATETIME NN
 }
 usuarios ||--o| perfis
 usuarios ||--o{ assinaturas
 usuarios ||--o{ redefinicoes_senha
-usuarios |o--o{ aprendizado_exemplos
-usuarios |o--o{ aprendizado_revisoes
+usuarios |o--o{ calibracao_extracao
 perfis ||--o{ curriculos
 perfis ||--o{ vagas
 perfis ||--o{ candidaturas
@@ -229,6 +192,5 @@ vagas ||--o{ matches
 curriculos |o--o{ candidaturas
 categorias |o--o{ vagas
 categorias |o--o{ cursos
-tentativas_login -[hidden]- aprendizado_palavras
-aprendizado_provas -[hidden]- aprendizado_calibracao
+tentativas_login -[hidden]- calibracao_extracao
 @enduml

@@ -1,4 +1,4 @@
-# Arquitetura — Conecta Vagas DF
+# Arquitetura — TCC Final · Conecta Vagas DF
 
 Como o sistema funciona por dentro. Instalação e visão geral estão no [README](../README.md).
 
@@ -71,8 +71,7 @@ View: layouts/header.php + vagas/lista.php + layouts/footer.php  ──► HTML
 | `CurriculoController` | envio do currículo (extração), aplicar dados do relatório, excluir currículo |
 | `ArquivoController` | imagens enviadas (`assets/uploads/...`), download do currículo (`download.php`) |
 | `AdminController` | painel (`admin/index.php`), usuários, categorias, cursos, assinaturas |
-| `AprendizadoController` | painel "Aprendizado da máquina" (`admin/pages/aprendizado.php`) |
-| `AprendeComRevisao` (*trait*) | usada pelos controllers com extração: guarda a sugestão da máquina e aprende quando o formulário é salvo |
+| `CalibradorController` | painel "Calibrador" (`admin/pages/calibrador.php`): termos calibrados, "Testar as máquinas" e nomes conhecidos |
 | `EmpresaController` | vagas (com extração), candidaturas recebidas, banco de talentos, perfil da empresa |
 
 ### app/Models — acesso ao banco (DAO)
@@ -88,7 +87,7 @@ View: layouts/header.php + vagas/lista.php + layouts/footer.php  ──► HTML
 | `CandidaturaDAO` | `candidaturas` |
 | `MatchDAO` | `matches` |
 | `AssinaturaDAO` | `assinaturas` + regras dos planos |
-| `AprendizadoDAO` | `aprendizado_exemplos`, `aprendizado_palavras`, `aprendizado_revisoes`, `aprendizado_provas` (máquina de aprendizado) |
+| `CalibracaoDAO` | `calibracao_extracao` (termos do Calibrador) + nomes conhecidos (empresas e instituições já cadastradas) |
 
 ### app/Services — regras de negócio
 
@@ -102,10 +101,7 @@ View: layouts/header.php + vagas/lista.php + layouts/footer.php  ──► HTML
 | `Extracao/AplicacaoCurriculo` | Aplica os dados extraídos no perfil (preenche, mantém ou mescla). |
 | `Extracao/ExtracaoVaga` | Texto de um anúncio → campos da vaga. |
 | `Extracao/ExtracaoCurso` | Texto de divulgação → campos do curso. |
-| `Aprendizado/MaquinaAprendizado` | Aprendizado de máquina das extrações: decisão híbrida regra × modelo, aprender com a revisão. Ver [APRENDIZADO.md](APRENDIZADO.md). |
-| `Aprendizado/NaiveBayes` | O classificador (aprender, esquecer, prever e explicar). |
-| `Aprendizado/Tokenizador` | Texto → palavras que o classificador conta. |
-| `Aprendizado/CorrecaoHumana` | Compara a sugestão da extração com o que a pessoa salvou e tira as lições. |
+| `Extracao/Calibrador` | Calibrador das máquinas de extração: termos do administrador ("quando o texto tiver X, mande para Y") e nomes conhecidos (empresas e instituições já cadastradas). Ver [CALIBRADOR.md](CALIBRADOR.md). |
 | `Pix` | Código Pix "copia e cola" (BR Code do Banco Central, com CRC16) do QR Code de doação do rodapé. |
 
 ### app/Views — telas
@@ -155,7 +151,7 @@ Definida em `public/index.php`. As rotas aceitam GET (mostrar) e POST (enviar fo
 | `admin/pages/categorias.php` | `AdminController::categorias` | `admin/categorias` | admin |
 | `admin/pages/cursos.php` | `AdminController::cursos` | `admin/cursos` | admin |
 | `admin/pages/assinaturas.php` | `AdminController::assinaturas` | `admin/assinaturas` | admin |
-| `admin/pages/aprendizado.php` | `AprendizadoController::painel` | `admin/aprendizado` | admin |
+| `admin/pages/calibrador.php` | `CalibradorController::painel` | `admin/calibrador` | admin |
 | `admin/pages/vagas.php` | `EmpresaController::vagas` | `admin/vagas` | empresa (suas vagas) e admin |
 | `admin/pages/candidaturas.php` | `EmpresaController::candidaturas` | `admin/candidaturas` | empresa e admin |
 | `admin/pages/talentos.php` | `EmpresaController::talentos` | `admin/talentos` | empresa e admin |
@@ -180,8 +176,9 @@ Definida em `public/index.php`. As rotas aceitam GET (mostrar) e POST (enviar fo
 A empresa faz um caminho parecido para vagas: cola o anúncio → `ExtracaoVaga` preenche → publica →
 o match é recalculado com todos os candidatos.
 
-Em todas as extrações (vaga, curso e currículo), a revisão salva ensina a **máquina de aprendizado**: as correções
-feitas na revisão viram lições que a extração passa a usar. Detalhes e roteiro de demonstração: [APRENDIZADO.md](APRENDIZADO.md).
+Em todas as extrações (vaga, curso e currículo), as regras do código podem ser ajustadas pelo **Calibrador**
+(Painel → Calibrador): termos que o administrador cadastra e empresas/instituições já cadastradas, reconhecidas
+sozinhas. Detalhes e roteiro de demonstração: [CALIBRADOR.md](CALIBRADOR.md).
 
 ---
 
@@ -286,9 +283,7 @@ fica fora do painel, em [PROMPTS_PESQUISA.md](PROMPTS_PESQUISA.md) (gerado por `
 
 **Manutenção automática** (`manutencao_diaria()` em `app/Core/Upload.php`, disparada pela visão geral do
 administrador, no máximo 1x por dia): limpa arquivos órfãos de `storage/uploads` (`limpar_uploads_orfaos`: sem
-registro que os use e com mais de 24 h) e chama `MaquinaAprendizado::manutencaoAutomatica()` (estuda o histórico,
-recalibra; as provas guardam só a janela recente — `AprendizadoDAO::JANELA_PROVAS` — então a máquina perde a
-liberação sozinha se piorar). A tela técnica da máquina saiu do menu (continua em `admin/pages/aprendizado.php`).
+registro que os use e com mais de 24 h).
 
 **Foto do currículo** (`LeitorDocumento::extrairFoto`): candidatas do DOCX (`word/media`) e do PDF (JPEG e imagens
 FlateDecode RGB/cinza remontadas em PNG por `PdfTexto::imagens`); vence a de maior `pontuacaoFoto` (tons de pele,
@@ -308,12 +303,15 @@ tem no máximo uma assinatura ativa; se a empresa perde o Premium, o destaque da
 demais da fila (`[data-rotativo]` em `app.js`), cada seção num ritmo (4,5 s, 5,2 s e 5,9 s) para não trocarem juntas;
 pausa com o mouse/foco em cima, no botão "Pausar" ou para quem prefere menos movimento.
 
-**Aprendizado de máquina**: as regras acima são a base. Linhas soltas do anúncio, área da vaga/curso, empresa ou
-instituição não reconhecida e linhas do currículo sem título de seção também passam pela `MaquinaAprendizado`
-(Naive Bayes e memória de nomes), que aprende com cada revisão salva e só decide quando tem lições e confiança
-suficientes e já passou no "período de experiência" (acertou 90% das provas feitas com lições que ainda não
-conhecia); senão vale a regra. Nas vagas e nos cursos, o relatório da extração mostra o que a máquina decidiu e
-por quê. Detalhes em [APRENDIZADO.md](APRENDIZADO.md).
+**Calibrador** (`Extracao/Calibrador` + `CalibracaoDAO`, Painel → Calibrador): as regras acima são a base. Onde elas
+erram, o administrador cadastra um **termo calibrado** — "quando o texto tiver X, mande para Y" — em 4 contextos:
+linha solta do anúncio → campo da vaga (`vaga_linha`), área da vaga (`vaga_categoria`), área do curso
+(`curso_categoria`) e linha solta do começo do currículo → seção (`curriculo_linha`). O termo vale mais que a regra;
+entre dois termos que casam, vence o mais longo; casa por palavra inteira, sem acento e sem maiúscula. A segunda parte
+é automática: as **empresas** (anunciante das vagas e nome fantasia) e as **instituições** (dos cursos) já cadastradas
+são reconhecidas quando nenhuma regra achou o nome. Tudo é determinístico; cada decisão vai para `$r['calibrador']`
+e aparece no relatório da extração da vaga (bloco "Ajustes do calibrador"). A tela tem **Testar as máquinas**: cola-se
+um texto e vê-se a extração, sem salvar nada. Detalhes em [CALIBRADOR.md](CALIBRADOR.md).
 
 ### CRUD do painel
 
@@ -324,6 +322,7 @@ por quê. Detalhes em [APRENDIZADO.md](APRENDIZADO.md).
 | Usuários | formulário | ficha da conta (`?ver=`) | `?edit=` | Ativar · Bloquear (nunca a própria conta nem o último admin) | sim | tipo e busca |
 | Categorias | formulário | vagas/cursos da categoria | `?edit=` | Ativar · Desativar | sim | — |
 | Candidaturas | (pelo candidato) | portfólio e currículo | status + retorno | — | admin | vaga e status |
+| Calibrador (termos) | formulário | "Testar as máquinas" | `?edit=` | Ativar · Desativar (guarda sem usar) | sim | contexto e busca |
 
 Toda ação que muda dados é um formulário POST com token CSRF (`painel_acao()`), confere a permissão no servidor e
 volta para a mesma lista filtrada (`volta_filtros()`).
@@ -366,7 +365,8 @@ volta para a mesma lista filtrada (`volta_filtros()`).
 - PDO com prepared statements em todas as consultas (nenhum valor do usuário é concatenado no SQL).
 - Senhas com `password_hash`/`password_verify` (bcrypt), rehash automático e limite de 72 caracteres.
 - Chaves estrangeiras com cascata: excluir um usuário remove perfil, currículos, vagas, candidaturas,
-  matches, assinaturas e pedidos de redefinição; os arquivos enviados também são apagados.
+  matches, assinaturas e pedidos de redefinição; os arquivos enviados também são apagados. Única exceção: os termos
+  do Calibrador ficam e só perdem o autor (`calibracao_extracao.usuario_id` → `ON DELETE SET NULL`).
 - Cadastro de usuário + perfil em transação; e-mail único (também pela chave UNIQUE).
 
 **Sessão e login**
@@ -407,7 +407,6 @@ volta para a mesma lista filtrada (`volta_filtros()`).
 - Candidatura cancelada: a empresa perde o acesso ao contato e ao currículo daquele candidato (LGPD).
 - **Exclusão da conta pelo candidato (LGPD)**: `PerfilController::excluirConta` (POST, CSRF) pede a senha — mesma
   tolerância e mesma pausa contra tentativas do login (`UsuarioDAO::senhaConfere`) — e a caixa de confirmação.
-  Antes de apagar, `MaquinaAprendizado::esquecerDoUsuario` tira as lições de currículo dele do modelo; depois
   `UsuarioDAO::excluir` apaga a conta (perfil, currículos, candidaturas, matches, assinaturas e pedidos de troca de
   senha em cascata), os arquivos enviados e as tentativas de login do e-mail. As outras sessões abertas da conta
   caem sozinhas (`revalidar_sessao`). Empresas pedem a exclusão ao administrador.
@@ -440,7 +439,7 @@ e o botão "Copiar código Pix". Nenhuma API externa é chamada.
 
 ## 10. Banco de dados
 
-`database/schema.sql` (estrutura) + `database/seed.sql` (demonstração). Banco: `conecta_vagas_df_v2`.
+`database/schema.sql` (estrutura) + `database/seed.sql` (demonstração). Banco: `tcc_final`, com **12 tabelas**.
 
 ```
 usuarios 1──1 perfis 1──N curriculos
@@ -448,8 +447,10 @@ usuarios 1──1 perfis 1──N curriculos
                   │                     └──N matches      N── perfis (candidato)
 usuarios 1──N assinaturas · tentativas_login · redefinicoes_senha
 categorias 1──N vagas / cursos
-usuarios 1──N aprendizado_exemplos · aprendizado_revisoes   (quem ensinou; aprendizado_palavras são os contadores)
+usuarios 0..1──N calibracao_extracao   (quem cadastrou o termo; ON DELETE SET NULL: o termo fica sem autor)
 ```
+
+O `seed.sql` traz 12 termos de exemplo do Calibrador (ver [CALIBRADOR.md](CALIBRADOR.md)).
 
 Categorias de vaga do seed: TI, Administração, Marketing, Vendas, RH, Financeiro, Engenharia, Saúde, Educação,
 Alimentação, Serviços Gerais e Limpeza, Logística e Transporte e Atendimento ao Público (as quatro últimas são as que a
@@ -496,7 +497,7 @@ Removidos por não serem usados: as funções `perfilAtual()`, `pt_data_extenso(
 
 Se o banco falhar, o sistema mostra "Banco de dados indisponível" (HTTP 503) com a orientação certa. Confira:
 - Apache e MySQL iniciados (XAMPP Control Panel, status verde).
-- O banco `conecta_vagas_df_v2` existe (importe `database/schema.sql` e `database/seed.sql`).
+- O banco `tcc_final` existe (importe `database/schema.sql` e `database/seed.sql`).
 - `DB_HOST`, `DB_NAME`, `DB_USER` e `DB_PASS` corretos (`config/config.php` ou variáveis de ambiente).
 - A pasta `storage/uploads` permite gravação.
 - Só a página inicial abre e as outras dão "Not Found" do Apache: o `mod_rewrite` está desligado

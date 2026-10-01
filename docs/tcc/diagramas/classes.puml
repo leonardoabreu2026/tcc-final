@@ -182,60 +182,25 @@ class TentativaLogin {
   +registrarFalha() : void
   +minutosBloqueio() : int
 }
-package "Máquina de aprendizado" {
-  class LicaoAprendizado {
-    -id : int
-    -modelo : String
-    -classe : String
-    -texto : String
-    -chave : String
-    -vezes : int
-    --
-    +registrarExemplo() : void
-    +removerExemplo() : boolean
-  }
-  class RevisaoAprendizado {
-    -id : int
-    -origem : String
-    -campos : int
-    -camposCertos : int
-    -linhas : int
-    -linhasCertas : int
-    -licoes : int
-    --
-    +registrarRevisao() : void
-  }
-  class PalavraModelo {
-    -modelo : String
-    -classe : String
-    -palavra : String
-    -contagem : int
-    --
-    +somarPalavras(sinal) : void
-  }
-  class ProvaModelo {
-    -modelo : String
-    -provas : int
-    -acertos : int
-    --
-    +registrarProva(acertou) : void
-  }
-  class CalibracaoModelo {
-    -modelo : String
-    -temperatura : decimal
-    -licoes : int
-    -amostras : int
-    -nllAntes : decimal
-    -nllDepois : decimal
-    --
-    +salvarCalibracao() : void
-  }
+class TermoCalibrado {
+  -id : int
+  -contexto : String
+  -termo : String
+  -termoChave : String
+  -destino : String
+  -ativo : boolean
+  -createdAt : DateTime
+  -updatedAt : DateTime
+  --
+  +salvar() : int
+  +alterarAtivo(ativo) : boolean
+  +excluir() : boolean
+  +listarAtivos() : List
 }
 Usuario "1" -- "0..1" Perfil : possui >
 Usuario "1" -- "0..*" Assinatura : contrata >
 Usuario "1" -- "0..*" RedefinicaoSenha : solicita >
-Usuario "0..1" -- "0..*" LicaoAprendizado : ensina >
-Usuario "0..1" -- "0..*" RevisaoAprendizado : revisa >
+Usuario "0..1" -- "0..*" TermoCalibrado : cadastra >
 Perfil "1" -- "0..*" Curriculo : envia >
 Perfil "1" -- "0..*" Vaga : publica >
 Perfil "1" -- "0..*" Candidatura : realiza >
@@ -245,7 +210,4 @@ Vaga "1" -- "0..*" Match
 Curriculo "0..1" -- "0..*" Candidatura : anexado em >
 Categoria "0..1" -- "0..*" Vaga : classifica >
 Categoria "0..1" -- "0..*" Curso : classifica >
-LicaoAprendizado -[hidden]down- PalavraModelo
-LicaoAprendizado -[hidden]down- ProvaModelo
-RevisaoAprendizado -[hidden]down- CalibracaoModelo
 @enduml

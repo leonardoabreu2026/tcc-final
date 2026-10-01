@@ -31,7 +31,7 @@ rectangle "Sistema Conecta Vagas DF" {
   usecase "UC16 Manter categoria" as UC16
   usecase "UC17 Manter curso/e-book" as UC17
   usecase "UC20 Gerenciar assinaturas" as UC20
-  usecase "UC21 Acompanhar a máquina\nde aprendizado" as UC21
+  usecase "UC21 Calibrar as máquinas\nde extração" as UC21
 }
 U -- UC01
 C -- UC06

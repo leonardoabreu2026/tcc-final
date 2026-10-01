@@ -10,6 +10,7 @@ control ":LeitorCartaz\n(navegador)" as L
 control ":EmpresaController" as C
 control ":OcrImagem" as O
 control ":ExtracaoVaga" as X
+control ":Calibrador" as K
 entity ":AssinaturaDAO" as S
 entity ":VagaDAO" as D
 control ":MatchService" as M
@@ -22,6 +23,8 @@ T -> C ++ : vagas(acao = ler_cartaz, cartaz, leituras)
 C -> O ++ : leiturasDoNavegador(leituras)
 O --> C -- : leituras validadas
 C -> X ++ : doImagem(cartaz, leituras)
+X -> K ++ : decidir(linha / área) · nomeConhecido("empresa")
+K --> X -- : ajustes do calibrador
 X --> C -- : campos da vaga + relatório
 C --> T -- : formulário preenchido
 T --> E -- : exibir para revisão
@@ -36,7 +39,6 @@ C -> D ++ : salvarComLimite(dados, 0, limite)
 D --> C -- : vagaId
 C -> M ++ : recalcularVaga(vagaId)
 M --> C -- : nº de candidatos
-C -> C : aprenderComRevisao("vaga")
 C --> T -- : "Vaga publicada"
 T --> E -- : exibir mensagem
 @enduml

@@ -11,7 +11,7 @@ rectangle "Conecta Vagas DF" {
   usecase "Excluir currículo" as XC
   usecase "Visualizar portfólio" as VP
   usecase "Recalcular match" as RM
-  usecase "Aprender com a revisão\n(automático)" as AA
+  usecase "Aplicar o calibrador\n(termos do administrador)" as CB
   usecase "Excluir a própria conta\n(LGPD)" as XA
   usecase "Confirmar com a senha" as CS
 }
@@ -23,7 +23,7 @@ C -- VP
 C -- XA
 EC ..> EX : <<include>>
 AP ..> RM : <<include>>
-AP ..> AA : <<include>>
+EX ..> CB : <<include>>
 VP <.. RM : <<extend>>
 XA ..> CS : <<include>>
 @enduml

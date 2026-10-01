@@ -10,7 +10,7 @@ rectangle "Conecta Vagas DF" {
   usecase "Alterar vaga" as AV
   usecase "Excluir vaga" as EV
   usecase "Recalcular match\nda vaga" as RM
-  usecase "Aprender com a revisão\n(automático)" as AA
+  usecase "Aplicar o calibrador\n(termos e empresas\njá cadastradas)" as CB
 }
 actor Administrador as A
 E -- CV
@@ -23,5 +23,5 @@ CV <.. XT : <<extend>>
 CV <.. LC : <<extend>>
 CV ..> RM : <<include>>
 AV ..> RM : <<include>>
-CV ..> AA : <<include>>
+XT ..> CB : <<include>>
 @enduml
