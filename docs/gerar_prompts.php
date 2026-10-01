@@ -21,10 +21,21 @@ $modelo = "Título:\nTipo:\nInstituição:\nModalidade:\nCidade:\nNível:\nCarga
 $md = "# Prompt padrão — pesquisa de cursos e e-books para o cadastro\n\n";
 $md .= "Peça a uma IA de pesquisa (Perplexity, ChatGPT, Gemini, Copilot, Claude) que pesquise **cada link ou título** e devolva uma **ficha** com os mesmos campos do cadastro. Depois é só colar a resposta na caixa **Extrair** do painel (**Painel → Cursos e e-books**):\n\n";
 $md .= "- **uma ficha** → preenche o formulário: revise e clique em **Salvar conteúdo**;\n- **várias fichas** (separadas por `---`) → prévia: confira e clique em **Cadastrar marcados**;\n";
-$md .= "- **com imagem** na ficha, ela é conferida e baixada; **sem imagem**, o conteúdo entra com a **imagem padrão** da plataforma e aparece na lista como *trocar imagem* (use Editar quando tiver a imagem certa);\n";
+$md .= "- **imagem**: o link direto da ficha é conferido na prévia e baixado ao salvar; **sem imagem** — ou se o link não baixar —, o conteúdo entra com a **imagem padrão** e aparece na lista como *trocar imagem*. A imagem **nunca impede o cadastro** (passo a passo em *Depois da pesquisa*, abaixo);\n";
 $md .= "- **PDF na nossa biblioteca**: com o campo **PDF:** na ficha (ou o link do e-book apontando para o PDF), o cadastro baixa o PDF para a biblioteca da plataforma e o botão vira **Baixar**; também dá para enviar o arquivo à mão. Conteúdo que fica na web mostra **Acessar**. Os e-books antigos que ainda abrem no site de origem vêm todos de uma vez pelo botão **Trazer os PDFs para a biblioteca** (painel → Cursos e e-books).\n\n";
 $md .= "> Gerado em ".date('d/m/Y')." com as áreas cadastradas. Criou ou renomeou áreas? Rode `C:\\xampp\\php\\php.exe docs\\gerar_prompts.php`.\n\n";
 $md .= "## Modelo da ficha\n\n```text\n{$modelo}\n```\n\n";
+$md .= "## Depois da pesquisa: subir a imagem e finalizar o cadastro\n\n"
+     ."1. **Extrair** — copie as fichas da IA, abra **Painel → Cursos e e-books**, cole na caixa **Extrair** e clique em **Extrair**.\n"
+     ."2. **Conferir a imagem na prévia** — uma ficha preenche o formulário com a miniatura da imagem; várias fichas abrem a prévia em lote, com a miniatura de cada uma e um aviso quando não há imagem. A plataforma já conferiu cada link: o que não abre como imagem é trocado pela imagem de divulgação da página (aviso *Imagem achada na página do conteúdo*).\n"
+     ."3. **Salvar** — **Salvar conteúdo** (uma) ou **Cadastrar marcados** (várias). A imagem do link é baixada, reduzida para até 800 px de largura e guardada na plataforma (não depende mais do site de origem). Se o link não baixar, o conteúdo é salvo do mesmo jeito, com a imagem da instituição ou a imagem padrão e um aviso.\n"
+     ."4. **Finalizar (trocar a imagem padrão)** — na lista, filtre **Situação → Com imagem padrão** (ou clique em *trocar imagem* na linha do conteúdo), abra **Editar** e use **uma** destas formas, na ordem de preferência:\n"
+     ."   - **enviar o arquivo** (JPG, PNG ou WEBP até 3 MB) — a mais garantida: salve a imagem da página oficial no computador e envie;\n"
+     ."   - **colar o link direto** da imagem (o endereço que termina em .jpg, .png ou .webp);\n"
+     ."   - **escolher um caminho** de imagem que já está no site (lista *Imagem (caminho)*, ex.: `assets/img/ebooks/...`).\n"
+     ."   Clique em **Salvar conteúdo**. O número em *Com imagem padrão* diminui; repita até zerar.\n"
+     ."5. **Conferir no site** — abra *Cursos* ou *E-books* e veja o card com a imagem nova.\n\n"
+     ."> Na ficha, o campo **Imagem:** também aceita um caminho do próprio site (`assets/img/...`) — útil quando a imagem já foi salva no projeto.\n\n";
 $md .= "## Onde colar o prompt em cada IA\n\n| IA | Como usar |\n|---|---|\n";
 foreach (PromptsPesquisa::IAS as $c) $md .= '| '.$c['nome'].' | '.$c['onde']." |\n";
 $md .= "\nDepois de configurado, cada mensagem é só a lista de **links e/ou títulos**, um por linha.\n\n";

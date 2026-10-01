@@ -251,6 +251,16 @@ confere('ExtracaoCurso: link com parênteses não é cortado (".../Cartilha%20(2
 $comImagem = ExtracaoCurso::fichas("Título: Guia X\nTipo: E-book\nLink: https://x.gov.br/guia.pdf\nImagem: https://x.gov.br/capa.jpg\n---\nTítulo: Curso Y\nLink: https://x.gov.br/y\nImagem: Não encontrada\n---");
 confere('Padrão da ficha tem Imagem: o prompt pede e a máquina lê', str_contains(ExtracaoCurso::promptPesquisa([]), 'Imagem:')
     && ($comImagem[0]['imagem_url'] ?? '') === 'https://x.gov.br/capa.jpg' && ($comImagem[1]['imagem_url'] ?? null) === '');
+$comCaminho = ExtracaoCurso::fichas("Título: Guia Z\nTipo: E-book\nLink: https://x.gov.br/guia-z\nImagem: assets/img/padrao/ebook.jpg\n---\nTítulo: Guia W\nLink: https://x.gov.br/guia-w.pdf\nImagem: assets/img/nao-existe-w.jpg");
+$caminhoNaPrevia = ImagemRemota::completar([$comCaminho[0]])[0];   // caminho do site já é a imagem: não busca nada na internet
+confere('Ficha: caminho de imagem do site que existe entra direto (e a prévia não troca); caminho que não existe é ignorado',
+    $comCaminho[0]['imagem'] === 'assets/img/padrao/ebook.jpg' && $comCaminho[0]['imagem_propria'] === true && $comCaminho[0]['imagem_url'] === ''
+    && $caminhoNaPrevia['imagem_origem'] === 'caminho' && $caminhoNaPrevia['imagem'] === 'assets/img/padrao/ebook.jpg'
+    && $comCaminho[1]['imagem_propria'] === false && $comCaminho[1]['imagem'] !== 'assets/img/nao-existe-w.jpg');
+$promptMestre = PromptsPesquisa::mestre('chatgpt', []);
+confere('Prompt de pesquisa explica a imagem: arquivo direto (.jpg/.png/.webp), nunca a página, e "Não encontrada" quando não achar',
+    str_contains($promptMestre, 'endereço DIRETO do arquivo da imagem') && str_contains($promptMestre, '.webp') && str_contains($promptMestre, 'Não encontrada')
+    && str_contains($promptMestre, 'a página do curso no lugar da imagem'));
 // BIBLIOTECA: a ficha traz o link direto do PDF (campo "PDF:") e, na página do e-book, o PDF é achado sozinho.
 $comPdf = ExtracaoCurso::fichas("Título: Guia Z\nTipo: E-book\nLink: https://z.gov.br/guia\nPDF: https://z.gov.br/arquivos/guia-z.pdf\n---\nTítulo: Guia W\nTipo: E-book\nLink: https://w.gov.br/w.pdf\nPDF: Não encontrado\n---");
 $paginaDspace = '<html><head><meta name="citation_pdf_url" content="http://educapes.capes.gov.br/bitstream/capes/1/2/Cartilha%20A5.pdf"></head><body><a href="/termos.pdf">Termos</a></body></html>';

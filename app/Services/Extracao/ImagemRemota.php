@@ -5,8 +5,9 @@ declare(strict_types=1);
  * Imagem dos cursos e e-books importados pela pesquisa (capa do e-book ou imagem do curso).
  *
  *  - completar(): na prévia da importação, confere se o link "Imagem:" da ficha abre mesmo uma imagem;
- *    se a ficha veio sem imagem (ou com link ruim), usa a imagem de divulgação da página do conteúdo
- *    (og:image — a mesma que aparece quando o link é compartilhado);
+ *    se o link é de uma PÁGINA (e não do arquivo da imagem), ou se a ficha veio sem imagem, usa a imagem de
+ *    divulgação dessa página ou da página do conteúdo (og:image — a mesma que aparece quando o link é
+ *    compartilhado); caminho de imagem do próprio site (assets/...) já é a imagem certa e fica;
  *  - baixar(): no cadastro, baixa as imagens escolhidas, reduz para no máximo 800 px de largura e grava
  *    em storage/uploads, como as imagens enviadas pelo painel;
  *  - pdfs(): baixa o PDF dos e-books (do link direto ou achado na página) para a BIBLIOTECA da plataforma.
@@ -24,7 +25,10 @@ final class ImagemRemota {
     private const CERTIFICADOS = ROOT_DIR.'/config/cacert.pem';
 
     /**
-     * Fichas da importação: 'imagem_url' fica só com imagem que abre de verdade.
+     * Fichas da importação: 'imagem_url' fica só com imagem que abre de verdade, e 'imagem_origem' diz de onde
+     * ela veio, para a prévia avisar o administrador:
+     *   'ficha'   = o link "Imagem:" da ficha é a imagem;       'caminho' = caminho de imagem do próprio site;
+     *   'pagina'  = achada na página do link "Imagem:" ou do conteúdo;   '' = sem imagem (entra a reserva ao salvar).
      * @param array<int,array<string,mixed>> $itens
      * @return array<int,array<string,mixed>>
      */
@@ -33,23 +37,30 @@ final class ImagemRemota {
         $validas = self::validas(array_map(fn($it) => (string)($it['imagem_url'] ?? ''), $itens));
         $paginas = [];
         foreach ($itens as $i => $it) {
-            $itens[$i]['imagem_url'] = $u = (string)($it['imagem_url'] ?? '');
-            if ($u !== '' && !isset($validas[$u])) $itens[$i]['imagem_url'] = '';
-            // 2. Sem imagem: procura na página do conteúdo (link direto de PDF não tem página para olhar).
+            $u = (string)($it['imagem_url'] ?? '');
+            $itens[$i]['imagem_url'] = $u !== '' && isset($validas[$u]) ? $u : '';
+            $itens[$i]['imagem_origem'] = $itens[$i]['imagem_url'] !== '' ? 'ficha' : (!empty($it['imagem_propria']) ? 'caminho' : '');
+            if ($itens[$i]['imagem_origem'] !== '') continue;
+            // 2. Sem imagem: procura a de divulgação na página que veio no campo Imagem (a pesquisa às vezes manda a
+            //    página em vez do arquivo da imagem) e na página do conteúdo. Link de PDF não tem página para olhar.
             $link = (string)($it['url'] ?? '');
-            if ($itens[$i]['imagem_url'] === '' && $link !== '' && !preg_match('/\.pdf($|[?#])/i', $link)) $paginas[$i] = $link;
+            $paginas[$i] = array_values(array_unique(array_filter([$u, $link], fn($l) => $l !== '' && !preg_match('/\.pdf($|[?#])/i', $l))));
+            if (!$paginas[$i]) unset($paginas[$i]);
         }
         if (!$paginas) return $itens;
-        $respostas = self::buscar(array_values($paginas), self::LIMITE_PAGINA, true);
+        $respostas = self::buscar(array_values(array_unique(array_merge([], ...array_values($paginas)))), self::LIMITE_PAGINA, true);
         $daPagina = [];
-        foreach ($paginas as $i => $link) {
-            [$html, $tipo, $final] = $respostas[$link] ?? ['', '', $link];
-            if ($html !== '' && str_contains($tipo, 'html')) $daPagina[$i] = array_slice(self::candidatas($html, $final), 0, 4);
+        foreach ($paginas as $i => $links) {
+            $daPagina[$i] = [];
+            foreach ($links as $link) {
+                [$html, $tipo, $final] = $respostas[$link] ?? ['', '', $link];
+                if ($html !== '' && str_contains($tipo, 'html')) $daPagina[$i] = [...$daPagina[$i], ...array_slice(self::candidatas($html, $final), 0, 4)];
+            }
         }
-        // 3. Fica a primeira imagem da página que abre de verdade (a metatag às vezes aponta para um ícone ou foto provisória).
+        // 3. Fica a primeira imagem que abre de verdade (a metatag às vezes aponta para um ícone ou foto provisória).
         $validas = self::validas(array_merge([], ...array_values($daPagina)));
         foreach ($daPagina as $i => $lista) {
-            foreach ($lista as $u) if (isset($validas[$u])) { $itens[$i]['imagem_url'] = $u; break; }
+            foreach ($lista as $u) if (isset($validas[$u])) { $itens[$i]['imagem_url'] = $u; $itens[$i]['imagem_origem'] = 'pagina'; break; }
         }
         return $itens;
     }

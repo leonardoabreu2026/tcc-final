@@ -24,7 +24,11 @@ $modeloFicha = "Título:\nTipo:\nInstituição:\nModalidade:\nCidade:\nNível:\n
             <div class="form-actions"><button class="btn">Extrair</button><span class="meta">1 ficha ou texto → preenche o formulário abaixo · várias fichas → prévia para cadastrar de uma vez</span></div>
         </form>
         <?php if ($extraido): ?>
-            <?=carregador_html('Pronto: dados extraídos — revise abaixo e clique em "Salvar conteúdo".'.(($form['imagem_url'] ?? '') === '' && ($form['imagem'] ?? '') === '' ? ' Sem imagem na ficha: vai entrar com a imagem padrão (troque depois).' : ''), true)?>
+            <?=carregador_html('Pronto: dados extraídos — revise abaixo e clique em "Salvar conteúdo".'.match (true) {
+                ($extraido['imagem_origem'] ?? '') === 'pagina' => ' Imagem achada na página do conteúdo: confira a prévia.',
+                ($form['imagem_url'] ?? '') === '' && ($form['imagem'] ?? '') === '' => ' Sem imagem na ficha: vai entrar com a imagem padrão (troque depois).',
+                default => '',
+            }, true)?>
         <?php endif; ?>
         <?php if ($importacao): ?>
         <form method="post" class="imp-previa" style="margin-top:12px" data-carregando="Cadastrando os conteúdos e baixando as imagens e os PDFs…">
@@ -73,7 +77,7 @@ $modeloFicha = "Título:\nTipo:\nInstituição:\nModalidade:\nCidade:\nNível:\n
                 <?php if (eh_pdf_biblioteca((string)$form['url'])): ?><small class="meta">Este conteúdo já está na biblioteca: <a href="<?=e(url($form['url']))?>" target="_blank" rel="noopener">abrir o PDF<span class="sr-only"> (abre em nova aba)</span></a>. Enviar outro substitui.</small><?php endif; ?></div>
             <div><label for="c-img">Imagem (caminho)</label><input id="c-img" name="imagem" list="imgs-curso" maxlength="255" value="<?=e($form['imagem'])?>"><datalist id="imgs-curso"><?php foreach ($imagens as $i): ?><option value="<?=e($i)?>"><?php endforeach; ?></datalist></div>
             <div><label for="c-arq">…ou envie uma imagem</label><input id="c-arq" type="file" name="imagem_arquivo" accept="image/jpeg,image/png,image/webp"></div>
-            <div class="full"><label for="c-img-url">…ou cole o link da imagem (é baixada ao salvar). Sem imagem, entra a imagem padrão da plataforma.</label>
+            <div class="full"><label for="c-img-url">…ou cole o link da imagem (é baixada ao salvar). Sem imagem, ou se o link não baixar, entra a imagem padrão da plataforma.</label>
                 <div class="pm-img-link"><?php if (url_http_valida((string)($form['imagem_url'] ?? ''))): ?><img class="imp-miniatura" src="<?=e($form['imagem_url'])?>" alt="Prévia da imagem do link" loading="lazy" referrerpolicy="no-referrer"><?php endif; ?>
                 <input id="c-img-url" name="imagem_url" type="url" maxlength="500" value="<?=e((string)($form['imagem_url'] ?? ''))?>" placeholder="https://.../capa.jpg"></div></div>
             <div class="full"><label for="c-desc">Descrição</label><textarea id="c-desc" name="descricao" rows="4"><?=e($form['descricao'])?></textarea></div>

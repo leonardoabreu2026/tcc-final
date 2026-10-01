@@ -4,10 +4,10 @@ Peça a uma IA de pesquisa (Perplexity, ChatGPT, Gemini, Copilot, Claude) que pe
 
 - **uma ficha** → preenche o formulário: revise e clique em **Salvar conteúdo**;
 - **várias fichas** (separadas por `---`) → prévia: confira e clique em **Cadastrar marcados**;
-- **com imagem** na ficha, ela é conferida e baixada; **sem imagem**, o conteúdo entra com a **imagem padrão** da plataforma e aparece na lista como *trocar imagem* (use Editar quando tiver a imagem certa);
+- **imagem**: o link direto da ficha é conferido na prévia e baixado ao salvar; **sem imagem** — ou se o link não baixar —, o conteúdo entra com a **imagem padrão** e aparece na lista como *trocar imagem*. A imagem **nunca impede o cadastro** (passo a passo em *Depois da pesquisa*, abaixo);
 - **PDF na nossa biblioteca**: com o campo **PDF:** na ficha (ou o link do e-book apontando para o PDF), o cadastro baixa o PDF para a biblioteca da plataforma e o botão vira **Baixar**; também dá para enviar o arquivo à mão. Conteúdo que fica na web mostra **Acessar**. Os e-books antigos que ainda abrem no site de origem vêm todos de uma vez pelo botão **Trazer os PDFs para a biblioteca** (painel → Cursos e e-books).
 
-> Gerado em 27/09/2026 com as áreas cadastradas. Criou ou renomeou áreas? Rode `C:\xampp\php\php.exe docs\gerar_prompts.php`.
+> Gerado em 01/10/2026 com as áreas cadastradas. Criou ou renomeou áreas? Rode `C:\xampp\php\php.exe docs\gerar_prompts.php`.
 
 ## Modelo da ficha
 
@@ -27,6 +27,20 @@ PDF: https://... (e-book gratuito: link direto do arquivo)
 Imagem: https://...
 Descrição:
 ```
+
+## Depois da pesquisa: subir a imagem e finalizar o cadastro
+
+1. **Extrair** — copie as fichas da IA, abra **Painel → Cursos e e-books**, cole na caixa **Extrair** e clique em **Extrair**.
+2. **Conferir a imagem na prévia** — uma ficha preenche o formulário com a miniatura da imagem; várias fichas abrem a prévia em lote, com a miniatura de cada uma e um aviso quando não há imagem. A plataforma já conferiu cada link: o que não abre como imagem é trocado pela imagem de divulgação da página (aviso *Imagem achada na página do conteúdo*).
+3. **Salvar** — **Salvar conteúdo** (uma) ou **Cadastrar marcados** (várias). A imagem do link é baixada, reduzida para até 800 px de largura e guardada na plataforma (não depende mais do site de origem). Se o link não baixar, o conteúdo é salvo do mesmo jeito, com a imagem da instituição ou a imagem padrão e um aviso.
+4. **Finalizar (trocar a imagem padrão)** — na lista, filtre **Situação → Com imagem padrão** (ou clique em *trocar imagem* na linha do conteúdo), abra **Editar** e use **uma** destas formas, na ordem de preferência:
+   - **enviar o arquivo** (JPG, PNG ou WEBP até 3 MB) — a mais garantida: salve a imagem da página oficial no computador e envie;
+   - **colar o link direto** da imagem (o endereço que termina em .jpg, .png ou .webp);
+   - **escolher um caminho** de imagem que já está no site (lista *Imagem (caminho)*, ex.: `assets/img/ebooks/...`).
+   Clique em **Salvar conteúdo**. O número em *Com imagem padrão* diminui; repita até zerar.
+5. **Conferir no site** — abra *Cursos* ou *E-books* e veja o card com a imagem nova.
+
+> Na ficha, o campo **Imagem:** também aceita um caminho do próprio site (`assets/img/...`) — útil quando a imagem já foi salva no projeto.
 
 ## Onde colar o prompt em cada IA
 
@@ -54,7 +68,8 @@ REGRAS DE PESQUISA:
 1. Abra a página OFICIAL de cada item (site da instituição) antes de responder. Nunca invente link, carga horária, preço ou imagem: o que não achar, escreva Não informado (na imagem: Não encontrada).
 2. Link: o endereço oficial da página do próprio curso/e-book (para e-book, pode ser o PDF oficial). Nada de página inicial, resultado de busca ou site que copia conteúdo.
    PDF (e-book gratuito): o link DIRETO do arquivo no site oficial (o que baixa o PDF, terminando em .pdf) — a plataforma guarda esse PDF na biblioteca dela. Nunca de site que copia conteúdo; livro pago não tem PDF.
-3. Imagem: endereço DIRETO de uma imagem oficial do item, terminando em .jpg, .jpeg, .png ou .webp — no e-book, a CAPA; no curso, a imagem de divulgação da página. Nunca logotipo genérico, ícone ou imagem de outro site. Não achou? Escreva Não encontrada (o cadastro entra com a imagem padrão da plataforma).
+3. Imagem: o endereço DIRETO do arquivo da imagem oficial do item — aberto no navegador, mostra só a imagem. Termina em .jpg, .jpeg, .png ou .webp (pode ter ?parâmetros depois). No e-book, a CAPA; no curso, a imagem de divulgação da página (a mesma que aparece quando o link é compartilhado: metatag og:image). Prefira imagem com pelo menos 300 px de largura.
+   Nunca: a página do curso no lugar da imagem, logotipo ou ícone da instituição, banner genérico do site, miniatura do Google/Bing, link de resultado de busca, imagem em base64 (data:), imagem gerada por IA ou de outro site. Não achou a imagem certa? Escreva Não encontrada: a plataforma procura sozinha a imagem de divulgação da página do Link e, se não achar, cadastra com a imagem padrão (o administrador troca depois).
 4. Fontes oficiais preferidas: Fundação Bradesco – Escola Virtual (ev.org.br), Escola Virtual.Gov (Enap) (escolavirtual.gov.br), SEBRAE (sebrae.com.br), Google Grow (grow.google), Microsoft Learn (learn.microsoft.com), FGV Online (educacao-executiva.fgv.br), IFB – Instituto Federal de Brasília (ifb.edu.br), SENAI (senai.br), SENAC (senac.br), Banco Central do Brasil (bcb.gov.br), CERT.br / NIC.br (cartilha.cert.br), Febraban – Meu Bolso em Dia (meubolsoemdia.com.br), Ministério do Trabalho e Emprego (gov.br/trabalho-e-emprego), eduCAPES (educapes.capes.gov.br), CVM – Portal do Investidor (gov.br/investidor), Cisco Networking Academy (netacad.com), Fundação Estudar (estudar.org.br). Outras instituições públicas ou reconhecidas valem se o link for do site oficial delas.
 5. Tudo em português. Descrição curta e objetiva, sem propaganda. Diga se tem certificado. Área: escolha a mais próxima da lista (nunca invente uma área nova).
 6. Se um item estiver encerrado, fora do ar ou não for encontrado, responda no lugar da ficha: NÃO ENCONTRADO: <o que foi pedido> — <motivo>.
@@ -73,7 +88,7 @@ Preço: ex.: R$ 49,90 (só se não for gratuito)
 Área: uma destas: Administração e Atendimento | Carreira e Empregabilidade | Empreendedorismo e Gestão | Informática e Excel | Marketing, Dados e UX | Negócios, Finanças e ESG | Tecnologia e Inteligência Artificial
 Link: endereço oficial completo, começando com https://
 PDF: (só e-book gratuito) endereço DIRETO do arquivo PDF oficial, terminando em .pdf (ou Não encontrado)
-Imagem: endereço direto da imagem da capa (e-book) ou da imagem do curso, começando com https://
+Imagem: endereço DIRETO do arquivo da imagem (capa do e-book ou imagem de divulgação do curso), começando com https:// e terminando em .jpg, .jpeg, .png ou .webp (ou Não encontrada)
 Descrição: 1 ou 2 frases dizendo o que a pessoa aprende e se tem certificado
 ---
 ```
@@ -97,7 +112,8 @@ REGRAS DE PESQUISA:
 1. Abra a página OFICIAL de cada item (site da instituição) antes de responder. Nunca invente link, carga horária, preço ou imagem: o que não achar, escreva Não informado (na imagem: Não encontrada).
 2. Link: o endereço oficial da página do próprio curso/e-book (para e-book, pode ser o PDF oficial). Nada de página inicial, resultado de busca ou site que copia conteúdo.
    PDF (e-book gratuito): o link DIRETO do arquivo no site oficial (o que baixa o PDF, terminando em .pdf) — a plataforma guarda esse PDF na biblioteca dela. Nunca de site que copia conteúdo; livro pago não tem PDF.
-3. Imagem: endereço DIRETO de uma imagem oficial do item, terminando em .jpg, .jpeg, .png ou .webp — no e-book, a CAPA; no curso, a imagem de divulgação da página. Nunca logotipo genérico, ícone ou imagem de outro site. Não achou? Escreva Não encontrada (o cadastro entra com a imagem padrão da plataforma).
+3. Imagem: o endereço DIRETO do arquivo da imagem oficial do item — aberto no navegador, mostra só a imagem. Termina em .jpg, .jpeg, .png ou .webp (pode ter ?parâmetros depois). No e-book, a CAPA; no curso, a imagem de divulgação da página (a mesma que aparece quando o link é compartilhado: metatag og:image). Prefira imagem com pelo menos 300 px de largura.
+   Nunca: a página do curso no lugar da imagem, logotipo ou ícone da instituição, banner genérico do site, miniatura do Google/Bing, link de resultado de busca, imagem em base64 (data:), imagem gerada por IA ou de outro site. Não achou a imagem certa? Escreva Não encontrada: a plataforma procura sozinha a imagem de divulgação da página do Link e, se não achar, cadastra com a imagem padrão (o administrador troca depois).
 4. Fontes oficiais preferidas: Fundação Bradesco – Escola Virtual (ev.org.br), Escola Virtual.Gov (Enap) (escolavirtual.gov.br), SEBRAE (sebrae.com.br), Google Grow (grow.google), Microsoft Learn (learn.microsoft.com), FGV Online (educacao-executiva.fgv.br), IFB – Instituto Federal de Brasília (ifb.edu.br), SENAI (senai.br), SENAC (senac.br), Banco Central do Brasil (bcb.gov.br), CERT.br / NIC.br (cartilha.cert.br), Febraban – Meu Bolso em Dia (meubolsoemdia.com.br), Ministério do Trabalho e Emprego (gov.br/trabalho-e-emprego), eduCAPES (educapes.capes.gov.br), CVM – Portal do Investidor (gov.br/investidor), Cisco Networking Academy (netacad.com), Fundação Estudar (estudar.org.br). Outras instituições públicas ou reconhecidas valem se o link for do site oficial delas.
 5. Tudo em português. Descrição curta e objetiva, sem propaganda. Diga se tem certificado. Área: escolha a mais próxima da lista (nunca invente uma área nova).
 6. Se um item estiver encerrado, fora do ar ou não for encontrado, responda no lugar da ficha: NÃO ENCONTRADO: <o que foi pedido> — <motivo>.
@@ -116,7 +132,7 @@ Preço: ex.: R$ 49,90 (só se não for gratuito)
 Área: uma destas: Administração e Atendimento | Carreira e Empregabilidade | Empreendedorismo e Gestão | Informática e Excel | Marketing, Dados e UX | Negócios, Finanças e ESG | Tecnologia e Inteligência Artificial
 Link: endereço oficial completo, começando com https://
 PDF: (só e-book gratuito) endereço DIRETO do arquivo PDF oficial, terminando em .pdf (ou Não encontrado)
-Imagem: endereço direto da imagem da capa (e-book) ou da imagem do curso, começando com https://
+Imagem: endereço DIRETO do arquivo da imagem (capa do e-book ou imagem de divulgação do curso), começando com https:// e terminando em .jpg, .jpeg, .png ou .webp (ou Não encontrada)
 Descrição: 1 ou 2 frases dizendo o que a pessoa aprende e se tem certificado
 ---
 ```

@@ -44,7 +44,7 @@ Preço: ex.: R\$ 49,90 (só se não for gratuito)
 Área: uma destas: {$listaAreas}
 Link: endereço oficial completo, começando com https://
 PDF: (só e-book gratuito) endereço DIRETO do arquivo PDF oficial, terminando em .pdf (ou Não encontrado)
-Imagem: endereço direto da imagem da capa (e-book) ou da imagem do curso, começando com https://
+Imagem: endereço DIRETO do arquivo da imagem (capa do e-book ou imagem de divulgação do curso), começando com https:// e terminando em .jpg, .jpeg, .png ou .webp (ou Não encontrada)
 Descrição: 1 ou 2 frases dizendo o que a pessoa aprende e se tem certificado
 ---
 TXT;
@@ -60,7 +60,8 @@ REGRAS DE PESQUISA:
 1. Abra a página OFICIAL de cada item (site da instituição) antes de responder. Nunca invente link, carga horária, preço ou imagem: o que não achar, escreva Não informado (na imagem: Não encontrada).
 2. Link: o endereço oficial da página do próprio curso/e-book (para e-book, pode ser o PDF oficial). Nada de página inicial, resultado de busca ou site que copia conteúdo.
    PDF (e-book gratuito): o link DIRETO do arquivo no site oficial (o que baixa o PDF, terminando em .pdf) — a plataforma guarda esse PDF na biblioteca dela. Nunca de site que copia conteúdo; livro pago não tem PDF.
-3. Imagem: endereço DIRETO de uma imagem oficial do item, terminando em .jpg, .jpeg, .png ou .webp — no e-book, a CAPA; no curso, a imagem de divulgação da página. Nunca logotipo genérico, ícone ou imagem de outro site. Não achou? Escreva Não encontrada (o cadastro entra com a imagem padrão da plataforma).
+3. Imagem: o endereço DIRETO do arquivo da imagem oficial do item — aberto no navegador, mostra só a imagem. Termina em .jpg, .jpeg, .png ou .webp (pode ter ?parâmetros depois). No e-book, a CAPA; no curso, a imagem de divulgação da página (a mesma que aparece quando o link é compartilhado: metatag og:image). Prefira imagem com pelo menos 300 px de largura.
+   Nunca: a página do curso no lugar da imagem, logotipo ou ícone da instituição, banner genérico do site, miniatura do Google/Bing, link de resultado de busca, imagem em base64 (data:), imagem gerada por IA ou de outro site. Não achou a imagem certa? Escreva Não encontrada: a plataforma procura sozinha a imagem de divulgação da página do Link e, se não achar, cadastra com a imagem padrão (o administrador troca depois).
 4. Fontes oficiais preferidas: {$fontes}. Outras instituições públicas ou reconhecidas valem se o link for do site oficial delas.
 5. Tudo em português. Descrição curta e objetiva, sem propaganda. Diga se tem certificado. Área: escolha a mais próxima da lista (nunca invente uma área nova).
 6. Se um item estiver encerrado, fora do ar ou não for encontrado, responda no lugar da ficha: NÃO ENCONTRADO: <o que foi pedido> — <motivo>.
