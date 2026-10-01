@@ -58,14 +58,15 @@ TXT;
         return <<<TXT
 REGRAS DE PESQUISA:
 1. Abra a página OFICIAL de cada item (site da instituição) antes de responder. Nunca invente link, carga horária, preço ou imagem: o que não achar, escreva Não informado (na imagem: Não encontrada).
-2. Link: o endereço oficial da página do próprio curso/e-book (para e-book, pode ser o PDF oficial). Nada de página inicial, resultado de busca ou site que copia conteúdo.
-   PDF (e-book gratuito): o link DIRETO do arquivo no site oficial (o que baixa o PDF, terminando em .pdf) — a plataforma guarda esse PDF na biblioteca dela. Nunca de site que copia conteúdo; livro pago não tem PDF.
+2. ABRA E CONFIRA CADA LINK antes de responder — Link, PDF e Imagem. Só vale o endereço que você abriu agora e que mostrou o próprio item. Endereço montado de cabeça, com erro de digitação, que cai em página de erro, na página inicial ou numa lista genérica ("Conteúdos", "Publicações") NÃO vale: procure o endereço atual no site oficial.
+   Link: o endereço oficial da página do próprio curso/e-book (para e-book, pode ser o PDF oficial). Nada de página inicial, resultado de busca ou site que copia conteúdo.
+   PDF (e-book gratuito): o link DIRETO do arquivo no site oficial — aberto, ele BAIXA o PDF (não abre uma página). A plataforma guarda esse PDF na biblioteca dela e tira a capa da 1ª página. Nunca de site que copia conteúdo; livro pago não tem PDF.
 3. Imagem: o endereço DIRETO do arquivo da imagem oficial do item — aberto no navegador, mostra só a imagem. Termina em .jpg, .jpeg, .png ou .webp (pode ter ?parâmetros depois). No e-book, a CAPA; no curso, a imagem de divulgação da página (a mesma que aparece quando o link é compartilhado: metatag og:image). Prefira imagem com pelo menos 300 px de largura.
-   Nunca: a página do curso no lugar da imagem, logotipo ou ícone da instituição, banner genérico do site, miniatura do Google/Bing, link de resultado de busca, imagem em base64 (data:), imagem gerada por IA ou de outro site. Não achou a imagem certa? Escreva Não encontrada: a plataforma procura sozinha a imagem de divulgação da página do Link e, se não achar, cadastra com a imagem padrão (o administrador troca depois).
+   Nunca: a página do curso no lugar da imagem, logotipo ou ícone da instituição, banner genérico do site, miniatura do Google/Bing, link de resultado de busca, imagem em base64 (data:), imagem gerada por IA ou de outro site. Não achou a imagem certa? Escreva Não encontrada: no e-book, a plataforma tira a capa da 1ª página do PDF; no curso, procura a imagem de divulgação da página do Link; se nada der certo, cadastra com a imagem padrão (o administrador troca depois).
 4. Fontes oficiais preferidas: {$fontes}. Outras instituições públicas ou reconhecidas valem se o link for do site oficial delas.
 5. Tudo em português. Descrição curta e objetiva, sem propaganda. Diga se tem certificado. Área: escolha a mais próxima da lista (nunca invente uma área nova).
 6. Se um item estiver encerrado, fora do ar ou não for encontrado, responda no lugar da ficha: NÃO ENCONTRADO: <o que foi pedido> — <motivo>.
-7. Responda SOMENTE com as fichas, sem introdução, sem conclusão, sem tabela e sem negrito. Uma ficha por item, separadas por uma linha contendo apenas ---
+7. Responda SOMENTE com as fichas, sem introdução, sem conclusão, sem tabela, sem negrito e sem marcas de citação ([1], contentReference, oaicite). Uma ficha por item, separadas por uma linha contendo apenas ---
 TXT;
     }
 

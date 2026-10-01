@@ -25,10 +25,12 @@ $modeloFicha = "Título:\nTipo:\nInstituição:\nModalidade:\nCidade:\nNível:\n
         </form>
         <?php if ($extraido): ?>
             <?=carregador_html('Pronto: dados extraídos — revise abaixo e clique em "Salvar conteúdo".'.match (true) {
+                ($extraido['imagem_origem'] ?? '') === 'capa_pdf' => ' Capa tirada da 1ª página do PDF do e-book.',
                 ($extraido['imagem_origem'] ?? '') === 'pagina' => ' Imagem achada na página do conteúdo: confira a prévia.',
                 ($form['imagem_url'] ?? '') === '' && ($form['imagem'] ?? '') === '' => ' Sem imagem na ficha: vai entrar com a imagem padrão (troque depois).',
                 default => '',
             }, true)?>
+            <?php if ($extraido['avisos_links'] ?? []): ?><ul class="ex-avisos"><?php foreach ($extraido['avisos_links'] as $a): ?><li><?=e(ucfirst($a))?>.</li><?php endforeach; ?></ul><?php endif; ?>
         <?php endif; ?>
         <?php if ($importacao): ?>
         <form method="post" class="imp-previa" style="margin-top:12px" data-carregando="Cadastrando os conteúdos e baixando as imagens e os PDFs…">

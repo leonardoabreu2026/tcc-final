@@ -12,9 +12,9 @@
 -- Tabelas: usuarios (contas) → perfis (1:1, candidato ou empresa) → curriculos, vagas;
 -- categorias; cursos; candidaturas (candidato × vaga); matches (nota candidato × vaga);
 -- assinaturas (planos); tentativas_login e redefinicoes_senha (segurança da conta);
--- calibracao_extracao (termos do Calibrador das máquinas de extração). São 12 tabelas.
--- As chaves estrangeiras usam ON DELETE CASCADE: excluir um usuário remove tudo dele (exceto no calibrador:
--- o termo fica e só perde o autor, ON DELETE SET NULL).
+-- São 11 tabelas. As chaves estrangeiras usam ON DELETE CASCADE: excluir um usuário remove tudo dele.
+-- As máquinas de extração não têm tabela própria: os padrões automáticos delas são tirados na hora das
+-- vagas e dos cursos já cadastrados (app/Services/Extracao/PadroesExtracao.php).
 -- ============================================================
 SET NAMES utf8mb4;
 
@@ -218,27 +218,4 @@ CREATE TABLE redefinicoes_senha (
  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
  FOREIGN KEY(usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
  INDEX idx_redef_usuario(usuario_id,created_at)
-) ENGINE=InnoDB;
-
--- ============================================================
--- CALIBRADOR DAS MÁQUINAS DE EXTRAÇÃO (app/Services/Extracao/Calibrador.php)
--- ============================================================
--- As máquinas de extração (cartaz, anúncio, curso e currículo) funcionam por regras. Cada termo calibrado
--- pelo administrador (tela admin/pages/calibrador.php) diz: "quando o texto tiver este termo, mande para
--- este destino". Se a tabela não existir (banco de uma versão anterior), o CalibracaoDAO a cria sozinho.
--- contexto = onde o termo age: vaga_linha (campo da vaga: descricao, requisitos, beneficios),
---            vaga_categoria / curso_categoria (nome da área) ou curriculo_linha (seção do currículo).
--- termo_chave = o termo normalizado (minúsculo, sem acento): o mesmo termo não entra duas vezes no mesmo contexto.
-CREATE TABLE calibracao_extracao (
- id INT AUTO_INCREMENT PRIMARY KEY,
- contexto VARCHAR(30) NOT NULL,
- termo VARCHAR(120) NOT NULL,
- termo_chave VARCHAR(120) NOT NULL,
- destino VARCHAR(100) NOT NULL,
- ativo TINYINT(1) NOT NULL DEFAULT 1,
- usuario_id INT NULL,
- created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
- updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
- UNIQUE KEY uniq_calibracao(contexto, termo_chave),
- FOREIGN KEY(usuario_id) REFERENCES usuarios(id) ON DELETE SET NULL
 ) ENGINE=InnoDB;

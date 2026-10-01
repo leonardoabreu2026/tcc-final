@@ -71,16 +71,16 @@ $cartazNoForm = !empty($form['imagem']) && str_starts_with((string)$form['imagem
                 <?php endforeach; ?>
             </div>
         </details>
-        <?php if (!empty($extraido['calibrador'])): ?>
-        <div class="cal-resultado">
-            <h3 style="margin-top:0">Ajustes do calibrador</h3>
-            <ul class="cal-ajustes">
-                <?php foreach ($extraido['calibrador'] as $a): ?>
-                <li><span class="cal-campo"><?=e(['linha' => 'Linha', 'categoria' => 'Área', 'anunciante' => 'Empresa'][$a['campo']] ?? $a['campo'])?></span> “<?=e(mb_strimwidth((string)$a['texto'], 0, 90, '…'))?>” → <b><?=e(Calibrador::rotuloDestino($a['campo'] === 'linha' ? 'vaga_linha' : '', (string)$a['para']))?></b>
-                    <span class="muted">(termo: <?=e((string)$a['termo'])?>)</span></li>
+        <?php if (!empty($extraido['padroes'])): ?>
+        <div class="ex-padroes">
+            <h3>Padrões automáticos usados</h3>
+            <ul>
+                <?php foreach ($extraido['padroes'] as $a): ?>
+                <li><span class="ex-padroes-campo"><?=e(['linha' => 'Linha', 'categoria' => 'Área', 'anunciante' => 'Empresa'][$a['campo']] ?? $a['campo'])?></span> “<?=e(mb_strimwidth((string)$a['texto'], 0, 90, '…'))?>” → <b><?=e($a['campo'] === 'linha' ? (['descricao' => 'Descrição / atividades', 'requisitos' => 'Requisitos', 'beneficios' => 'Benefícios'][$a['para']] ?? $a['para']) : (string)$a['para'])?></b>
+                    <span class="muted">(padrão: <?=e((string)$a['termo'])?>)</span></li>
                 <?php endforeach; ?>
             </ul>
-            <?php if (isAdmin()): ?><p class="small muted" style="margin:8px 0 0">Os termos ficam no <a href="<?=url('admin/pages/calibrador.php')?>">Calibrador</a>.</p><?php endif; ?>
+            <p class="small muted" style="margin:8px 0 0">Tirados das vagas já cadastradas: valem onde a regra não tem pista e se atualizam a cada vaga salva.</p>
         </div>
         <?php endif; ?>
     </section>

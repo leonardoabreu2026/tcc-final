@@ -7,8 +7,8 @@
 --   empresa@conectavagas.com   / Empresa@123
 --   candidato@conectavagas.com / Candidato@123
 -- Inclui 20 categorias (13 de vagas, 7 de cursos), 62 vagas (cartazes em public/assets/img/vagas),
--- 64 conteúdos de capacitação (43 cursos e 21 e-books gratuitos, de fontes oficiais, cada um com a sua imagem),
--- a assinatura VIP do candidato de teste e 12 termos de exemplo do Calibrador das máquinas de extração.
+-- 64 conteúdos de capacitação (43 cursos e 21 e-books gratuitos, de fontes oficiais, cada um com a sua imagem)
+-- e a assinatura VIP do candidato de teste.
 -- ============================================================
 
 SET NAMES utf8mb4;
@@ -172,19 +172,3 @@ INSERT INTO cursos(categoria_id,titulo,descricao,tipo,modalidade,nivel,duracao,g
 
 INSERT INTO assinaturas(usuario_id,plano,valor,data_inicio,data_fim,status) VALUES
 (3,'assinante',9.90,CURDATE(),DATE_ADD(CURDATE(), INTERVAL 30 DAY),'ativa');
-
--- Calibrador das máquinas de extração: termos de exemplo (o administrador edita em Painel > Calibrador).
--- termo_chave = termo normalizado (minúsculo, sem acento), como o CalibracaoDAO grava.
-INSERT INTO calibracao_extracao(contexto,termo,termo_chave,destino,ativo,usuario_id) VALUES
-('vaga_linha','Uniforme','uniforme','beneficios',1,1),
-('vaga_linha','Café da manhã','cafe da manha','beneficios',1,1),
-('vaga_linha','Lanche','lanche','beneficios',1,1),
-('vaga_linha','Habilitação','habilitacao','requisitos',1,1),
-('vaga_categoria','Churrasqueiro','churrasqueiro','Alimentação',1,1),
-('vaga_categoria','Camareiro','camareiro','Serviços Gerais e Limpeza',1,1),
-('vaga_categoria','Motoboy','motoboy','Logística e Transporte',1,1),
-('vaga_categoria','Promotor de vendas','promotor de vendas','Vendas',1,1),
-('curso_categoria','Power BI','power bi','Marketing, Dados e UX',1,1),
-('curso_categoria','Currículo','curriculo','Carreira e Empregabilidade',1,1),
-('curriculo_linha','Ensino médio','ensino medio','formacao',1,1),
-('curriculo_linha','Pacote Office','pacote office','habilidades',1,1);

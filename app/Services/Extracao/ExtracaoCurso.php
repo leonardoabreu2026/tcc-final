@@ -5,8 +5,8 @@ declare(strict_types=1);
  * Extração de cursos: transforma o texto de divulgação de um curso nos campos do cadastro.
  * O resultado só preenche o formulário — o administrador revisa antes de salvar.
  *
- * CALIBRADOR: a área (categoria) pode vir de um termo calibrado pelo administrador e a instituição,
- * de uma já cadastrada no catálogo (Calibrador). As decisões dele ficam em $r['calibrador'].
+ * PADRÕES AUTOMÁTICOS: a área que a regra não reconhece e a instituição que ela não acha vêm dos padrões
+ * tirados do catálogo já cadastrado (PadroesExtracao). As decisões deles ficam em $r['padroes'].
  */
 final class ExtracaoCurso {
     private const INSTITUICOES = [
@@ -32,7 +32,7 @@ final class ExtracaoCurso {
     public static function doTexto(string $texto): array {
         $texto = trim(str_replace(["\r\n", "\r"], "\n", $texto));
         $r = ['titulo'=>'','descricao'=>'','tipo'=>'curso','modalidade'=>'ead','nivel'=>'iniciante','duracao'=>'','gratuito'=>1,'preco'=>null,
-              'url'=>'','instituicao'=>'','categoria'=>'','competencias'=>[],'calibrador'=>[]];
+              'url'=>'','instituicao'=>'','categoria'=>'','competencias'=>[],'padroes'=>[]];
         if ($texto === '') return $r;
         $n = Competencias::normalizar($texto);
         $linhas = array_values(array_filter(array_map(fn($l) => trim_u($l, " \t*_•·-–—>"), explode("\n", $texto)), fn($l) => $l !== ''));
@@ -54,9 +54,9 @@ final class ExtracaoCurso {
             }
         }
         if ($r['instituicao'] === '') {
-            // Instituição fora da lista acima, mas que já está no catálogo (calibrador automático).
-            $r['instituicao'] = Calibrador::nomeConhecido('instituicao', $texto);
-            if ($r['instituicao'] !== '') $r['calibrador'][] = ['campo' => 'instituicao', 'texto' => $r['instituicao'], 'regra' => '', 'para' => $r['instituicao'], 'termo' => 'instituição já cadastrada'];
+            // Instituição fora da lista acima, mas que já está no catálogo (padrões automáticos).
+            $r['instituicao'] = PadroesExtracao::nomeConhecido('instituicao', $texto);
+            if ($r['instituicao'] !== '') $r['padroes'][] = ['campo' => 'instituicao', 'texto' => $r['instituicao'], 'regra' => '', 'para' => $r['instituicao'], 'termo' => 'instituição já cadastrada'];
         }
 
         if (preg_match('/r\$\s*(\d{1,3}(?:\.\d{3})*(?:,\d{2})?|\d+(?:,\d{2})?)/iu', $texto, $m) && !preg_match('/\b(gratuito|gratis|gratuita|free|sem custo)\b/', $n)) {
@@ -90,15 +90,13 @@ final class ExtracaoCurso {
     }
 
     /**
-     * Área do curso: palpite da regra (pelas competências), a não ser que um termo calibrado
-     * pelo administrador aponte outra área (primeiro no título, depois na descrição).
+     * Área do curso: a da regra (pelas competências); se a regra não reconhece, a do padrão dos títulos do catálogo.
      */
     private static function categoriaSugerida(array $r): array {
         $regra = self::categoria($r['competencias']);
-        $d = Calibrador::decidir('curso_categoria', $r['titulo'], $regra);
-        if ($d['origem'] === 'regra') $d = Calibrador::decidir('curso_categoria', $r['titulo']."\n".$r['descricao'], $regra);
+        $d = $regra === '' ? PadroesExtracao::decidir('curso_categoria', $r['titulo'], '') : ['classe' => $regra, 'origem' => 'regra', 'termo' => ''];
         $r['categoria'] = $d['classe'];
-        if ($d['origem'] === 'calibrador') $r['calibrador'][] = ['campo' => 'categoria', 'texto' => $r['titulo'], 'regra' => $regra, 'para' => $d['classe'], 'termo' => $d['termo']];
+        if ($d['origem'] === 'padrao') $r['padroes'][] = ['campo' => 'categoria', 'texto' => $r['titulo'], 'regra' => $regra, 'para' => $d['classe'], 'termo' => $d['termo']];
         return $r;
     }
 
@@ -180,7 +178,10 @@ final class ExtracaoCurso {
         if ($texto === '') return [];
         // Tira a formatação de Markdown que as IAs costumam usar (negrito, títulos, listas, links [texto](url)).
         // O link do Markdown pode ter parênteses em par no endereço: [pdf](https://site/arquivo%20(2).pdf).
-        $texto = preg_replace(['/\*\*|__/u', '/^\s*#{1,6}\s*/mu', '/\[([^\]]*)\]\((https?:\/\/(?:[^()\s]|\([^()\s]*\))+)\)/u', '/\[\d+\]/u'], ['', '', '$2', ''], $texto) ?? $texto;
+        // Marcas que as IAs deixam na resposta: negrito, títulos, links em markdown e citações de fonte
+        // ([1], :contentReference[oaicite:1]{index=1} do ChatGPT, 【4†fonte】).
+        $texto = preg_replace(['/\*\*|__/u', '/^\s*#{1,6}\s*/mu', '/\[([^\]]*)\]\((https?:\/\/(?:[^()\s]|\([^()\s]*\))+)\)/u', '/[ \t]*\[\d+\]/u',
+            '/\s*:?contentReference\[oaicite:\d+\]\{index=\d+\}/u', '/\s*\[oaicite:\d+\]/u', '/\s*【[^】]*】/u'], ['', '', '$2', '', '', '', ''], $texto) ?? $texto;
         $blocos = preg_split('/^\s*(?:-{3,}|={3,}|_{3,})\s*$/mu', $texto) ?: [];
         if (count($blocos) === 1) $blocos = preg_split('/\n(?=\s*(?:\d+[.)]\s*)?t[ií]tulo\s*:)/iu', $texto) ?: [$texto];
         $out = [];
@@ -234,11 +235,11 @@ final class ExtracaoCurso {
         $cidade = trim($c['cidade'] ?? '');
         if ($cidade !== '' && $r['modalidade'] !== 'ead' && !preg_match('/^(online|ead|nao se aplica|n\/?a|-)/i', Competencias::normalizar($cidade))) $desc .= ($desc !== '' ? "\n" : '').'Local: '.$cidade.'.';
         if ($desc !== '') $r['descricao'] = $desc;
-        // Área: a da ficha se for uma categoria cadastrada; senão, a da regra ou a do calibrador (categoriaSugerida).
+        // Área: a da ficha se for uma categoria cadastrada; senão, a da regra ou a dos padrões automáticos (categoriaSugerida).
         $r['competencias'] = Competencias::doCurso($r);
         $areaDaFicha = '';
         foreach ($categorias as $cat) if (Competencias::normalizar($cat) === $n('categoria')) $areaDaFicha = $cat;
-        $r['calibrador'] = array_values(array_filter($r['calibrador'], fn($m) => $m['campo'] !== 'categoria'));   // o doTexto já opinou; decide de novo com a descrição da ficha
+        $r['padroes'] = array_values(array_filter($r['padroes'], fn($m) => $m['campo'] !== 'categoria'));   // o doTexto já opinou; decide de novo com a descrição da ficha
         if ($areaDaFicha !== '') $r['categoria'] = $areaDaFicha; else $r = self::categoriaSugerida($r);
         // Imagem que a pesquisa trouxe (capa do e-book / imagem do curso):
         //  - link → imagem_url, conferido na prévia e baixado ao cadastrar (ImagemRemota);

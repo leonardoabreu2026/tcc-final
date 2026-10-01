@@ -11,7 +11,6 @@ if (isAdmin()) {
     $abas['categorias'] = ['admin/pages/categorias.php', 'Categorias', 'jornal'];
     $abas['cursos'] = ['admin/pages/cursos.php', 'Cursos e e-books', 'cursos'];
     $abas['assinaturas'] = ['admin/pages/assinaturas.php', 'Assinaturas', 'planos'];
-    $abas['calibrador'] = ['admin/pages/calibrador.php', 'Calibrador', 'engrenagem'];
 }
 $abas['vagas'] = ['admin/pages/vagas.php', 'Vagas', 'maleta'];
 $abas['candidaturas'] = ['admin/pages/candidaturas.php', 'Candidaturas', 'formulario'];

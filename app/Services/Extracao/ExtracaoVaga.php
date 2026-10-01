@@ -11,10 +11,9 @@ declare(strict_types=1);
  * contato do anúncio (WhatsApp/telefone/e-mail), quantidade de vagas, competências e categoria.
  * Os "avisos" dizem o que a máquina não conseguiu confirmar e merece atenção na revisão.
  *
- * CALIBRADOR: as regras abaixo são a base. O administrador ajusta onde elas erram pelo Calibrador
- * (admin/pages/calibrador.php): nas linhas soltas (sem título de seção) e na área, um termo calibrado
- * troca o palpite da regra; na empresa, os nomes já cadastrados no sistema completam quando nenhuma regra
- * achou o nome. Cada decisão do calibrador vai para $r['calibrador'] e aparece no relatório da extração.
+ * PADRÕES AUTOMÁTICOS: as regras abaixo são a base. Onde a regra não tem pista — linha solta sem palavra-chave,
+ * área não reconhecida, empresa não achada —, decidem os padrões tirados das vagas já cadastradas (PadroesExtracao),
+ * que se atualizam sozinhos a cada vaga salva. Cada decisão deles vai para $r['padroes'] e aparece no relatório da extração.
  */
 final class ExtracaoVaga {
     private const SECOES = [
@@ -130,7 +129,7 @@ final class ExtracaoVaga {
         $texto = trim(str_replace(["\r\n", "\r"], "\n", $texto));
         $r = ['titulo'=>'','descricao'=>'','requisitos'=>'','beneficios'=>'','tipo_vaga'=>'clt','nivel_experiencia'=>'junior','remoto'=>'presencial',
               'cidade'=>'','uf'=>'','salario_minimo'=>null,'salario_maximo'=>null,'categoria'=>'','competencias'=>[],
-              'anunciante'=>'','contato'=>'','quantidade'=>null,'cargos'=>[],'avisos'=>[],'padrao'=>[],'calibrador'=>[]];
+              'anunciante'=>'','contato'=>'','quantidade'=>null,'cargos'=>[],'avisos'=>[],'padrao'=>[],'padroes'=>[]];
         // OCR parte palavras em letra grande ("MÁQUI NA"): se a junção aparece inteira em outra leitura ("MAQUINA"), junta.
         $vocabulario = self::vocabularioOcr([$texto, ...($ocr['complemento'] ?? []), ...($ocr['destaques'] ?? []), ...($ocr['todas'] ?? [])]);
         $consertar = fn(string $l) => self::juntarPartidas(self::limparLinha($l), $vocabulario);
@@ -166,9 +165,9 @@ final class ExtracaoVaga {
         $emSecao = array_fill_keys(array_map([Competencias::class, 'normalizar'], [...($secoes['requisitos'] ?? []), ...($secoes['beneficios'] ?? [])]), true);
         $r['anunciante'] = self::anunciante($tudo, $linhas, $destaques, $ocr['todas'] ?? [], $emSecao, $texto."\n".implode("\n", $ocr['complemento'] ?? []));
         if ($r['anunciante'] === '') {
-            // Nenhuma regra achou a empresa: talvez seja uma que já está cadastrada no sistema (calibrador automático).
-            $r['anunciante'] = Calibrador::nomeConhecido('empresa', $tudo);
-            if ($r['anunciante'] !== '') $r['calibrador'][] = ['campo' => 'anunciante', 'texto' => $r['anunciante'], 'regra' => '', 'para' => $r['anunciante'], 'termo' => 'empresa já cadastrada'];
+            // Nenhuma regra achou a empresa: talvez seja uma que já está cadastrada no sistema (padrões automáticos).
+            $r['anunciante'] = PadroesExtracao::nomeConhecido('empresa', $tudo);
+            if ($r['anunciante'] !== '') $r['padroes'][] = ['campo' => 'anunciante', 'texto' => $r['anunciante'], 'regra' => '', 'para' => $r['anunciante'], 'termo' => 'empresa já cadastrada'];
         }
         // Cargos: das linhas e também das letras grandes do cartaz (o título decorado nem sempre entra no texto corrido).
         $r['cargos'] = self::cargos([...$linhas, ...array_slice($destaques, 0, 4)]);
@@ -217,14 +216,15 @@ final class ExtracaoVaga {
             if (self::ehLocalSolto($ln)) continue; // já vai para o campo cidade
             if (self::soRotulos($ln)) continue;    // "ESCALA LOCAIS DE TRABALHO FORMATO", "Temos outras vagas também!"
             // Palpite da regra pelas palavras-chave; o horário fica na descrição.
+            $semPista = false;
             if (preg_match(self::PALAVRAS_BENEFICIO, $ln)) $regra = 'beneficios';
             elseif (preg_match(self::PALAVRAS_REQUISITO, $ln)) $regra = 'requisitos';
             elseif (preg_match(self::PALAVRAS_HORARIO, $ln)) $regra = 'descricao';
             elseif (self::ehCargo(self::limparTitulo($l)) && mb_strlen($l) <= 42) continue; // cargo solto: já está no título/"outras vagas"
-            else $regra = 'descricao';
-            // Um termo calibrado pelo administrador vale mais que o palpite da regra.
-            $d = Calibrador::decidir('vaga_linha', $l, $regra);
-            if ($d['origem'] === 'calibrador') $r['calibrador'][] = ['campo' => 'linha', 'texto' => $l, 'regra' => $regra, 'para' => $d['classe'], 'termo' => $d['termo']];
+            else { $regra = 'descricao'; $semPista = true; }
+            // Sem palavra-chave na regra: decide o padrão das vagas cadastradas (se houver).
+            $d = $semPista ? PadroesExtracao::decidir('vaga_linha', $l, $regra) : ['classe' => $regra, 'origem' => 'regra', 'termo' => ''];
+            if ($d['origem'] === 'padrao') $r['padroes'][] = ['campo' => 'linha', 'texto' => $l, 'regra' => $regra, 'para' => $d['classe'], 'termo' => $d['termo']];
             match ($d['classe']) { 'beneficios' => $ben[] = $l, 'requisitos' => $req[] = $l, default => $desc[] = $l };
         }
         foreach (['horario' => 'Horário', 'local' => 'Local'] as $extra => $rot) {
@@ -248,11 +248,10 @@ final class ExtracaoVaga {
 
         $r['competencias'] = Competencias::daVaga($r);
         $regraCategoria = self::categoria($r['competencias'], Competencias::extrair($r['titulo']));
-        // Área: o termo calibrado no título manda; sem ele, vale o que aparecer na descrição e nos requisitos.
-        $d = Calibrador::decidir('vaga_categoria', $r['titulo'], $regraCategoria);
-        if ($d['origem'] === 'regra') $d = Calibrador::decidir('vaga_categoria', implode("\n", [$r['titulo'], $r['descricao'], $r['requisitos']]), $regraCategoria);
+        // Área que a regra não reconheceu: decide o padrão dos títulos das vagas cadastradas.
+        $d = $regraCategoria === '' ? PadroesExtracao::decidir('vaga_categoria', $r['titulo'], '') : ['classe' => $regraCategoria, 'origem' => 'regra', 'termo' => ''];
         $r['categoria'] = $d['classe'];
-        if ($d['origem'] === 'calibrador') $r['calibrador'][] = ['campo' => 'categoria', 'texto' => $r['titulo'], 'regra' => $regraCategoria, 'para' => $d['classe'], 'termo' => $d['termo']];
+        if ($d['origem'] === 'padrao') $r['padroes'][] = ['campo' => 'categoria', 'texto' => $r['titulo'], 'regra' => $regraCategoria, 'para' => $d['classe'], 'termo' => $d['termo']];
 
         if ($r['titulo'] === '') $r['avisos'][] = 'Não encontramos o cargo: preencha o título.';
         if ($r['salario_minimo'] === null) $r['avisos'][] = 'Salário não informado no anúncio (ficará "A combinar").';

@@ -248,7 +248,7 @@ final class AdminController extends Controller {
      *    imagem de divulgação dela; caminho do próprio site (assets/...) entra direto. Sem imagem, ou se o link não baixar,
      *    entra o banner da instituição ou a imagem padrão (CursoDAO::imagemPadrao), com aviso — e a lista marca
      *    "trocar imagem" para terminar o cadastro em Editar (enviar o arquivo, colar o link ou escolher o caminho);
-     *  - a área e a instituição sugeridas podem vir do Calibrador (termos do administrador e instituições já cadastradas).
+     *  - a área e a instituição que a regra não reconhece vêm dos padrões automáticos do catálogo (PadroesExtracao);
      */
     public function cursos(): void {
         exigirAdmin();
@@ -353,7 +353,9 @@ final class AdminController extends Controller {
                         if ($rep) $it['problemas'][] = 'já cadastrado (#'.(int)$rep['id'].')';
                         $alertas = [];
                         if ($it['imagem_url'] === '' && $it['imagem'] === '') $alertas[] = 'sem imagem: entra com a imagem padrão';
-                        elseif ($it['imagem_url'] === '' && ($it['imagem_origem'] ?? '') !== 'caminho') $alertas[] = 'sem imagem própria: entra com a imagem da instituição';
+                        elseif ($it['imagem_url'] === '' && !in_array($it['imagem_origem'] ?? '', ['caminho', 'capa_pdf'], true)) $alertas[] = 'sem imagem própria: entra com a imagem da instituição';
+                        if (($it['imagem_origem'] ?? '') === 'capa_pdf') $alertas[] = 'capa tirada da 1ª página do PDF';
+                        foreach ($it['avisos_links'] ?? [] as $a) $alertas[] = $a;
                         if (!$it['gratuito'] && !$it['preco']) $alertas[] = 'pago sem preço: entra como gratuito';
                         $it['alerta'] = implode('; ', $alertas);
                     }

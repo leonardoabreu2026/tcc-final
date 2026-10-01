@@ -14,7 +14,7 @@ final class EmpresaController extends Controller {
      *  - "Colar texto": o mesmo a partir do texto do anúncio (WhatsApp, Instagram, site).
      * Nada é salvo sem revisão. Empresa só mexe nas próprias vagas; o limite do plano básico
      * (2 vagas abertas) vale ao publicar e ao reativar; o mesmo anúncio não é publicado duas vezes.
-     * Ao salvar, o match é recalculado. A extração segue as regras e os termos do Calibrador (admin/pages/calibrador.php).
+     * Ao salvar, o match é recalculado. A extração segue as regras e, onde elas não têm pista, os padrões automáticos das vagas já cadastradas (PadroesExtracao).
      */
     public function vagas(): void {
         exigirLogin();

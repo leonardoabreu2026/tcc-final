@@ -12,7 +12,7 @@ declare(strict_types=1);
  * Verifica, sem gravar nada no banco (a única mudança é +1 no contador de visualizações da vaga 1):
  *  1. se todas as classes de app/ carregam (autoloader);
  *  2. as regras principais: funções de apoio, extração de vagas/cursos e máquina de match;
- *     e o calibrador das máquinas de extração (termos e nomes conhecidos em memória);
+ *     os padrões automáticos das máquinas de extração (montados em memória) e a capa de e-book tirada do PDF;
  *  3. a conexão com o banco e as contas de teste;
  *  4. as páginas pelo navegador (HTTP) e o bloqueio das pastas internas.
  * Termina com código 1 se algo falhar.
@@ -37,8 +37,8 @@ foreach (['Controllers', 'Models', 'DTO', 'Services', 'Services/Extracao'] as $p
 
 // ------------------------------------------------------------
 echo PHP_EOL.'2. Regras de negócio'.PHP_EOL;
-// As regras são conferidas SEM o calibrador: os termos cadastrados no banco não podem mudar estes resultados.
-Calibrador::ligar(false);
+// As regras são conferidas SEM os padrões automáticos: o que está cadastrado no banco não pode mudar estes resultados.
+PadroesExtracao::ligar(false);
 confere('decimal_ou_null("1.234,56") = 1234.56', decimal_ou_null('1.234,56') === 1234.56);
 confere('salario_texto(1900, 2500)', salario_texto(1900, 2500) === 'R$ 1.900,00 a R$ 2.500,00');
 confere('rotulo("em_analise") = "Em análise"', rotulo('em_analise') === 'Em análise');
@@ -203,7 +203,7 @@ SOLUÇÕES QUE GERAM VALOR. SERVIÇOS QUE FAZEM A DIFERENÇA.',
   ),
 );
 $re9 = ExtracaoVaga::doTexto($ocrRe9["texto"], $ocrRe9);
-confere("cartaz com cargo em várias linhas, slogan e logotipo ilegível (calibrado)", $re9["titulo"] === "Operador de Máquina Costal (Roçadeira)" && $re9["anunciante"] === ""
+confere("cartaz com cargo em várias linhas, slogan e logotipo ilegível (OCR ajustado)", $re9["titulo"] === "Operador de Máquina Costal (Roçadeira)" && $re9["anunciante"] === ""
     && $re9["categoria"] === "Serviços Gerais e Limpeza" && str_contains($re9["beneficios"], "Vale Refeição: R$ 48,00 por dia") && !preg_match("/solu|diferen|lugar|req\(/iu", $re9["beneficios"].$re9["descricao"])
     && $re9["contato"] === "WhatsApp (61) 97402-3121" && $re9["cidade"] === "Brasília", json_encode([$re9["titulo"], $re9["anunciante"], $re9["categoria"], $re9["beneficios"]], JSON_UNESCAPED_UNICODE));
 // Leitor de cartaz DA PLATAFORMA (Tesseract.js no navegador): leituras reais de dois cartazes, salvas em tests/amostras.
@@ -383,52 +383,63 @@ confere('pt_secao_formato: cada formato tem a sua página (cursos, e-books, víd
     && pt_secao_formato('xyz')[0] === 'Cursos');
 
 // ------------------------------------------------------------
-echo PHP_EOL.'2b. Calibrador das máquinas de extração (termos em memória, sem banco)'.PHP_EOL;
-$anuncio = "ATENDENTE\nUniforme fornecido pela empresa\nVenha trabalhar na Padaria Pão Quente";
-Calibrador::ligar(true);
-Calibrador::usarTermos([
-    ['contexto' => 'vaga_linha', 'termo' => 'Uniforme', 'destino' => 'beneficios'],
-    ['contexto' => 'vaga_linha', 'termo' => 'Vale', 'destino' => 'requisitos'],
-    ['contexto' => 'vaga_linha', 'termo' => 'Vale-refeição', 'destino' => 'beneficios'],
-    ['contexto' => 'vaga_categoria', 'termo' => 'Churrasqueiro', 'destino' => 'Alimentação'],
-    ['contexto' => 'curriculo_linha', 'termo' => 'Ensino médio', 'destino' => 'formacao'],
-    ['contexto' => 'contexto_que_nao_existe', 'termo' => 'Uniforme', 'destino' => 'descricao'],
+echo PHP_EOL.'2b. Padrões automáticos das máquinas de extração (montados em memória, sem banco)'.PHP_EOL;
+$padroesTeste = PadroesExtracao::montar([
+    ['titulo' => 'Churrasqueiro', 'descricao' => 'Atender clientes', 'requisitos' => 'Experiência', 'beneficios' => "Uniforme fornecido pela empresa\nVale-transporte", 'categoria' => 'Alimentação'],
+    ['titulo' => 'Churrasqueiro e auxiliar', 'descricao' => 'Vitrine da loja', 'requisitos' => '', 'beneficios' => 'Uniforme completo', 'categoria' => 'Alimentação'],
+    ['titulo' => 'Atendente de loja', 'descricao' => '', 'requisitos' => '', 'beneficios' => '', 'categoria' => 'Atendimento ao Público'],
+    ['titulo' => 'Atendente de cozinha', 'descricao' => '', 'requisitos' => '', 'beneficios' => '', 'categoria' => 'Alimentação'],
+], [
+    ['titulo' => 'Excel básico', 'categoria' => 'Informática e Excel'], ['titulo' => 'Excel avançado', 'categoria' => 'Informática e Excel'],
 ]);
-Calibrador::usarNomes('empresa', ['Padaria Pão Quente', 'Loja', 'Empresa Teste']);
-$comCal = ExtracaoVaga::doTexto($anuncio);
-Calibrador::ligar(false);
+confere('Padrões saem dos cadastros: termo visto em 2+ cadastros e no mesmo destino vira padrão; termo de 1 cadastro ou dividido não',
+    ($padroesTeste['vaga_linha']['uniforme']['destino'] ?? '') === 'beneficios' && !isset($padroesTeste['vaga_linha']['vitrine'])
+    && ($padroesTeste['vaga_categoria']['churrasqueiro']['destino'] ?? '') === 'Alimentação' && !isset($padroesTeste['vaga_categoria']['atendente'])
+    && ($padroesTeste['curso_categoria']['excel']['destino'] ?? '') === 'Informática e Excel', json_encode($padroesTeste, JSON_UNESCAPED_UNICODE));
+confere('Padrão é texto normalizado por caractere: sem acento, sem maiúscula, sem pontuação, número vira #',
+    PadroesExtracao::termos('CAFÉ DA MANHÃ — R$ 30,00') === PadroesExtracao::termos('café da manhã - r$ 31,50') && in_array('cafe manha', PadroesExtracao::termos('Café da manhã'), true));
+$anuncio = "ATENDENTE\nUniforme fornecido pela empresa\nExperiência com uniforme e crachá\nVenha trabalhar na Padaria Pão Quente";
+PadroesExtracao::ligar(true);
+PadroesExtracao::usarPadroes($padroesTeste);
+PadroesExtracao::usarNomes('empresa', ['Padaria Pão Quente', 'Loja', 'Empresa Teste']);
+$comPadroes = ExtracaoVaga::doTexto($anuncio);
+PadroesExtracao::ligar(false);
 $soRegra = ExtracaoVaga::doTexto($anuncio);
-confere('Termo calibrado tira "Uniforme" da descrição e põe em benefícios (e registra o termo)',
-    str_contains($comCal['beneficios'], 'Uniforme') && !str_contains($comCal['descricao'], 'Uniforme') && str_contains($soRegra['descricao'], 'Uniforme')
-    && in_array('Uniforme', array_column($comCal['calibrador'], 'termo'), true), json_encode([$comCal['beneficios'], $comCal['descricao'], $comCal['calibrador']], JSON_UNESCAPED_UNICODE));
-confere('Nome conhecido: empresa já cadastrada é reconhecida quando nenhuma regra acha', $comCal['anunciante'] === 'Padaria Pão Quente' && $soRegra['anunciante'] === '',
-    $comCal['anunciante'].' / '.$soRegra['anunciante']);
-Calibrador::ligar(true);
-confere('Vence o termo mais longo ("vale-refeição" ganha de "vale")', Calibrador::decidir('vaga_linha', 'Vale refeição de R$ 30', 'descricao')['classe'] === 'beneficios'
-    && Calibrador::decidir('vaga_linha', 'Vale muito a pena', 'descricao')['classe'] === 'requisitos');
-confere('Termo vale como palavra inteira ("vale" não pega "valeu")', Calibrador::decidir('vaga_linha', 'Valeu pela atenção', 'descricao')['origem'] === 'regra');
-confere('Sem acento e sem maiúscula: "CHURRASQUEIRO" casa com o termo "Churrasqueiro"',
-    Calibrador::decidir('vaga_categoria', 'CHURRASQUEIRO COM EXPERIÊNCIA', 'Vendas') === ['classe' => 'Alimentação', 'origem' => 'calibrador', 'termo' => 'Churrasqueiro']);
-confere('Termo que concorda com a regra fica registrado como regra; contexto inválido é ignorado',
-    Calibrador::decidir('vaga_linha', 'Uniforme', 'beneficios')['origem'] === 'regra' && Calibrador::termoQueCasa('contexto_que_nao_existe', 'Uniforme') === null);
-confere('Nome genérico ("Loja", "Empresa Teste", "Salário") não vira nome conhecido; nome de verdade entra',
-    Calibrador::nomes('empresa') === ['Padaria Pão Quente'] && Calibrador::nomeGenerico('Salário') && !Calibrador::nomeGenerico('Grupo Dourado'));
-$cvTexto = "Maria Souza\nAtendente\nEnsino médio completo na Escola Classe 10\nBrasileira, solteira, 25 anos\nEXPERIÊNCIA\nVendedora - Loja X";
-$cvCal = ExtracaoCurriculo::extrairCampos($cvTexto);
-$ajustesCv = ExtracaoCurriculo::$calibrador;
-ExtracaoCurriculo::extrairCampos("Carla Teste\nEXPERIÊNCIA\nAtendente, boa comunicação, Ensino médio em curso\nFORMAÇÃO\nTécnico em Administração");
-$ajustesEmSecao = ExtracaoCurriculo::$calibrador;
-Calibrador::ligar(false);
-$cvRegra = ExtracaoCurriculo::extrairCampos($cvTexto);
-confere('Currículo: linha solta com termo calibrado ("Ensino médio") vai para Formação',
-    str_contains(Competencias::normalizar($cvCal['formacao']), 'ensino medio') && !str_contains(Competencias::normalizar($cvRegra['formacao']), 'ensino medio'),
-    json_encode([$cvCal['formacao'], $cvRegra['formacao']], JSON_UNESCAPED_UNICODE));
-confere('Currículo: o calibrador registra só o que mudou de verdade (linha já dentro de uma seção não conta)',
-    count($ajustesCv) === 1 && $ajustesCv[0]['termo'] === 'Ensino médio' && $ajustesEmSecao === [], json_encode([$ajustesCv, $ajustesEmSecao], JSON_UNESCAPED_UNICODE));
-confere('Currículo: dado pessoal do cabeçalho ("Brasileira, solteira, 25 anos") nunca vai para Experiências',
-    !str_contains(Competencias::normalizar($cvCal['experiencias']), 'solteira'), $cvCal['experiencias']);
-Calibrador::limpar();
-
+confere('Linha sem pista na regra ("Uniforme fornecido") vai para Benefícios pelo padrão das vagas cadastradas (e registra o padrão)',
+    str_contains($comPadroes['beneficios'], 'Uniforme fornecido') && !str_contains($comPadroes['descricao'], 'Uniforme fornecido') && str_contains($soRegra['descricao'], 'Uniforme fornecido')
+    && in_array('uniforme', array_column($comPadroes['padroes'], 'termo'), true), json_encode([$comPadroes['beneficios'], $comPadroes['descricao'], $comPadroes['padroes']], JSON_UNESCAPED_UNICODE));
+confere('A regra continua mandando: linha com palavra-chave de requisito ("Experiência com uniforme") não muda pelo padrão',
+    str_contains($comPadroes['requisitos'], 'Experiência com uniforme'), $comPadroes['requisitos']);
+confere('Nome conhecido: empresa já cadastrada é reconhecida quando nenhuma regra acha; nome genérico ("Loja", "Empresa Teste") não entra',
+    $comPadroes['anunciante'] === 'Padaria Pão Quente' && $soRegra['anunciante'] === '' && PadroesExtracao::nomes('empresa') === ['Padaria Pão Quente']
+    && PadroesExtracao::nomeGenerico('Salário') && !PadroesExtracao::nomeGenerico('Grupo Dourado'), $comPadroes['anunciante'].' / '.$soRegra['anunciante']);
+PadroesExtracao::ligar(true);
+confere('Área: padrão do título decide só quando a regra não reconhece ("CHURRASQUEIRO" → Alimentação; com palpite da regra, fica a regra)',
+    PadroesExtracao::decidir('vaga_categoria', 'CHURRASQUEIRO COM EXPERIÊNCIA', '') === ['classe' => 'Alimentação', 'origem' => 'padrao', 'termo' => 'churrasqueiro']
+    && PadroesExtracao::decidir('vaga_categoria', 'Atendente de loja', '')['origem'] === 'regra');
+PadroesExtracao::ligar(false);
+PadroesExtracao::limpar();
+confere('Ficha: marcas de citação das IAs ([1], :contentReference[oaicite:1]{index=1}, 【4†fonte】) saem da descrição',
+    (ExtracaoCurso::fichas("Título: Guia X\nLink: https://x.gov.br/x\nDescrição: Bom guia [2]. :contentReference[oaicite:1]{index=1} 【4†fonte】")[0]['descricao'] ?? '') === 'Bom guia.');
+// Capa do e-book: PDF mínimo com uma imagem na 1ª página (o Windows desenha a página; sem ele, sai a imagem da página).
+$jpgCapa = (function (): string { $im = imagecreatetruecolor(300, 400); imagefill($im, 0, 0, imagecolorallocate($im, 30, 90, 160)); ob_start(); imagejpeg($im, null, 80); return (string)ob_get_clean(); })();
+$conteudoCapa = 'q 300 0 0 400 0 0 cm /Im1 Do Q';
+$objsPdf = ['<< /Type /Catalog /Pages 2 0 R >>', '<< /Type /Pages /Kids [3 0 R] /Count 1 >>',
+    '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 300 400] /Resources << /XObject << /Im1 4 0 R >> >> /Contents 5 0 R >>',
+    '<< /Type /XObject /Subtype /Image /Width 300 /Height 400 /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length '.strlen($jpgCapa)." >>\nstream\n".$jpgCapa."\nendstream",
+    '<< /Length '.strlen($conteudoCapa)." >>\nstream\n".$conteudoCapa."\nendstream"];
+$pdfCapa = "%PDF-1.4\n"; $posicoes = [];
+foreach ($objsPdf as $i => $o) { $posicoes[] = strlen($pdfCapa); $pdfCapa .= ($i + 1)." 0 obj\n".$o."\nendobj\n"; }
+$xref = strlen($pdfCapa);
+$pdfCapa .= "xref\n0 ".(count($objsPdf) + 1)."\n0000000000 65535 f \n".implode('', array_map(fn($p) => sprintf("%010d 00000 n \n", $p), $posicoes))
+    ."trailer\n<< /Size ".(count($objsPdf) + 1)." /Root 1 0 R >>\nstartxref\n$xref\n%%EOF\n";
+$arqCapa = tempnam(sys_get_temp_dir(), 'cvdf_teste_').'.pdf';
+file_put_contents($arqCapa, $pdfCapa);
+$capaPhp = (new PdfTexto($pdfCapa))->capa();
+$capaFinal = CapaPdf::gerar(['t' => $arqCapa])['t'] ?? '';
+@unlink($arqCapa);
+confere('Capa do e-book: sai da 1ª página do PDF (desenhada pelo Windows ou, sem ele, a imagem da página)',
+    $capaPhp !== null && (getimagesizefromstring($capaPhp)[0] ?? 0) === 300 && $capaFinal !== '' && (getimagesizefromstring($capaFinal)[1] ?? 0) > (getimagesizefromstring($capaFinal)[0] ?? 0));
 
 $_SERVER['REQUEST_URI'] = BASE_URL.'vaga.php?id=3';
 confere('Router::caminhoPedido() → "vaga.php"', Router::caminhoPedido() === 'vaga.php', Router::caminhoPedido());
@@ -439,12 +450,14 @@ try {
     $db = Database::getConexao();
     confere('conexão PDO', true);
     $tabelas = $db->query('SHOW TABLES')->fetchAll(PDO::FETCH_COLUMN);
-    $esperadas = ['assinaturas','calibracao_extracao','candidaturas','categorias','curriculos','cursos','matches','perfis','redefinicoes_senha','tentativas_login','usuarios','vagas'];
-    confere('12 tabelas do database/schema.sql', !array_diff($esperadas, $tabelas), implode(', ', array_diff($esperadas, $tabelas)));
-    // O calibrador cria a tabela dele se o banco for de uma versão anterior; os termos ativos e os nomes conhecidos carregam.
-    $termosAtivos = (new CalibracaoDAO())->ativos();
-    confere('calibrador: termos ativos e nomes conhecidos carregam do banco', is_array($termosAtivos) && is_array((new CalibracaoDAO())->nomesConhecidos('empresa')),
-        count($termosAtivos).' termo(s)');
+    $esperadas = ['assinaturas','candidaturas','categorias','curriculos','cursos','matches','perfis','redefinicoes_senha','tentativas_login','usuarios','vagas'];
+    confere('11 tabelas do database/schema.sql', !array_diff($esperadas, $tabelas), implode(', ', array_diff($esperadas, $tabelas)));
+    // Padrões automáticos: montados na hora das vagas e cursos do banco (sem tabela própria).
+    PadroesExtracao::limpar();
+    $padroesBanco = PadroesExtracao::padroes();
+    confere('padrões automáticos montados das vagas e dos cursos cadastrados', count($padroesBanco['vaga_linha']) > 0 && count($padroesBanco['curso_categoria']) > 0
+        && PadroesExtracao::nomes('empresa') !== [] && PadroesExtracao::nomes('instituicao') !== [], count($padroesBanco['vaga_linha']).' padrões de linha');
+    PadroesExtracao::limpar();
     $contas = $db->query("SELECT email FROM usuarios WHERE email IN ('admin@conectavagas.com','empresa@conectavagas.com','candidato@conectavagas.com')")->fetchAll(PDO::FETCH_COLUMN);
     confere('contas de teste do database/seed.sql', count($contas) === 3, count($contas).' de 3 encontradas');
     $senhasReadme = ['admin@conectavagas.com' => 'Admin@123', 'empresa@conectavagas.com' => 'Empresa@123', 'candidato@conectavagas.com' => 'Candidato@123'];
@@ -496,7 +509,7 @@ if ($status('') === 0) {
               // Leitor de cartaz da plataforma: tudo servido pelo próprio site (nada instalado no servidor).
               'assets/js/leitor-cartaz.js' => 200, 'assets/js/vendor/tesseract/tesseract.min.js' => 200, 'assets/js/vendor/tesseract/worker.min.js' => 200,
               'assets/js/vendor/tesseract/core/tesseract-core-simd-lstm.wasm.js' => 200, 'assets/js/vendor/tesseract/lang/por.traineddata.gz' => 200,
-              'view/perfil/index.php' => 302, 'admin/index.php' => 302, 'admin/pages/calibrador.php' => 302,
+              'view/perfil/index.php' => 302, 'admin/index.php' => 302,
               'admin/pages/assinaturas.php' => 302, 'download.php?id=1' => 302] as $caminho => $esperado) {
         $s = $status($caminho);
         confere(sprintf('%-24s → %d', $caminho === '' ? '/' : $caminho, $esperado), $s === $esperado, "recebeu $s");

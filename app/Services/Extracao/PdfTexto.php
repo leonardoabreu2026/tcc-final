@@ -111,28 +111,76 @@ final class PdfTexto {
         foreach ($this->objs as $num => $dict) {
             if (isset($mascaras[$num]) || !isset($this->streams[$num]) || !preg_match('/\/Subtype\s*\/Image/', $dict)) continue;
             if (!preg_match('/\/Filter\s*(?:\/FlateDecode|\[\s*\/FlateDecode\s*\])/', $dict)) continue;
-            try {
-                $v = $this->valor($dict);
-                if (!is_array($v)) continue;
-                $w = (int)$this->resolver($v['Width'] ?? 0); $h = (int)$this->resolver($v['Height'] ?? 0);
-                $comp = $this->componentesCor($v['ColorSpace'] ?? null);
-                if ((int)$this->resolver($v['BitsPerComponent'] ?? 8) !== 8 || !$comp || $w < 80 || $h < 80 || $w * $h > $maxPixels) continue;
-                $raw = $this->inflar($this->streams[$num]);
-                if ($raw === null) continue;
-                $this->orcamento -= strlen($raw);
-                if ($this->orcamento < 0) self::grandeDemais();
-                $parms = $this->resolver($v['DecodeParms'] ?? null);
-                if (is_array($parms) && isset($parms[0])) $parms = $this->resolver($parms[0]);
-                if (is_array($parms) && (int)($parms['Predictor'] ?? 1) >= 10) $raw = self::desfiltrarPng($raw, $w * $comp, $comp);
-                if (strlen($raw) < $w * $h * $comp) continue;
-                $out[] = self::montarPng($raw, $w, $h, $comp);
-            } catch (LengthException $e) {
-                throw $e;
-            } catch (Throwable) {
-                continue;   // imagem num formato que não sabemos remontar: segue para a próxima
-            }
+            $png = $this->flateParaPng($num, $maxPixels);
+            if ($png !== null) $out[] = $png;
         }
         return $out;
+    }
+
+    /**
+     * CAPA de um e-book em PDF: a maior imagem desenhada na 1ª página (inclusive dentro de Form XObjects),
+     * como JPEG ou PNG. A capa costuma ser uma imagem de página inteira; o texto por cima dela (vetor) não vem.
+     * null = a 1ª página não tem imagem (capa feita só de texto e vetores) ou a imagem está num formato que
+     * não sabemos remontar (CMYK, indexada...).
+     */
+    public function capa(int $maxPixels = 25_000_000): ?string {
+        $paginas = $this->paginas();
+        $pagina = $paginas ? $this->valor($this->objs[$paginas[0]] ?? '') : null;
+        if (!is_array($pagina)) return null;
+        $imagens = [];
+        $coletar = function (mixed $recursos, int $prof) use (&$coletar, &$imagens): void {
+            $xo = is_array($recursos) ? $this->resolver($recursos['XObject'] ?? null) : null;
+            if (!is_array($xo) || $prof > 3) return;
+            foreach ($xo as $ref) {
+                if (!is_array($ref) || !isset($ref['_ref'])) continue;
+                $num = (int)$ref['_ref'];
+                $dict = $this->objs[$num] ?? '';
+                if (preg_match('/\/Subtype\s*\/Image/', $dict)) {
+                    $v = $this->valor($dict);
+                    if (is_array($v)) $imagens[$num] = (int)$this->resolver($v['Width'] ?? 0) * (int)$this->resolver($v['Height'] ?? 0);
+                } elseif (preg_match('/\/Subtype\s*\/Form/', $dict)) {
+                    $v = $this->valor($dict);
+                    if (is_array($v)) $coletar($this->resolver($v['Resources'] ?? null), $prof + 1);
+                }
+            }
+        };
+        $coletar($this->recursosDaPagina($pagina), 0);
+        arsort($imagens);
+        foreach (array_keys($imagens) as $num) {
+            $dict = $this->objs[$num];
+            if (preg_match('/\/DCTDecode/', $dict) && !preg_match('/\/Filter\s*\[[^\]]*\/FlateDecode/', $dict)) {
+                $d = $this->streams[$num] ?? '';
+                // JPEG em CMYK (comum em material de gráfica) sai com as cores trocadas: não serve de capa.
+                if (str_starts_with($d, "\xFF\xD8") && ((@getimagesizefromstring($d))['channels'] ?? 3) !== 4) return $d;
+            } elseif (($png = $this->flateParaPng($num, $maxPixels)) !== null) {
+                return $png;
+            }
+        }
+        return null;
+    }
+
+    /** Imagem compactada (FlateDecode, RGB ou cinza, 8 bits) remontada em PNG; null se não der. */
+    private function flateParaPng(int $num, int $maxPixels): ?string {
+        try {
+            $v = $this->valor($this->objs[$num] ?? '');
+            if (!is_array($v) || !isset($this->streams[$num])) return null;
+            $w = (int)$this->resolver($v['Width'] ?? 0); $h = (int)$this->resolver($v['Height'] ?? 0);
+            $comp = $this->componentesCor($v['ColorSpace'] ?? null);
+            if ((int)$this->resolver($v['BitsPerComponent'] ?? 8) !== 8 || !$comp || $w < 80 || $h < 80 || $w * $h > $maxPixels) return null;
+            $raw = $this->inflar($this->streams[$num]);
+            if ($raw === null) return null;
+            $this->orcamento -= strlen($raw);
+            if ($this->orcamento < 0) self::grandeDemais();
+            $parms = $this->resolver($v['DecodeParms'] ?? null);
+            if (is_array($parms) && isset($parms[0])) $parms = $this->resolver($parms[0]);
+            if (is_array($parms) && (int)($parms['Predictor'] ?? 1) >= 10) $raw = self::desfiltrarPng($raw, $w * $comp, $comp);
+            if (strlen($raw) < $w * $h * $comp) return null;
+            return self::montarPng($raw, $w, $h, $comp);
+        } catch (LengthException $e) {
+            throw $e;
+        } catch (Throwable) {
+            return null;   // imagem num formato que não sabemos remontar
+        }
     }
 
     /** Canais de cor de um /ColorSpace: 3 (RGB), 1 (cinza) ou 0 (formato não suportado: CMYK, indexado...). */

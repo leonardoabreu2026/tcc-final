@@ -20,47 +20,91 @@ declare(strict_types=1);
 final class ImagemRemota {
     private const LIMITE_IMAGEM = 5 * 1024 * 1024;   // arquivo original (reduzido, fica bem menor)
     private const LIMITE_PAGINA = 512 * 1024;        // só o começo do HTML: as metatags ficam no <head>
+    private const LIMITE_PDF_CAPA = 80 * 1024 * 1024; // PDF baixado na prévia só para tirar a capa (CapaPdf)
     private const LARGURA = 800;
     private const SIMULTANEAS = 16;
     private const CERTIFICADOS = ROOT_DIR.'/config/cacert.pem';
 
     /**
-     * Fichas da importação: 'imagem_url' fica só com imagem que abre de verdade, e 'imagem_origem' diz de onde
-     * ela veio, para a prévia avisar o administrador:
-     *   'ficha'   = o link "Imagem:" da ficha é a imagem;       'caminho' = caminho de imagem do próprio site;
-     *   'pagina'  = achada na página do link "Imagem:" ou do conteúdo;   '' = sem imagem (entra a reserva ao salvar).
+     * Prévia da importação: ABRE CADA LINK da ficha (Imagem, PDF e Link), descobre o que ele é — imagem, PDF ou
+     * página — e traz para a plataforma o que serve:
+     *   - 'imagem_url' fica só com imagem que abre de verdade, e 'imagem_origem' diz de onde a imagem veio:
+     *     'ficha' (o link Imagem é a imagem) · 'caminho' (caminho de imagem do próprio site) · 'capa_pdf' (1ª página
+     *     do PDF do e-book, já gravada em storage/uploads e posta em 'imagem') · 'pagina' (imagem de divulgação
+     *     da página do link) · '' (sem imagem: entra a reserva ao salvar);
+     *   - e-book: o PDF achado (no Link, no PDF, na Imagem ou dentro da página deles) vai para 'pdf_url' — ao
+     *     salvar, ele entra na biblioteca da plataforma;
+     *   - 'avisos_links': o que não abriu como deveria (ex.: link de PDF que abre uma página), para conferir.
      * @param array<int,array<string,mixed>> $itens
      * @return array<int,array<string,mixed>>
      */
     public static function completar(array $itens): array {
         // 1. A imagem que a pesquisa trouxe abre e é imagem mesmo?
         $validas = self::validas(array_map(fn($it) => (string)($it['imagem_url'] ?? ''), $itens));
-        $paginas = [];
+        $links = [];
         foreach ($itens as $i => $it) {
             $u = (string)($it['imagem_url'] ?? '');
             $itens[$i]['imagem_url'] = $u !== '' && isset($validas[$u]) ? $u : '';
             $itens[$i]['imagem_origem'] = $itens[$i]['imagem_url'] !== '' ? 'ficha' : (!empty($it['imagem_propria']) ? 'caminho' : '');
-            if ($itens[$i]['imagem_origem'] !== '') continue;
-            // 2. Sem imagem: procura a de divulgação na página que veio no campo Imagem (a pesquisa às vezes manda a
-            //    página em vez do arquivo da imagem) e na página do conteúdo. Link de PDF não tem página para olhar.
-            $link = (string)($it['url'] ?? '');
-            $paginas[$i] = array_values(array_unique(array_filter([$u, $link], fn($l) => $l !== '' && !preg_match('/\.pdf($|[?#])/i', $l))));
-            if (!$paginas[$i]) unset($paginas[$i]);
+            $itens[$i]['avisos_links'] = [];
+            $itens[$i]['_abrir'] = array_values(array_unique(array_filter([$itens[$i]['imagem_url'] === '' ? $u : '', (string)($it['pdf_url'] ?? ''), (string)($it['url'] ?? '')])));
+            foreach ($itens[$i]['_abrir'] as $l) $links[$l] = true;
         }
-        if (!$paginas) return $itens;
-        $respostas = self::buscar(array_values(array_unique(array_merge([], ...array_values($paginas)))), self::LIMITE_PAGINA, true);
-        $daPagina = [];
-        foreach ($paginas as $i => $links) {
-            $daPagina[$i] = [];
-            foreach ($links as $link) {
-                [$html, $tipo, $final] = $respostas[$link] ?? ['', '', $link];
-                if ($html !== '' && str_contains($tipo, 'html')) $daPagina[$i] = [...$daPagina[$i], ...array_slice(self::candidatas($html, $final), 0, 4)];
+        // 2. Abre cada link (só o começo: basta para saber o que é) e separa: PDF, página (com o PDF e as imagens dela) ou nada.
+        $respostas = $links ? self::buscar(array_keys($links), self::LIMITE_PAGINA, true) : [];
+        $oQue = []; $daPagina = []; $pdfNaPagina = [];
+        foreach (array_keys($links) as $l) {
+            [$corpo, $tipo, $final] = $respostas[$l] ?? ['', '', $l];
+            $oQue[$l] = match (true) {
+                $corpo === '' => 'falhou',
+                str_starts_with(ltrim($corpo), '%PDF') || str_contains($tipo, 'application/pdf') => 'pdf',
+                str_contains($tipo, 'html') => 'pagina',
+                str_starts_with($tipo, 'image/') => 'imagem',
+                default => 'outro',
+            };
+            if ($oQue[$l] === 'pagina') { $daPagina[$l] = array_slice(self::candidatas($corpo, $final), 0, 4); $pdfNaPagina[$l] = self::pdfDaPagina($corpo, $final); }
+        }
+        // 3. E-book sem imagem: a capa é a 1ª página do PDF (o PDF do link, ou o que a página dele oferece).
+        $pdfDoItem = [];
+        foreach ($itens as $i => $it) {
+            if (($it['tipo'] ?? '') !== 'ebook') continue;
+            foreach ($it['_abrir'] as $l) {
+                if ($oQue[$l] === 'pdf') { $pdfDoItem[$i] = $l; break; }
+                if (($pdfNaPagina[$l] ?? '') !== '') { $pdfDoItem[$i] = $pdfNaPagina[$l]; break; }
             }
+            if (isset($pdfDoItem[$i]) && (string)($it['pdf_url'] ?? '') === '' && $pdfDoItem[$i] !== ($it['url'] ?? '')) $itens[$i]['pdf_url'] = $pdfDoItem[$i];
         }
-        // 3. Fica a primeira imagem que abre de verdade (a metatag às vezes aponta para um ícone ou foto provisória).
-        $validas = self::validas(array_merge([], ...array_values($daPagina)));
-        foreach ($daPagina as $i => $lista) {
+        $paraCapa = array_filter($pdfDoItem, fn($p, $i) => $itens[$i]['imagem_origem'] === '', ARRAY_FILTER_USE_BOTH);
+        if ($paraCapa) {
+            $arquivos = self::baixarArquivos(array_values(array_unique($paraCapa)), self::LIMITE_PDF_CAPA);
+            $pdfsOk = [];
+            foreach (array_unique($paraCapa) as $p) if (isset($arquivos[$p]) && self::ehPdf($arquivos[$p][0])) $pdfsOk[$p] = $arquivos[$p][0];
+            $capas = CapaPdf::gerar($pdfsOk);
+            foreach ($paraCapa as $i => $p) {
+                if (isset($capas[$p]) && self::ehImagem($capas[$p]) && ($caminho = self::gravar($capas[$p], 'capa')) !== '') {
+                    $itens[$i]['imagem'] = $caminho; $itens[$i]['imagem_propria'] = true; $itens[$i]['imagem_origem'] = 'capa_pdf';
+                }
+            }
+            foreach ($arquivos as [$tmp]) if (is_file($tmp)) @unlink($tmp);
+        }
+        // 4. Ainda sem imagem: a de divulgação da página (a metatag às vezes aponta para um ícone: fica a primeira que abre de verdade).
+        $candidatas = [];
+        foreach ($itens as $i => $it) {
+            if ($it['imagem_origem'] !== '') continue;
+            $candidatas[$i] = array_values(array_unique(array_merge([], ...array_map(fn($l) => $daPagina[$l] ?? [], $it['_abrir']))));
+        }
+        $validas = self::validas(array_merge([], ...array_values($candidatas)));
+        foreach ($candidatas as $i => $lista) {
             foreach ($lista as $u) if (isset($validas[$u])) { $itens[$i]['imagem_url'] = $u; $itens[$i]['imagem_origem'] = 'pagina'; break; }
+        }
+        // 5. Avisos do que não abriu como deveria.
+        foreach ($itens as $i => $it) {
+            $pdf = (string)($it['pdf_url'] ?? ''); $link = (string)($it['url'] ?? '');
+            if ($link !== '' && ($oQue[$link] ?? '') === 'falhou') $itens[$i]['avisos_links'][] = 'o Link não abriu (fora do ar ou endereço errado)';
+            elseif ($link !== '' && preg_match('/\.pdf($|[?#])/i', $link) && ($oQue[$link] ?? '') !== 'pdf') $itens[$i]['avisos_links'][] = 'o Link termina em .pdf, mas não abre um PDF (o site devolveu uma página): confira o endereço';
+            if ($pdf !== '' && isset($oQue[$pdf]) && $oQue[$pdf] !== 'pdf' && ($pdfNaPagina[$pdf] ?? '') === '') $itens[$i]['avisos_links'][] = 'o link do PDF não abre um PDF: confira o endereço';
+            if (($it['tipo'] ?? '') === 'ebook' && !isset($pdfDoItem[$i]) && $pdf === '' && !preg_match('/\.pdf($|[?#])/i', $link)) $itens[$i]['avisos_links'][] = 'nenhum PDF achado nos links: o e-book fica com o botão "Acessar"';
+            unset($itens[$i]['_abrir']);
         }
         return $itens;
     }
@@ -233,7 +277,7 @@ final class ImagemRemota {
         $out = [];
         foreach ($achadas as $u) {
             $u = self::absoluto(html_entity_decode($u, ENT_QUOTES | ENT_HTML5), $base);
-            if ($u !== '' && !preg_match('/placeholder|no_selection/i', $u) && !in_array($u, $out, true)) $out[] = $u;
+            if ($u !== '' && !preg_match('/placeholder|no_selection|logo|favicon|sprite|avatar/i', $u) && !in_array($u, $out, true)) $out[] = $u;
         }
         return $out;
     }
