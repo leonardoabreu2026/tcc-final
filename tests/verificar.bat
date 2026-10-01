@@ -6,13 +6,16 @@ rem Confere a sintaxe de todos os PHP, roda o teste rapido e as jornadas (Apache
 rem ============================================================
 cd /d "%~dp0.."
 echo.
-echo === Conecta Vagas DF - verificacao completa ===
+echo === TCC Final - Conecta Vagas DF - verificacao completa ===
 echo.
 C:\xampp\php\php.exe tests\lint.php
 if errorlevel 1 goto erro
 C:\xampp\php\php.exe tests\smoke.php
 if errorlevel 1 goto erro
-C:\xampp\php\php.exe tests\jornadas.php
+rem A extensao zip (usada so pelo teste, para montar um DOCX) costuma vir desligada no php.ini do XAMPP: liga so nesta execucao.
+set ZIPEXT=
+C:\xampp\php\php.exe -r "exit(class_exists('ZipArchive') ? 0 : 1);" || set ZIPEXT=-d extension=zip
+C:\xampp\php\php.exe %ZIPEXT% tests\jornadas.php
 if errorlevel 1 goto erro
 echo.
 echo TUDO CERTO: pode usar e fazer commit.

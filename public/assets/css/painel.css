@@ -276,44 +276,41 @@ body.cv .pn-talento h3{margin:10px 0 2px;font-size:16.5px;color:var(--gf-tinta)}
 .imp-miniatura{display:block;width:64px;height:48px;object-fit:cover;border:1px solid #dfe5ee;border-radius:4px;background:#eef2f7}
 
 /* =====================================================================
-   APRENDIZADO DA MÁQUINA (admin/aprendizado.php) e decisões da máquina no relatório da extração.
-   Prefixo .ml- (machine learning).
+   CALIBRADOR DAS MÁQUINAS DE EXTRAÇÃO (admin/calibrador.php) e ajustes dele no relatório da extração.
+   Prefixo .cal-
    ===================================================================== */
-/* Os 4 passos "como a máquina aprende" */
-.ml-passos{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0 0 16px;padding:0;list-style:none}
-.ml-passos li{display:flex;flex-direction:column;gap:3px;padding:12px 14px;background:#f3f7fd;border:1px solid #d6e3f7;border-radius:var(--cv-raio);font-size:13.5px;color:var(--gf-tinta2)}
-.ml-passos b{color:var(--cv-azul-esc);font-size:14.5px}
-/* Palavras aprendidas (chips) */
-.ml-chip{display:inline-block;margin:0 5px 5px 0;padding:2px 8px;border-radius:4px;background:#eef3fb;color:#1f3d6d;font-size:12.5px;font-weight:600;line-height:1.5}
-.ml-palavras{display:grid;grid-template-columns:max-content 1fr;gap:4px 12px;margin:14px 0 0;font-size:13px}
-.ml-palavras dt{font-weight:700;color:var(--gf-tinta2);padding-top:2px}
-.ml-palavras dd{margin:0}
-.ml-rodape{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:12px -18px -12px;padding:10px 18px;border-top:1px solid var(--gf-borda)}
-.ml-memorias{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-body.cv .ml-memorias h3{margin:0 0 8px;font-size:14px;color:var(--gf-tinta)}
-.ml-cont{display:inline-block;min-width:22px;padding:0 6px;border-radius:9px;background:#eef1f5;color:#465164;font-size:12px;text-align:center}
-.ml-tabela{width:100%;border-collapse:collapse;font-size:13.5px}
-.ml-tabela th,.ml-tabela td{padding:7px 4px;border-bottom:1px solid var(--gf-grade);text-align:left}
-.ml-tabela .num{text-align:right}
-/* Teste a máquina */
-.ml-teste-form{display:grid;grid-template-columns:minmax(180px,240px) 1fr auto;gap:12px;align-items:end}
-.ml-resposta{margin:16px 0 0;padding:14px 16px;background:#f7f9fc;border:1px solid var(--gf-borda);border-radius:var(--cv-raio);font-size:14px}
-.ml-resposta p{margin:0 0 10px}
-.ml-filtro select{width:auto;padding:7px 10px;font-size:13.5px}
-.ml-texto-licao{max-width:380px;overflow:hidden;text-overflow:ellipsis}
-/* Decisões da máquina dentro do relatório da extração (vaga e curso) */
-.ml-campo{display:inline-block;min-width:64px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#5f6b7c}
-.ml-det{color:#5f6b7c}
+/* Os 4 passos "como o calibrador funciona" */
+.cal-passos{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0 0 16px;padding:0;list-style:none}
+.cal-passos li{display:flex;flex-direction:column;gap:3px;padding:12px 14px;background:#f3f7fd;border:1px solid #d6e3f7;border-radius:var(--cv-raio);font-size:13.5px;color:var(--gf-tinta2)}
+.cal-passos b{color:var(--cv-azul-esc);font-size:14.5px}
+/* Testar as máquinas */
+.cal-teste{margin:18px 0}
+.cal-teste-form{display:grid;grid-template-columns:minmax(200px,260px) 1fr auto;gap:12px;align-items:end}
+.cal-teste-form textarea{min-height:120px}
+.cal-resultado{margin:16px 0 4px;padding:14px 16px;background:#f7f9fc;border:1px solid var(--gf-borda);border-radius:var(--cv-raio);font-size:14px}
+body.cv .cal-resultado h3{margin:14px 0 8px;font-size:14px;color:var(--gf-tinta)}
+.cal-campos{display:grid;grid-template-columns:max-content 1fr;gap:6px 14px;margin:0}
+.cal-campos dt{font-weight:700;color:var(--gf-tinta2)}
+.cal-campos dd{margin:0;overflow-wrap:anywhere}
+.cal-ajustes{margin:0;padding:0;list-style:none}
+.cal-ajustes li{padding:6px 0;border-bottom:1px solid var(--gf-grade);overflow-wrap:anywhere}
+.cal-ajustes li:last-child{border-bottom:0}
+.cal-campo{display:inline-block;min-width:74px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#5f6b7c}
+/* Nomes conhecidos (chips) */
+.cal-nomes{margin:18px 0 0}
+.cal-nomes-grade{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+body.cv .cal-nomes h3{margin:0 0 8px;font-size:14px;color:var(--gf-tinta)}
+.cal-chip{display:inline-block;margin:0 5px 5px 0;padding:2px 8px;border-radius:4px;background:#eef3fb;color:#1f3d6d;font-size:12.5px;font-weight:600;line-height:1.5}
+.cal-cont{display:inline-block;min-width:22px;padding:0 6px;border-radius:9px;background:#eef1f5;color:#465164;font-size:12px;text-align:center}
 @media (max-width:900px){
-  .ml-passos{grid-template-columns:1fr 1fr}
-  .ml-teste-form{grid-template-columns:1fr}
+  .cal-passos{grid-template-columns:1fr 1fr}
+  .cal-teste-form{grid-template-columns:1fr}
 }
 @media (max-width:640px){
-  .ml-passos,.ml-memorias{grid-template-columns:1fr}
-  .ml-rodape{margin:12px -14px -10px;padding:10px 14px;flex-wrap:wrap}
-  .ml-palavras{grid-template-columns:1fr}
+  .cal-passos,.cal-nomes-grade{grid-template-columns:1fr}
+  .cal-campos{grid-template-columns:1fr}
+  .cal-campos dd{margin-bottom:6px}
 }
-.ml-experiencia{margin:0 0 12px;padding:8px 12px;background:#f7f9fc;border:1px solid var(--gf-borda);border-radius:var(--cv-raio);font-size:13.5px;color:var(--gf-tinta2)}
 
 /* ---------- Tabelas: ordenação por coluna, subabas e paginação ---------- */
 .pn-ordem{display:inline-flex;align-items:center;gap:4px;color:inherit;text-decoration:none;white-space:nowrap}

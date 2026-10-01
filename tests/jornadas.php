@@ -206,7 +206,7 @@ try {
 } finally {
     // Limpeza: nada do teste fica para trás, mesmo se algum passo falhou no meio.
     $sobrou = $dao->buscarPorEmail($email);
-    if ($sobrou) { MaquinaAprendizado::esquecerDoUsuario((int)$sobrou['id']); $dao->excluir((int)$sobrou['id']); }
+    if ($sobrou) { $dao->excluir((int)$sobrou['id']); }
     // A tentativa de entrar com a conta já excluída (último passo) também fica registrada: sai junto.
     Database::getConexao()->prepare('DELETE FROM tentativas_login WHERE email=?')->execute([$email]);
     foreach ($tmp as $f) if (is_file($f)) @unlink($f);

@@ -9,7 +9,6 @@ declare(strict_types=1);
  * a aba "Portfólio" é liberada no topo → lá ficam o portfólio montado e o match com as vagas.
  */
 final class PerfilController extends Controller {
-    use AprendeComRevisao;
 
     /** view/perfil/index.php — "Meu perfil": máquina de extração do currículo + formulário do cadastro. */
     public function index(): void {
@@ -70,10 +69,6 @@ final class PerfilController extends Controller {
             redirect('view/perfil/index.php');
         }
         if ($fotoNova && !empty($p['foto'])) apagar_upload_sem_uso((string)$p['foto']);
-        // Perfil revisado depois de enviar o currículo: a máquina de aprendizado vê onde o candidato
-        // deixou cada linha do currículo e aprende (só uma vez por currículo enviado).
-        $this->aprenderComRevisao('curriculo', $dados);
-
         // Telefone pertence à conta (tabela usuarios).
         $tel = mb_substr(post_str('telefone'), 0, 30);
         (new UsuarioDAO())->atualizarTelefone((int)$_SESSION['usuario_id'], $tel ?: null);
@@ -199,7 +194,7 @@ final class PerfilController extends Controller {
 
     /**
      * view/perfil/conta_excluir.php (POST) — LGPD: o candidato apaga a PRÓPRIA conta e todos os dados dele
-     * (perfil, currículos e arquivos, foto, candidaturas, matches e as lições que a máquina aprendeu com ele).
+     * (perfil, currículos e arquivos, foto, candidaturas e matches).
      * Confirma com a senha (mesma tolerância e mesma trava contra tentativas do login) e com a caixa marcada.
      */
     public function excluirConta(): void {
@@ -226,7 +221,6 @@ final class PerfilController extends Controller {
             flash('erro', 'Senha incorreta: a conta não foi excluída.');
             redirect($voltar);
         }
-        MaquinaAprendizado::esquecerDoUsuario($id);   // as lições de currículo dele saem antes da conta
         if (!$dao->excluir($id)) {
             flash('erro', 'Não foi possível excluir a conta agora. Tente de novo em instantes.');
             redirect($voltar);

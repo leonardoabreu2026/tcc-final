@@ -27,7 +27,9 @@ fi
 grep -E "RESULTADO" .git/smoke_ultimo.txt
 
 echo "Blindagem: rodando as jornadas (tests/jornadas.php)..."
-"$PHP" tests/jornadas.php > .git/jornadas_ultimo.txt 2>&1
+# A extensão zip (usada só pelo teste, para montar um DOCX) costuma vir desligada no php.ini do XAMPP: liga só para esta execução.
+ZIP=""; "$PHP" -r "exit(class_exists('ZipArchive') ? 0 : 1);" || ZIP="-d extension=zip"
+"$PHP" $ZIP tests/jornadas.php > .git/jornadas_ultimo.txt 2>&1
 if [ $? -ne 0 ]; then
     grep -E "FALHA|RESULTADO" .git/jornadas_ultimo.txt
     echo ""

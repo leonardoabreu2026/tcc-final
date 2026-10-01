@@ -79,7 +79,7 @@ $rotas->rota('admin/pages/usuarios.php',      [AdminController::class, 'usuarios
 $rotas->rota('admin/pages/categorias.php',    [AdminController::class, 'categorias']);
 $rotas->rota('admin/pages/cursos.php',        [AdminController::class, 'cursos']);
 $rotas->rota('admin/pages/assinaturas.php',   [AdminController::class, 'assinaturas']);
-$rotas->rota('admin/pages/aprendizado.php',   [AprendizadoController::class, 'painel']);
+$rotas->rota('admin/pages/calibrador.php',    [CalibradorController::class, 'painel']);
 $rotas->rota('admin/pages/vagas.php',         [EmpresaController::class, 'vagas']);
 $rotas->rota('admin/pages/candidaturas.php',  [EmpresaController::class, 'candidaturas']);
 $rotas->rota('admin/pages/talentos.php',      [EmpresaController::class, 'talentos']);

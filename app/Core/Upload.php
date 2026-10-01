@@ -130,7 +130,7 @@ function limpar_uploads_orfaos(int $horas = 24): int {
 
 /**
  * Tarefas automáticas do sistema, no máximo 1x por dia (disparadas ao abrir a visão geral do administrador):
- * limpeza de arquivos órfãos e o estudo da máquina de aprendizado. Nunca interrompe a página.
+ * limpeza de arquivos órfãos. Nunca interrompe a página.
  */
 function manutencao_diaria(?int $usuarioId = null): void {
     $marca = LOG_DIR.'manutencao_diaria.txt';
@@ -138,5 +138,4 @@ function manutencao_diaria(?int $usuarioId = null): void {
         @file_put_contents($marca, (string)time(), LOCK_EX);
         try { limpar_uploads_orfaos(); } catch (Throwable $e) { error_log('[manutencao_diaria] '.$e->getMessage()); }
     }
-    MaquinaAprendizado::manutencaoAutomatica($usuarioId);   // tem o seu próprio controle de 1x por dia
 }

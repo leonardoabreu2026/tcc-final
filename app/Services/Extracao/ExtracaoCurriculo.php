@@ -12,9 +12,9 @@ declare(strict_types=1);
  *  3. divisão em seções pelos títulos (com ou sem acento, maiúsculas, numeração, ícones, "E X P E R I Ê N C I A");
  *  4. cada campo é montado a partir da sua seção; experiências e formação saem em formato padronizado.
  *
- * APRENDIZADO: currículo simples muitas vezes não tem título de seção nenhum, e as linhas ficam
- * "soltas" no cabeçalho. Para essas linhas a MaquinaAprendizado pode dizer a seção, com o que
- * aprendeu dos perfis que os candidatos revisaram e salvaram depois de enviar o currículo.
+ * CALIBRADOR: currículo simples muitas vezes não tem título de seção nenhum, e as linhas ficam
+ * "soltas" no cabeçalho. Para essas linhas o Calibrador pode dizer a seção, pelos termos que o
+ * administrador cadastrou (ex.: "ensino médio" → Formação).
  */
 final class ExtracaoCurriculo {
     /** Seções reconhecidas e os títulos que as identificam (normalizados). */
@@ -109,7 +109,7 @@ final class ExtracaoCurriculo {
 
         // ---- 3) seções
         [$cabecalho, $secoes] = self::separarSecoes($resto);
-        [$cabecalho, $secoes] = self::secoesAprendidas($cabecalho, $secoes);
+        [$cabecalho, $secoes] = self::secoesCalibradas($cabecalho, $secoes);
         foreach ($secoes['contato'] ?? [] as $l) $cabecalho[] = $l;
 
         // ---- 4) contato, local, datas
@@ -173,12 +173,12 @@ final class ExtracaoCurriculo {
     }
 
     /**
-     * Linhas do cabeçalho (antes do primeiro título de seção) que a máquina de aprendizado reconhece
-     * com confiança como experiência, formação, curso etc. vão para essa seção. Contato, datas e linhas
+     * Linhas do cabeçalho (antes do primeiro título de seção) com um termo calibrado de experiência,
+     * formação, curso etc. vão para essa seção. Contato, datas e linhas
      * curtas (nome, cargo) ficam onde estão; "resumo" também fica, porque o cabeçalho já vira o resumo.
      * @return array{0:string[],1:array<string,string[]>}
      */
-    private static function secoesAprendidas(array $cabecalho, array $secoes): array {
+    private static function secoesCalibradas(array $cabecalho, array $secoes): array {
         $fica = [];
         foreach ($cabecalho as $l) {
             $limpa = self::semMarcador($l);
@@ -186,9 +186,9 @@ final class ExtracaoCurriculo {
             // Dados pessoais (idade, estado civil, nacionalidade, endereço) nunca vão para uma seção do
             // portfólio: ficam no cabeçalho, onde a extração já sabe tratá-los (ou descartá-los).
             if (preg_match(self::DADOS_PESSOAIS, Competencias::normalizar($limpa))) { $fica[] = $l; continue; }
-            // No cabeçalho não há regra de seção: com palpite vazio, a máquina decide sempre que estiver pronta.
-            $d = MaquinaAprendizado::decidir('curriculo_linha', $limpa, '');
-            if ($d['origem'] === 'maquina' && $d['classe'] !== 'resumo') $secoes[$d['classe']][] = $l;
+            // No cabeçalho não há regra de seção: com palpite vazio, decide o termo calibrado (se houver).
+            $d = Calibrador::decidir('curriculo_linha', $limpa, '');
+            if ($d['origem'] === 'calibrador' && $d['classe'] !== 'resumo') $secoes[$d['classe']][] = $l;
             else $fica[] = $l;
         }
         return [$fica, $secoes];

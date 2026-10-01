@@ -7,7 +7,6 @@ declare(strict_types=1);
  * As telas do painel que a empresa usa (vagas, candidaturas...) ficam em EmpresaController.
  */
 final class AdminController extends Controller {
-    use AprendeComRevisao;
 
     /**
      * admin/index.php — dashboard (estilo Power BI): indicadores + gráficos + listas recentes.
@@ -42,8 +41,7 @@ final class AdminController extends Controller {
         ];
 
         if (isAdmin()) {
-            // Manutenção automática (no máximo 1x por dia): limpa arquivos órfãos e a máquina de aprendizado estuda
-            // o que foi cadastrado — ninguém precisa calibrar nada.
+            // Manutenção automática (no máximo 1x por dia): limpa arquivos órfãos.
             manutencao_diaria($usuarioId);
             $usuariosPorTipo = (new UsuarioDAO())->contarPorTipo($dias);
             $novosUsuarios = (new UsuarioDAO())->listarRecentes(5);
@@ -85,8 +83,6 @@ final class AdminController extends Controller {
                 if ($id === $meuId) { flash('erro', 'Você não pode excluir a própria conta.'); redirect('admin/pages/usuarios.php'.painel_qs()); }
                 $alvo = $dao->buscarPorId($id);
                 if ($alvo && $alvo['tipo'] === 'admin' && (int)$alvo['ativo'] && $dao->contarAdminsAtivos() <= 1) { flash('erro', 'É preciso manter pelo menos um administrador ativo.'); redirect('admin/pages/usuarios.php'.painel_qs()); }
-                // LGPD: as lições de currículo que vieram deste candidato saem da máquina de aprendizado antes da conta.
-                if ($alvo) MaquinaAprendizado::esquecerDoUsuario($id);
                 $ok = $dao->excluir($id);
                 flash($ok ? 'ok' : 'erro', $ok ? 'Usuário excluído (perfil, currículos, vagas e candidaturas foram removidos junto).' : 'Não foi possível excluir o usuário.');
                 redirect('admin/pages/usuarios.php'.painel_qs());
@@ -250,7 +246,7 @@ final class AdminController extends Controller {
      *    várias fichas → prévia para cadastrar as marcadas (importação em lote);
      *  - com imagem na ficha, ela é conferida e baixada; sem imagem, o conteúdo entra com a imagem padrão da
      *    plataforma (CursoDAO::imagemPadrao) e aparece na lista como "trocar imagem", para ajustar depois;
-     *  - a máquina de aprendizado aprende sozinha com cada conteúdo salvo (sem painel).
+     *  - a área e a instituição sugeridas podem vir do Calibrador (termos do administrador e instituições já cadastradas).
      */
     public function cursos(): void {
         exigirAdmin();
@@ -373,7 +369,6 @@ final class AdminController extends Controller {
                 // Imagem: a do link (baixada ao salvar); sem ela, o banner da instituição (ou a padrão, ao salvar).
                 $form['imagem'] = $imgLink !== '' ? '' : ExtracaoCurso::capa($extraido['instituicao'], $extraido['url'], $extraido['tipo']);
                 $form['imagem_url'] = $imgLink;
-                $form['sugestao_maquina'] = $this->guardarSugestao('curso', fn() => MaquinaAprendizado::sugestao('curso', $extraido, [], $texto));
             } else {
                 $d = [
                     'categoria_id' => post_int('categoria_id') ?: null,
@@ -450,14 +445,12 @@ final class AdminController extends Controller {
                     if (is_string($pdf)) { apagar_upload_sem_uso($pdf); $d['url'] = $doLink !== '' ? $urlWeb : ($existente['url'] ?? ''); }
                     if ($baixada !== '') { apagar_upload_sem_uso($baixada); $d['imagem'] = $existente['imagem'] ?? ''; }
                     flash('erro', implode(' ', $erros));
-                    $form = $d + ['id' => $id, 'imagem_url' => $imgLink, 'pdf_url' => $pdfLink, 'sugestao_maquina' => post_str('sugestao_maquina')];
+                    $form = $d + ['id' => $id, 'imagem_url' => $imgLink, 'pdf_url' => $pdfLink];
                 } else {
                     $ok = $dao->salvar($d, $id);
                     if ($ok && $existente && ($existente['imagem'] ?? '') !== $d['imagem']) apagar_upload_sem_uso((string)$existente['imagem']);
                     if ($ok && $existente && ($existente['url'] ?? '') !== $d['url']) apagar_upload_sem_uso((string)$existente['url']);   // PDF antigo da biblioteca
                     if (!$ok && is_string($pdf)) apagar_upload_sem_uso($pdf);
-                    // Aprendizado automático: o conteúdo salvo é a resposta certa para a sugestão da extração.
-                    if ($ok) $this->aprenderComRevisao('curso', $d + ['categoria' => array_column($cats, 'nome', 'id')[(int)$d['categoria_id']] ?? ''], post_str('sugestao_maquina'));
                     flash($ok ? 'ok' : 'erro', $ok ? 'Conteúdo salvo.'.$avisoPdf.($usouPadrao ? ' Entrou com a imagem padrão da plataforma: quando tiver a imagem certa, use Editar para trocar.' : '') : 'Não foi possível salvar.');
                     redirect('admin/pages/cursos.php'.painel_qs());   // volta para a mesma aba, filtros e ordem
                 }

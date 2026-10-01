@@ -71,6 +71,18 @@ $cartazNoForm = !empty($form['imagem']) && str_starts_with((string)$form['imagem
                 <?php endforeach; ?>
             </div>
         </details>
+        <?php if (!empty($extraido['calibrador'])): ?>
+        <div class="cal-resultado">
+            <h3 style="margin-top:0">Ajustes do calibrador</h3>
+            <ul class="cal-ajustes">
+                <?php foreach ($extraido['calibrador'] as $a): ?>
+                <li><span class="cal-campo"><?=e(['linha' => 'Linha', 'categoria' => 'Área', 'anunciante' => 'Empresa'][$a['campo']] ?? $a['campo'])?></span> “<?=e(mb_strimwidth((string)$a['texto'], 0, 90, '…'))?>” → <b><?=e(Calibrador::rotuloDestino($a['campo'] === 'linha' ? 'vaga_linha' : '', (string)$a['para']))?></b>
+                    <span class="muted">(termo: <?=e((string)$a['termo'])?>)</span></li>
+                <?php endforeach; ?>
+            </ul>
+            <?php if (isAdmin()): ?><p class="small muted" style="margin:8px 0 0">Os termos ficam no <a href="<?=url('admin/pages/calibrador.php')?>">Calibrador</a>.</p><?php endif; ?>
+        </div>
+        <?php endif; ?>
     </section>
     <?php endif; ?>
     <?php if ($parecida): ?>
@@ -80,7 +92,6 @@ $cartazNoForm = !empty($form['imagem']) && str_starts_with((string)$form['imagem
     <h2 class="pn-form-titulo" id="form-vaga"><?=!empty($form['id']) ? 'Editar vaga #'.(int)$form['id'] : 'Cadastrar vaga'?></h2>
     <form method="post" enctype="multipart/form-data">
         <input type="hidden" name="csrf" value="<?=e(csrf_token())?>"><input type="hidden" name="acao" value="salvar"><input type="hidden" name="id" value="<?=(int)($form['id'] ?? 0)?>">
-        <?php if (!empty($form['sugestao_maquina'])): ?><input type="hidden" name="sugestao_maquina" value="<?=e((string)$form['sugestao_maquina'])?>"><?php endif; ?>
         <div class="form-grid">
             <?php if (isAdmin()): ?>
                 <div class="full"><label for="v-empresa">Empresa (quem publica)</label><select id="v-empresa" name="perfil_empresa_id" required><option value="">Selecione</option><?php foreach ($empresas as $ep): ?><option value="<?=(int)$ep['id']?>" <?=(int)($form['perfil_empresa_id'] ?? 0) === (int)$ep['id'] ? 'selected' : ''?>><?=e($ep['nome_fantasia'] ?: $ep['nome'])?></option><?php endforeach; ?></select></div>

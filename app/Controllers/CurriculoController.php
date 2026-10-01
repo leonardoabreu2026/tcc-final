@@ -6,7 +6,6 @@ declare(strict_types=1);
  * do relatório e exclusão. (A abertura do arquivo fica em ArquivoController::download.)
  */
 final class CurriculoController extends Controller {
-    use AprendeComRevisao;
 
     /**
      * view/perfil/curriculo_upload.php (POST) — envio do currículo:
@@ -16,9 +15,7 @@ final class CurriculoController extends Controller {
      *  3) aplica ao perfil — campos vazios são preenchidos; os já preenchidos são mantidos
      *     (ou substituídos, se o candidato marcar "substituir"); listas são mescladas;
      *  4) recalcula o match com as vagas ativas;
-     *  5) abre o portfólio com o RELATÓRIO DA EXTRAÇÃO (o que foi encontrado, aplicado, mantido e o que falta);
-     *  6) guarda a sugestão da extração: quando o candidato revisar e salvar o perfil, a máquina de
-     *     aprendizado compara e aprende em que seção fica cada linha (PerfilController::salvar).
+     *  5) abre o portfólio com o RELATÓRIO DA EXTRAÇÃO (o que foi encontrado, aplicado, mantido e o que falta).
      */
     public function upload(): void {
         exigirLogin();
@@ -159,9 +156,6 @@ final class CurriculoController extends Controller {
             flash('info', 'Currículo salvo, mas não foi possível ler o texto do arquivo (pode ser uma imagem escaneada). Preencha o perfil manualmente para montar o portfólio. '.$matchMsg);
             redirect('view/perfil/index.php');
         }
-
-        // ---- aprendizado: a sugestão espera a revisão do perfil
-        $this->guardarSugestao('curriculo', fn() => MaquinaAprendizado::sugestao('curriculo', $campos, ExtracaoCurriculo::linhasDoTexto($texto), ''));
 
         // ---- relatório (guardado na sessão; o portfólio mostra ao dono)
         $todos = array_merge($conta, [$fotoItem], $itens, $extras);

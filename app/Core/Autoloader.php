@@ -11,7 +11,7 @@ declare(strict_types=1);
  * Regra: o nome do arquivo é igual ao nome da classe.
  */
 spl_autoload_register(function (string $classe): void {
-    static $pastas = ['Controllers', 'Models', 'DTO', 'Services', 'Services/Extracao', 'Services/Aprendizado', 'Core'];
+    static $pastas = ['Controllers', 'Models', 'DTO', 'Services', 'Services/Extracao', 'Core'];
     if (!preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/', $classe)) return;
     foreach ($pastas as $pasta) {
         $arquivo = APP_DIR.'/'.$pasta.'/'.$classe.'.php';

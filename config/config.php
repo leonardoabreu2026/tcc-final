@@ -35,7 +35,7 @@ define('FUSO_HORARIO', 'America/Sao_Paulo');
 // ------------------------------------------------------------
 define('DB_HOST', getenv('DB_HOST') ?: '127.0.0.1');
 define('DB_PORT', (int)(getenv('DB_PORT') ?: 3306));
-define('DB_NAME', getenv('DB_NAME') ?: 'conecta_vagas_df_v2');
+define('DB_NAME', getenv('DB_NAME') ?: 'tcc_final');
 define('DB_USER', getenv('DB_USER') ?: 'root');
 define('DB_PASS', getenv('DB_PASS') !== false ? (string)getenv('DB_PASS') : '');
 // Socket só existe no Linux (XAMPP/LAMPP). No Windows a conexão é via TCP (127.0.0.1:3306).
