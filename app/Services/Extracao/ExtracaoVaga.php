@@ -130,7 +130,7 @@ final class ExtracaoVaga {
         $texto = trim(str_replace(["\r\n", "\r"], "\n", $texto));
         $r = ['titulo'=>'','descricao'=>'','requisitos'=>'','beneficios'=>'','tipo_vaga'=>'clt','nivel_experiencia'=>'junior','remoto'=>'presencial',
               'cidade'=>'','uf'=>'','salario_minimo'=>null,'salario_maximo'=>null,'categoria'=>'','competencias'=>[],
-              'anunciante'=>'','contato'=>'','quantidade'=>null,'cargos'=>[],'avisos'=>[],'padrao'=>[],'calibrador'=>[],'linhas'=>[]];
+              'anunciante'=>'','contato'=>'','quantidade'=>null,'cargos'=>[],'avisos'=>[],'padrao'=>[],'calibrador'=>[]];
         // OCR parte palavras em letra grande ("MÁQUI NA"): se a junção aparece inteira em outra leitura ("MAQUINA"), junta.
         $vocabulario = self::vocabularioOcr([$texto, ...($ocr['complemento'] ?? []), ...($ocr['destaques'] ?? []), ...($ocr['todas'] ?? [])]);
         $consertar = fn(string $l) => self::juntarPartidas(self::limparLinha($l), $vocabulario);

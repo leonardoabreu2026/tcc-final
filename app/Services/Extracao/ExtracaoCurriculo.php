@@ -17,6 +17,13 @@ declare(strict_types=1);
  * administrador cadastrou (ex.: "ensino médio" → Formação).
  */
 final class ExtracaoCurriculo {
+    /**
+     * Decisões do Calibrador na última extração (linhas soltas do cabeçalho que um termo mandou para uma seção),
+     * no mesmo formato de $r['calibrador'] da vaga e do curso. Fica fora do resultado, que só tem campos do perfil.
+     * @var list<array{campo:string,texto:string,regra:string,para:string,termo:string}>
+     */
+    public static array $calibrador = [];
+
     /** Seções reconhecidas e os títulos que as identificam (normalizados). */
     private const SECOES = [
         'resumo' => ['resumo','resumo profissional','perfil','perfil profissional','sobre mim','sobre','apresentacao','qualificacoes','qualificacoes profissionais','sumario','sumario profissional','quem sou','quem sou eu','resumo de qualificacoes','perfil pessoal'],
@@ -81,6 +88,7 @@ final class ExtracaoCurriculo {
     public static function extrairCampos(string $texto, array $destaques = []): array {
         $texto = LeitorDocumento::limpar($texto);
         $r = array_fill_keys(self::CAMPOS, '');
+        self::$calibrador = [];
         if ($texto === '') return $r;
 
         // ---- 1) linhas e linhas de dados com rótulo
@@ -188,8 +196,10 @@ final class ExtracaoCurriculo {
             if (preg_match(self::DADOS_PESSOAIS, Competencias::normalizar($limpa))) { $fica[] = $l; continue; }
             // No cabeçalho não há regra de seção: com palpite vazio, decide o termo calibrado (se houver).
             $d = Calibrador::decidir('curriculo_linha', $limpa, '');
-            if ($d['origem'] === 'calibrador' && $d['classe'] !== 'resumo') $secoes[$d['classe']][] = $l;
-            else $fica[] = $l;
+            if ($d['origem'] === 'calibrador' && $d['classe'] !== 'resumo') {
+                $secoes[$d['classe']][] = $l;
+                self::$calibrador[] = ['campo' => 'linha', 'texto' => $l, 'regra' => '', 'para' => $d['classe'], 'termo' => $d['termo']];
+            } else $fica[] = $l;
         }
         return [$fica, $secoes];
     }

@@ -405,11 +405,16 @@ confere('Nome genérico ("Loja", "Empresa Teste", "Salário") não vira nome con
     Calibrador::nomes('empresa') === ['Padaria Pão Quente'] && Calibrador::nomeGenerico('Salário') && !Calibrador::nomeGenerico('Grupo Dourado'));
 $cvTexto = "Maria Souza\nAtendente\nEnsino médio completo na Escola Classe 10\nBrasileira, solteira, 25 anos\nEXPERIÊNCIA\nVendedora - Loja X";
 $cvCal = ExtracaoCurriculo::extrairCampos($cvTexto);
+$ajustesCv = ExtracaoCurriculo::$calibrador;
+ExtracaoCurriculo::extrairCampos("Carla Teste\nEXPERIÊNCIA\nAtendente, boa comunicação, Ensino médio em curso\nFORMAÇÃO\nTécnico em Administração");
+$ajustesEmSecao = ExtracaoCurriculo::$calibrador;
 Calibrador::ligar(false);
 $cvRegra = ExtracaoCurriculo::extrairCampos($cvTexto);
 confere('Currículo: linha solta com termo calibrado ("Ensino médio") vai para Formação',
     str_contains(Competencias::normalizar($cvCal['formacao']), 'ensino medio') && !str_contains(Competencias::normalizar($cvRegra['formacao']), 'ensino medio'),
     json_encode([$cvCal['formacao'], $cvRegra['formacao']], JSON_UNESCAPED_UNICODE));
+confere('Currículo: o calibrador registra só o que mudou de verdade (linha já dentro de uma seção não conta)',
+    count($ajustesCv) === 1 && $ajustesCv[0]['termo'] === 'Ensino médio' && $ajustesEmSecao === [], json_encode([$ajustesCv, $ajustesEmSecao], JSON_UNESCAPED_UNICODE));
 confere('Currículo: dado pessoal do cabeçalho ("Brasileira, solteira, 25 anos") nunca vai para Experiências',
     !str_contains(Competencias::normalizar($cvCal['experiencias']), 'solteira'), $cvCal['experiencias']);
 Calibrador::limpar();

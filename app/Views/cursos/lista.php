@@ -32,9 +32,9 @@
 
   <?php if (count($atalhosArea) > 1 || $filtros['categoria_id']): // atalhos de área: filtrar com um clique ?>
     <nav class="cv-areas" aria-label="Áreas">
-      <a href="<?=e($linkLista($tipo, ['categoria_id' => '']))?>"<?=!$filtros['categoria_id'] ? ' class="ativo" aria-current="true"' : ''?>>Todas as áreas</a>
+      <a href="<?=e($linkLista($tipo, ['categoria_id' => '']))?>"<?=!$filtros['categoria_id'] ? ' class="ativo" aria-current="page"' : ''?>>Todas as áreas</a>
       <?php foreach ($atalhosArea as $a): $aid = (int)$a['id']; ?>
-        <a href="<?=e($linkLista($tipo, ['categoria_id' => $aid]))?>"<?=$filtros['categoria_id'] === $aid ? ' class="ativo" aria-current="true"' : ''?>><?=e($a['nome'])?> <small><?=(int)$porArea[$aid]?></small></a>
+        <a href="<?=e($linkLista($tipo, ['categoria_id' => $aid]))?>"<?=$filtros['categoria_id'] === $aid ? ' class="ativo" aria-current="page"' : ''?>><?=e($a['nome'])?> <small><?=(int)$porArea[$aid]?></small></a>
       <?php endforeach; ?>
     </nav>
   <?php endif; ?>

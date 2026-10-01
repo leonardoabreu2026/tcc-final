@@ -59,8 +59,8 @@
             <form method="post" action="<?=url('view/perfil/curriculo_upload.php')?>" enctype="multipart/form-data" data-carregando="Lendo o currículo e preenchendo o perfil…">
                 <input type="hidden" name="csrf" value="<?=e(csrf_token())?>">
                 <div class="form-grid">
-                    <div><label>Arquivo</label><input type="file" name="curriculo" accept=".pdf,.docx,.doc" required></div>
-                    <div><label>Título do currículo</label><input name="titulo" value="Currículo profissional" maxlength="255"></div>
+                    <div><label for="pf-cv-arquivo">Arquivo</label><input id="pf-cv-arquivo" type="file" name="curriculo" accept=".pdf,.docx,.doc" required></div>
+                    <div><label for="pf-cv-titulo">Título do currículo</label><input id="pf-cv-titulo" name="titulo" value="Currículo profissional" maxlength="255"></div>
                 </div>
                 <div class="check"><input type="checkbox" name="substituir" value="1" id="substituir"><label for="substituir">Substituir os dados do perfil pelos do currículo (sem marcar, só os campos vazios são preenchidos).</label></div>
                 <div class="form-actions"><?php if (!empty($_SESSION['relatorio_extracao']) && !$relatorio): ?><a class="btn btn-sm btn-outline" href="<?=url('view/perfil/index.php?relatorio=1')?>">Ver último relatório da extração</a><?php endif; ?><button class="btn">Enviar e preencher o cadastro</button></div>
@@ -90,28 +90,28 @@
         <input type="hidden" name="csrf" value="<?=e(csrf_token())?>">
         <div class="section-head" style="margin-top:0"><h3 style="margin:0">Cadastro do perfil</h3><small class="muted">Campos com * são obrigatórios para liberar o Portfólio</small></div>
         <div class="form-grid">
-            <div><label>Nome</label><input value="<?=e($perfil['nome'])?>" disabled></div>
-            <div><label>E-mail</label><input value="<?=e($perfil['email'])?>" disabled></div>
-            <div><label>Título profissional *</label><input name="titulo_profissional" maxlength="255" value="<?=e($perfil['titulo_profissional'])?>" placeholder="Ex.: Profissional em Administração | TI | RH"></div>
-            <div><label>Nível de experiência</label><select name="nivel_experiencia"><?php foreach (PerfilDAO::NIVEIS as $n): ?><option value="<?=$n?>" <?=$perfil['nivel_experiencia'] === $n ? 'selected' : ''?>><?=e(rotulo($n))?></option><?php endforeach; ?></select></div>
-            <div><label>Telefone *</label><input name="telefone" maxlength="30" value="<?=e($perfil['telefone'])?>" placeholder="(61) 99999-9999"></div>
-            <div><label>Data de nascimento</label><input type="date" name="data_nascimento" value="<?=e($perfil['data_nascimento'])?>"></div>
-            <div><label>Cidade / região *</label><input name="cidade" maxlength="100" value="<?=e($perfil['cidade'])?>" placeholder="Ex.: Ceilândia"></div>
-            <div><label>UF</label><input name="uf" maxlength="2" value="<?=e($perfil['uf'] ?: 'DF')?>"></div>
-            <div class="full"><label>Resumo profissional *</label><textarea name="bio" rows="4"><?=e($perfil['bio'])?></textarea></div>
-            <div class="full"><label>Objetivo profissional *</label><textarea name="objetivo" rows="3"><?=e($perfil['objetivo'])?></textarea></div>
-            <div class="full"><label>Experiências <small class="muted">— uma por bloco: Empresa, cargo e período (ex.: 2021 – 2023 ou 2025 – Atual)</small></label><textarea name="experiencias" rows="7" placeholder="ATACADÃO DIA A DIA&#10;Auxiliar Administrativo&#10;2025 – Atual"><?=e($perfil['experiencias'])?></textarea></div>
-            <div class="full"><label>Formação acadêmica e técnica * <small class="muted">— Curso – Instituição (situação)</small></label><textarea name="formacao" rows="3" placeholder="Análise e Desenvolvimento de Sistemas – Faculdade Anhanguera (cursando)"><?=e($perfil['formacao'])?></textarea></div>
-            <div><label>Habilidades * <small class="muted">(separe por vírgula)</small></label><textarea name="habilidades" rows="4"><?=e($perfil['habilidades'])?></textarea></div>
-            <div><label>Competências comportamentais</label><textarea name="competencias" rows="4"><?=e($perfil['competencias'])?></textarea></div>
-            <div><label>Cursos complementares <small class="muted">(um por linha)</small></label><textarea name="cursos_complementares" rows="4"><?=e($perfil['cursos_complementares'])?></textarea></div>
-            <div><label>Idiomas</label><textarea name="idiomas" rows="4"><?=e($perfil['idiomas'])?></textarea></div>
-            <div class="full"><label>Informações adicionais <small class="muted">(PCD, CNH, disponibilidade para viagens...)</small></label><textarea name="informacoes_adicionais" rows="2"><?=e($perfil['informacoes_adicionais'])?></textarea></div>
-            <div><label>Disponibilidade <small class="muted">(horário, viagens, mudança)</small></label><input name="disponibilidade" maxlength="100" value="<?=e($perfil['disponibilidade'])?>" placeholder="Ex.: 12h às 18h30; disponível para viagens"></div>
-            <div><label>CNH <small class="muted">(categoria)</small></label><input name="cnh" maxlength="5" value="<?=e($perfil['cnh'] ?? '')?>" placeholder="Ex.: B, AB, D"></div>
-            <div><label>Pretensão salarial</label><input name="pretensao_salarial" maxlength="60" value="<?=e($perfil['pretensao_salarial'] ?? '')?>" placeholder="Ex.: R$ 2.500,00 ou a combinar"></div>
-            <div class="full"><label>Links <small class="muted">(LinkedIn, GitHub, portfólio — um por linha)</small></label><textarea name="links" rows="2" placeholder="https://linkedin.com/in/seu-perfil"><?=e($perfil['links'] ?? '')?></textarea></div>
-            <div><label>Nova foto <small class="muted">(JPG/PNG/WEBP, até 3 MB)</small></label><input type="file" name="foto" accept="image/jpeg,image/png,image/webp"></div>
+            <div><label for="pf-nome">Nome</label><input id="pf-nome" value="<?=e($perfil['nome'])?>" disabled></div>
+            <div><label for="pf-email">E-mail</label><input id="pf-email" value="<?=e($perfil['email'])?>" disabled></div>
+            <div><label for="pf-titulo">Título profissional *</label><input id="pf-titulo" name="titulo_profissional" maxlength="255" value="<?=e($perfil['titulo_profissional'])?>" placeholder="Ex.: Profissional em Administração | TI | RH"></div>
+            <div><label for="pf-nivel">Nível de experiência</label><select id="pf-nivel" name="nivel_experiencia"><?php foreach (PerfilDAO::NIVEIS as $n): ?><option value="<?=$n?>" <?=$perfil['nivel_experiencia'] === $n ? 'selected' : ''?>><?=e(rotulo($n))?></option><?php endforeach; ?></select></div>
+            <div><label for="pf-tel">Telefone *</label><input id="pf-tel" name="telefone" maxlength="30" value="<?=e($perfil['telefone'])?>" placeholder="(61) 99999-9999"></div>
+            <div><label for="pf-nasc">Data de nascimento</label><input id="pf-nasc" type="date" name="data_nascimento" value="<?=e($perfil['data_nascimento'])?>"></div>
+            <div><label for="pf-cidade">Cidade / região *</label><input id="pf-cidade" name="cidade" maxlength="100" value="<?=e($perfil['cidade'])?>" placeholder="Ex.: Ceilândia"></div>
+            <div><label for="pf-uf">UF</label><input id="pf-uf" name="uf" maxlength="2" value="<?=e($perfil['uf'] ?: 'DF')?>"></div>
+            <div class="full"><label for="pf-bio">Resumo profissional *</label><textarea id="pf-bio" name="bio" rows="4"><?=e($perfil['bio'])?></textarea></div>
+            <div class="full"><label for="pf-objetivo">Objetivo profissional *</label><textarea id="pf-objetivo" name="objetivo" rows="3"><?=e($perfil['objetivo'])?></textarea></div>
+            <div class="full"><label for="pf-exp">Experiências <small class="muted">— uma por bloco: Empresa, cargo e período (ex.: 2021 – 2023 ou 2025 – Atual)</small></label><textarea id="pf-exp" name="experiencias" rows="7" placeholder="ATACADÃO DIA A DIA&#10;Auxiliar Administrativo&#10;2025 – Atual"><?=e($perfil['experiencias'])?></textarea></div>
+            <div class="full"><label for="pf-formacao">Formação acadêmica e técnica * <small class="muted">— Curso – Instituição (situação)</small></label><textarea id="pf-formacao" name="formacao" rows="3" placeholder="Análise e Desenvolvimento de Sistemas – Faculdade Anhanguera (cursando)"><?=e($perfil['formacao'])?></textarea></div>
+            <div><label for="pf-habilidades">Habilidades * <small class="muted">(separe por vírgula)</small></label><textarea id="pf-habilidades" name="habilidades" rows="4"><?=e($perfil['habilidades'])?></textarea></div>
+            <div><label for="pf-competencias">Competências comportamentais</label><textarea id="pf-competencias" name="competencias" rows="4"><?=e($perfil['competencias'])?></textarea></div>
+            <div><label for="pf-cursos-compl">Cursos complementares <small class="muted">(um por linha)</small></label><textarea id="pf-cursos-compl" name="cursos_complementares" rows="4"><?=e($perfil['cursos_complementares'])?></textarea></div>
+            <div><label for="pf-idiomas">Idiomas</label><textarea id="pf-idiomas" name="idiomas" rows="4"><?=e($perfil['idiomas'])?></textarea></div>
+            <div class="full"><label for="pf-info-add">Informações adicionais <small class="muted">(PCD, CNH, disponibilidade para viagens...)</small></label><textarea id="pf-info-add" name="informacoes_adicionais" rows="2"><?=e($perfil['informacoes_adicionais'])?></textarea></div>
+            <div><label for="pf-disp">Disponibilidade <small class="muted">(horário, viagens, mudança)</small></label><input id="pf-disp" name="disponibilidade" maxlength="100" value="<?=e($perfil['disponibilidade'])?>" placeholder="Ex.: 12h às 18h30; disponível para viagens"></div>
+            <div><label for="pf-cnh">CNH <small class="muted">(categoria)</small></label><input id="pf-cnh" name="cnh" maxlength="5" value="<?=e($perfil['cnh'] ?? '')?>" placeholder="Ex.: B, AB, D"></div>
+            <div><label for="pf-pretensao">Pretensão salarial</label><input id="pf-pretensao" name="pretensao_salarial" maxlength="60" value="<?=e($perfil['pretensao_salarial'] ?? '')?>" placeholder="Ex.: R$ 2.500,00 ou a combinar"></div>
+            <div class="full"><label for="pf-links">Links <small class="muted">(LinkedIn, GitHub, portfólio — um por linha)</small></label><textarea id="pf-links" name="links" rows="2" placeholder="https://linkedin.com/in/seu-perfil"><?=e($perfil['links'] ?? '')?></textarea></div>
+            <div><label for="pf-foto">Nova foto <small class="muted">(JPG/PNG/WEBP, até 3 MB)</small></label><input id="pf-foto" type="file" name="foto" accept="image/jpeg,image/png,image/webp"></div>
         </div>
         <div class="check"><input type="checkbox" name="publico" value="1" id="publico" <?=$perfil['publico'] ? 'checked' : ''?>><label for="publico">Deixar meu portfólio visível para empresas no Banco de Talentos.</label></div>
         <div class="form-actions"><button class="btn">Salvar e validar cadastro</button></div>

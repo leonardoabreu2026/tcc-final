@@ -108,11 +108,8 @@ final class CalibradorController extends Controller {
                 $r = ExtracaoCurriculo::extrairCampos($texto);
                 foreach (['nome' => 'Nome', 'titulo_profissional' => 'Título profissional', 'objetivo' => 'Objetivo', 'experiencias' => 'Experiências',
                           'formacao' => 'Formação', 'cursos' => 'Cursos', 'habilidades' => 'Habilidades', 'idiomas' => 'Idiomas'] as $k => $rot) $campos[] = [$rot, $resumo((string)$r[$k])];
-                // No currículo o termo só age nas linhas soltas do cabeçalho: mostra quais linhas têm termo.
-                foreach (ExtracaoCurriculo::linhasDoTexto($texto) as $l) {
-                    $t = Calibrador::termoQueCasa('curriculo_linha', $l);
-                    if ($t) $ajustes[] = ['campo' => 'linha', 'texto' => $l, 'regra' => '', 'para' => $t['destino'], 'termo' => $t['termo']];
-                }
+                // No currículo o termo só age nas linhas soltas do cabeçalho: as decisões vêm da própria extração.
+                $ajustes = ExtracaoCurriculo::$calibrador;
             }
         } catch (Throwable $e) {
             error_log('[Calibrador] Teste falhou: '.$e->getMessage());

@@ -49,8 +49,8 @@ $acoesCab = $isPremium
                 </div>
                 <h3><?=e($nomeExibido)?></h3>
                 <p class="pn-talento-cargo"><?=e($t['titulo_profissional'] ?: 'Profissional em busca de oportunidades')?></p>
-                <p class="pn-talento-bio"><?=e(mb_strimwidth((string)($t['bio'] ?: $t['objetivo']), 0, 110, '...'))?></p>
-                <?php if (!empty($t['habilidades'])): ?><p class="pn-talento-hab"><b>Habilidades:</b> <?=e(mb_strimwidth((string)$t['habilidades'], 0, 80, '...'))?></p><?php endif; ?>
+                <p class="pn-talento-bio"><?=e(mb_strimwidth((string)($t['bio'] ?: $t['objetivo']), 0, 110, '…'))?></p>
+                <?php if (!empty($t['habilidades'])): ?><p class="pn-talento-hab"><b>Habilidades:</b> <?=e(mb_strimwidth((string)$t['habilidades'], 0, 80, '…'))?></p><?php endif; ?>
                 <a class="btn btn-sm btn-outline" target="_blank" rel="noopener" href="<?=url('view/perfil/portfolio.php?id='.(int)$t['id'])?>"><?=$isPremium ? 'Ver portfólio' : 'Ver prévia do portfólio'?><span class="sr-only"> de <?=e($nomeExibido)?> (abre em nova aba)</span></a>
                 <div class="pn-talento-rodape">
                     <?php if ($isPremium): ?>
