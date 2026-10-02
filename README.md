@@ -301,7 +301,7 @@ git config core.hooksPath .githooks
 - [docs/PADROES_AUTOMATICOS.md](docs/PADROES_AUTOMATICOS.md): os padrões automáticos das máquinas de extração.
 - [docs/PROMPTS_PESQUISA.md](docs/PROMPTS_PESQUISA.md) e [docs/PESQUISA_CURSOS.md](docs/PESQUISA_CURSOS.md): como pesquisamos os cursos e e-books do catálogo.
 - [docs/tcc/TCC_Final_Conecta_Vagas_DF.docx](docs/tcc/TCC_Final_Conecta_Vagas_DF.docx): o documento do TCC, montado no modelo do professor (Escola Técnica de Ceilândia, Projeto de Conclusão de Curso 2.2026). Antes de entregar, completamos no Word ou no Google Docs os campos que dependem da equipe (nomes completos, data da defesa e banca), atualizamos o sumário e as listas (clicar com o botão direito no sumário e escolher Atualizar campo) e exportamos o PDF pelo próprio Word ou Google Docs.
-- `docs/tcc/diagramas/`: os diagramas de casos de uso, classes, sequência, arquitetura e os modelos conceitual e lógico, em `.png` e `.svg`. Os de UML também têm o arquivo `.puml` de origem.
+- `docs/tcc/diagramas/`: os diagramas de casos de uso, classes, sequência, arquitetura e os modelos conceitual e lógico, em `.png` e `.svg`. Os de sequência e a arquitetura têm o arquivo `.puml` de origem; os de caso de uso, o de classes e o modelo lógico são desenhados pelos scripts da pasta `docs/tcc/diagramas/gerador`, com linhas retas e posições controladas, no estilo do Astah.
 
 ## Problemas comuns
 

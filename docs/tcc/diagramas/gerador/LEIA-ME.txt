@@ -1,0 +1,8 @@
+Desenhistas dos diagramas (estilo Astah UML, linhas retas, posições controladas)
+
+- specs_uc.php  : a especificação dos 15 diagramas de caso de uso (casos, colunas, linhas, atores e ligações).
+- ucdraw.php    : desenha os casos de uso em SVG.   php ucdraw.php specs_uc.php ..
+- erdraw.php    : desenha o modelo lógico em SVG a partir das tabelas do ../logico.puml.   php erdraw.php ../logico.puml ../logico.svg
+- classdraw.php : desenha o diagrama de classes de domínio a partir das mesmas tabelas.   php classdraw.php ../logico.puml ../classes.svg
+- png.js        : converte os SVG em PNG com o Edge (npm install puppeteer-core).   node png.js .. 1
+Os diagramas de sequência e de arquitetura continuam em PlantUML (.puml, com o estilo comum em ../estilo.iuml).
