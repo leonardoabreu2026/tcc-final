@@ -200,7 +200,7 @@ tcc-final/
 │   ├── schema.sql         estrutura do banco (11 tabelas)
 │   ├── seed.sql           dados de demonstração
 │   └── resetar_senhas.php devolve as senhas das contas de teste
-├── docs/                  documentação, monografia e diagramas
+├── docs/                  documentação, documento do TCC (.docx) e diagramas
 ├── public/                única pasta servida pelo Apache
 │   ├── index.php          porta de entrada e tabela de rotas
 │   └── assets/            CSS, JavaScript, imagens e o leitor de cartaz (Tesseract.js)
@@ -300,7 +300,7 @@ git config core.hooksPath .githooks
 - [docs/ARQUITETURA.md](docs/ARQUITETURA.md): como o sistema funciona por dentro, camada por camada.
 - [docs/PADROES_AUTOMATICOS.md](docs/PADROES_AUTOMATICOS.md): os padrões automáticos das máquinas de extração.
 - [docs/PROMPTS_PESQUISA.md](docs/PROMPTS_PESQUISA.md) e [docs/PESQUISA_CURSOS.md](docs/PESQUISA_CURSOS.md): como pesquisamos os cursos e e-books do catálogo.
-- [docs/tcc/TCC_Final_Conecta_Vagas_DF.pdf](docs/tcc/TCC_Final_Conecta_Vagas_DF.pdf): a monografia. O arquivo de origem fica em `docs/tcc/monografia/`. Para gerar o PDF de novo, é só abrir o HTML no Edge e imprimir como PDF, sem cabeçalhos e rodapés e com gráficos de plano de fundo.
+- [docs/tcc/TCC_Final_Conecta_Vagas_DF.docx](docs/tcc/TCC_Final_Conecta_Vagas_DF.docx): o documento do TCC, montado no modelo do professor (Escola Técnica de Ceilândia, Projeto de Conclusão de Curso 2.2026). Antes de entregar, completamos no Word ou no Google Docs os campos que dependem da equipe (nomes completos, data da defesa e banca), atualizamos o sumário e as listas (clicar com o botão direito no sumário e escolher Atualizar campo) e exportamos o PDF pelo próprio Word ou Google Docs.
 - `docs/tcc/diagramas/`: os diagramas de casos de uso, classes, sequência, arquitetura e os modelos conceitual e lógico, em `.png` e `.svg`. Os de UML também têm o arquivo `.puml` de origem.
 
 ## Problemas comuns

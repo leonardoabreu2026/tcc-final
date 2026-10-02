@@ -461,7 +461,7 @@ se o banco não existe ou se a senha foi recusada.
 
 ## 13. O que mudou de lugar na reorganização
 
-Esta tabela foi útil para atualizar a monografia e os diagramas depois que reorganizamos o código.
+Esta tabela foi útil para atualizar o documento do TCC e os diagramas depois que reorganizamos o código.
 
 | Antes | Agora |
 |---|---|
