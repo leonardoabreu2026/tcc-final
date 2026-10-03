@@ -40,60 +40,64 @@
 @media(max-width:560px){.filtros{grid-template-columns:1fr!important}}
 
 /* ===================== Portfólio: uma folha A4 ===================== */
-/* A tela mostra a folha do mesmo tamanho do PDF: 21 cm de largura, 1 cm de margem (o @page folha usa a mesma margem). */
+/* Visual do modelo (faixa com Brasília, cartões com ícone em círculo), do tamanho de uma folha A4:
+   a tela mostra a folha igual ao PDF — 21 cm de largura e 1 cm de margem (o @page folha usa a mesma margem). */
 .pf{--pf-azul:#0b4a9e;--pf-azul2:#1e88ff;--pf-titulo:#0a3a7a;--pf-borda:#dbe7f7;--pf-suave:#f3f8ff;--pf-folha:210mm}
 .pf-acoes{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;max-width:var(--pf-folha);margin:-8px auto 14px}
 .pf > .pf-relatorio,.pf > .pf-match{max-width:var(--pf-folha);margin-left:auto;margin-right:auto}
 .pf-mesa{background:var(--cv-fundo,#eef3f9);border-radius:14px;padding:28px 16px}
 .pf-folha{box-sizing:border-box;width:var(--pf-folha);max-width:100%;min-height:297mm;margin:0 auto;padding:10mm;background:#fff;color:#1f2d45;
-  font-size:12.5px;line-height:1.45;border:1px solid #e1e8f2;box-shadow:0 1px 3px #0b3f8214,0 14px 34px #0b3f821f}
-/* Degradê azul sólido (sem foto nem transparência): sai igual na tela, no PDF e na impressora. */
-.pf-banner{display:flex;align-items:center;gap:16px;padding:12px 18px;border-radius:8px;color:#fff;
-  background:linear-gradient(90deg,#062a5c 0%,#0b3f82 55%,#1257c9 100%)}
-.pf-foto{width:84px;height:84px;border-radius:50%;object-fit:cover;border:3px solid #e8f1ff;background:#dbeafe;flex:none}
-.pf-foto-vazia{display:grid;place-items:center;color:#0b3f82;font-size:30px;font-weight:800}
-.pf-banner h1{margin:0 0 2px;font-size:22px;line-height:1.2}
-.pf-banner p{margin:0 0 6px;color:#dbeafe;font-size:13.5px}
-.pf-selo{display:inline-block;background:#cfe6ff;color:#0b3f82;font-weight:700;padding:2px 9px;border-radius:5px;font-size:10.5px;letter-spacing:.4px;text-transform:uppercase}
-.pf-grade{display:grid;grid-template-columns:34% 1fr;gap:16px;margin-top:12px;align-items:start}
+  font-size:12px;line-height:1.45;border:1px solid #e1e8f2;box-shadow:0 1px 3px #0b3f8214,0 14px 34px #0b3f821f}
+/* A faixa é uma imagem só (portfolio-faixa.jpg: header-bg.jpg com o degradê azul já aplicado), sem camadas
+   transparentes: sai igual na tela, no PDF e na impressora. */
+.pf-banner{display:flex;align-items:center;gap:20px;min-height:118px;padding:14px 22px;border-radius:10px;overflow:hidden;color:#fff;
+  background:#0b3f82 url('../img/portfolio-faixa.jpg') center/cover no-repeat;box-shadow:0 6px 18px #0b3f8226}
+.pf-foto{width:96px;height:96px;border-radius:50%;object-fit:cover;border:4px solid #e8f1ff;background:#dbeafe;flex:none;box-shadow:0 4px 12px #0003}
+.pf-foto-vazia{display:grid;place-items:center;color:#0b3f82;font-size:34px;font-weight:800}
+.pf-banner h1{margin:0 0 4px;font-size:24px;line-height:1.15}
+.pf-banner p{margin:0 0 8px;color:#dbeafe;font-size:13px}
+.pf-selo{display:inline-block;background:#cfe6ff;color:#0b3f82;font-weight:700;padding:3px 10px;border-radius:6px;font-size:11.5px}
+.pf-grade{display:grid;grid-template-columns:31% 1fr;gap:12px;margin-top:12px;align-items:start}
 .pf-col{display:grid;gap:12px;align-content:start}
-.pf-lateral{background:var(--pf-suave);border-radius:8px;padding:12px}
-.pf-card{min-width:0}
-.pf-card h2{display:flex;align-items:center;gap:8px;margin:0 0 7px;padding-bottom:5px;border-bottom:1.5px solid var(--pf-borda);
-  font-size:12.5px;letter-spacing:.5px;text-transform:uppercase;color:var(--pf-titulo);break-after:avoid}
-.pf-card h2 .pf-ic{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--pf-azul);color:#fff;flex:none}
-.pf-contato{list-style:none;margin:0;padding:0;display:grid;gap:6px}
-.pf-contato li{display:flex;align-items:center;gap:8px;word-break:break-word}
-.pf-contato .pf-mini{display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:#dbe9ff;color:var(--pf-azul);flex:none}
-.pf-lista{margin:0;padding:0;list-style:none;display:grid;gap:3px}
-.pf-lista li{position:relative;padding-left:14px}
-.pf-lista li::before{content:"";position:absolute;left:3px;top:.62em;width:5px;height:5px;border-radius:50%;background:var(--pf-azul2)}
-.pf-texto{margin:0;white-space:pre-line}
-.pf-timeline{position:relative;margin:0;padding:0 0 0 16px;list-style:none}
-.pf-timeline::before{content:"";position:absolute;left:4px;top:6px;bottom:6px;width:1.5px;background:var(--pf-azul2)}
+.pf-card{min-width:0;background:#fff;border:1px solid var(--pf-borda);border-radius:10px;padding:12px 14px;box-shadow:0 2px 8px #0b3f820d}
+.pf-lateral .pf-card{background:var(--pf-suave)}
+.pf-card h2{display:flex;align-items:center;gap:9px;margin:0 0 9px;font-size:15px;color:var(--pf-titulo);break-after:avoid}
+.pf-card h2 .pf-ic{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--pf-azul);color:#fff;flex:none}
+.pf-card h2.pequeno{font-size:13px}
+.pf-card h2.pequeno .pf-ic{background:none;color:var(--pf-azul);width:auto;height:auto}
+.pf-contato{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.pf-contato li{display:flex;align-items:center;gap:9px;font-size:11.5px;overflow-wrap:anywhere}
+.pf-contato .pf-mini{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#e3efff;color:var(--pf-azul);flex:none}
+.pf-lista{margin:0;padding:0;list-style:none;display:grid;gap:4px}
+.pf-lista li{position:relative;padding-left:16px}
+.pf-lista li::before{content:"";position:absolute;left:4px;top:.6em;width:5px;height:5px;border-radius:50%;background:var(--pf-azul2)}
+.pf-texto{margin:0;color:#1f2d45;white-space:pre-line}
+.pf-timeline{position:relative;margin:0;padding:0 0 0 18px;list-style:none}
+.pf-timeline::before{content:"";position:absolute;left:4px;top:6px;bottom:6px;width:2px;background:var(--pf-azul2)}
 .pf-timeline li{position:relative;padding:0 0 10px;break-inside:avoid}
 .pf-timeline li:last-child{padding-bottom:0}
-.pf-timeline li::before{content:"";position:absolute;left:-16px;top:5px;width:9px;height:9px;border-radius:50%;background:var(--pf-azul2);box-shadow:0 0 0 2px #fff}
+.pf-timeline li::before{content:"";position:absolute;left:-18px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--pf-azul2);box-shadow:0 0 0 2px #fff}
 .pf-exp-topo{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
-.pf-empresa{color:var(--pf-azul);font-weight:800;text-transform:uppercase;font-size:12px;letter-spacing:.2px}
-.pf-periodo{color:#64748b;font-size:11.5px;white-space:nowrap}
-.pf-cargo{font-weight:600}
-.pf-desc{margin:2px 0 0;color:#475569;font-size:12px}
-.pf-form{display:grid;gap:8px}
+.pf-empresa{color:var(--pf-azul2);font-weight:800;text-transform:uppercase;font-size:11.5px;letter-spacing:.2px}
+.pf-periodo{color:#64748b;font-size:11px;white-space:nowrap}
+.pf-cargo{color:#1f2d45}
+.pf-desc{margin:2px 0 0;color:#475569;font-size:11.5px}
+.pf-form{display:grid;gap:9px}
 .pf-form > div{break-inside:avoid}
 .pf-form b{color:var(--pf-azul);display:block}
 .pf-form span{display:block;color:#1e5bb8}
 .pf-form small{color:#64748b}
-.pf-cursos{columns:2;column-gap:18px}
-.pf-cursos li{break-inside:avoid}
-.pf-extra{display:flex;gap:10px;align-items:center;margin-top:10px;padding:8px 10px;border-radius:6px;background:var(--pf-suave);font-size:12px}
+.pf-cursos{grid-template-columns:1fr 1fr;column-gap:18px}
+.pf-cursos li{break-inside:avoid;color:#1e5bb8}
+.pf-extra{display:flex;gap:10px;align-items:center;margin-top:10px;padding:8px 10px;border-radius:8px;background:var(--pf-suave);border-top:1px solid var(--pf-borda);font-size:11.5px}
 .pf-extra .ic{color:var(--pf-azul);flex:none}
 .pf-extra p{margin:1px 0}
-.pf-extra p:first-child{text-transform:uppercase;font-size:11.5px}
+.pf-extra p:first-child{text-transform:uppercase;font-size:11px}
 .pf-vazio{color:#94a3b8;font-style:italic;margin:0}
-.pf-folha .pf-match-vip{font-size:12.5px}
-@media(max-width:860px){.pf-mesa{padding:12px 8px}.pf-folha{width:auto;min-height:0;padding:16px}}
-@media(max-width:640px){.pf-grade{grid-template-columns:1fr}.pf-banner{flex-direction:column;text-align:center}.pf-cursos{columns:1}}
+.pf-folha .pf-match-vip{font-size:12px}
+@media(max-width:860px){.pf-mesa{padding:12px 8px}.pf-folha{width:auto;min-height:0;padding:14px}}
+@media(max-width:640px){.pf-grade{grid-template-columns:1fr}.pf-cursos{grid-template-columns:1fr}
+  .pf-banner{flex-direction:column;text-align:center;background:linear-gradient(180deg,#062a5c,#0b3f82)}}
 /* "Salvar em PDF": só a folha, em A4, com a mesma margem de 1 cm da tela. */
 @page folha{size:A4;margin:10mm}
 @media print{
@@ -102,7 +106,8 @@
   .container,body.cv main.container{max-width:none!important;padding:0!important;margin:0!important}
   .pf-mesa{background:none;padding:0;border-radius:0}
   .pf-folha{page:folha;width:auto;min-height:0;padding:0;border:0;box-shadow:none}
-  .pf-banner,.pf-lateral,.pf-selo,.pf-card h2 .pf-ic,.pf-contato .pf-mini,.pf-timeline::before,.pf-timeline li::before,.pf-lista li::before,.pf-extra
+  .pf-banner,.pf-card,.pf-card h2 .pf-ic,.pf-selo,.pf-contato .pf-mini,.pf-timeline::before,.pf-timeline li::before,.pf-lista li::before,.pf-extra
     {-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .pf-grade{grid-template-columns:34% 1fr}
+  .pf-banner,.pf-card{box-shadow:none}
+  .pf-grade{grid-template-columns:31% 1fr}
 }

@@ -37,15 +37,15 @@
   <div class="pf-grade">
     <aside class="pf-col pf-lateral">
       <div class="pf-card">
-        <h2><span class="pf-ic"><?=icone('usuario', 13)?></span>Contato</h2>
+        <h2><span class="pf-ic"><?=icone('usuario', 15)?></span>Contato</h2>
         <ul class="pf-contato">
           <?php if ($verContato): ?>
-            <li><span class="pf-mini"><?=icone('email', 11)?></span><?=e($p['email'])?></li>
-            <?php if (!empty($p['telefone'])): ?><li><span class="pf-mini"><?=icone('telefone', 11)?></span><?=e($p['telefone'])?></li><?php endif; ?>
+            <li><span class="pf-mini"><?=icone('email', 12)?></span><?=e($p['email'])?></li>
+            <?php if (!empty($p['telefone'])): ?><li><span class="pf-mini"><?=icone('telefone', 12)?></span><?=e($p['telefone'])?></li><?php endif; ?>
           <?php else: ?>
-            <li class="muted small"><span class="pf-mini"><?=icone('email', 11)?></span>Contato visível para empresas com candidatura recebida ou plano Premium.</li>
+            <li class="muted small"><span class="pf-mini"><?=icone('email', 12)?></span>Contato visível para empresas com candidatura recebida ou plano Premium.</li>
           <?php endif; ?>
-          <?php if ($local !== ''): ?><li><span class="pf-mini"><?=icone('local', 11)?></span><?=e($local)?></li><?php endif; ?>
+          <?php if ($local !== ''): ?><li><span class="pf-mini"><?=icone('local', 12)?></span><?=e($local)?></li><?php endif; ?>
           <?php if ($verContato): foreach ($links as $lk): ?>
             <li class="pf-link"><span class="pf-mini" title="<?=e($lk['tipo'])?>"><?=e(mb_substr($lk['tipo'], 0, 2))?></span><a href="<?=e($lk['href'])?>" target="_blank" rel="noopener nofollow"><?=e($lk['texto'])?></a></li>
           <?php endforeach; endif; ?>
@@ -54,7 +54,7 @@
       </div>
 
       <div class="pf-card">
-        <h2><span class="pf-ic"><?=icone('engrenagem', 13)?></span>Habilidades</h2>
+        <h2><span class="pf-ic"><?=icone('engrenagem', 15)?></span>Habilidades</h2>
         <?php if ($habilidades): ?>
           <ul class="pf-lista"><?php foreach ($habilidades as $h): ?><li><?=e($h)?></li><?php endforeach; ?></ul>
         <?php else: ?><p class="pf-vazio">Nenhuma habilidade informada.</p><?php endif; ?>
@@ -62,14 +62,14 @@
 
       <?php if ($idiomas && !$previa): ?>
       <div class="pf-card">
-        <h2><span class="pf-ic"><?=icone('idiomas', 13)?></span>Idiomas</h2>
+        <h2 class="pequeno"><span class="pf-ic"><?=icone('idiomas', 18)?></span>Idiomas</h2>
         <ul class="pf-lista"><?php foreach ($idiomas as $i): ?><li><?=e($i)?></li><?php endforeach; ?></ul>
       </div>
       <?php endif; ?>
 
       <?php if (!$previa && trim((string)($p['objetivo'] ?? '')) !== ''): ?>
       <div class="pf-card">
-        <h2><span class="pf-ic"><?=icone('alvo', 13)?></span>Objetivo</h2>
+        <h2 class="pequeno"><span class="pf-ic"><?=icone('alvo', 18)?></span>Objetivo Profissional</h2>
         <p class="pf-texto"><?=e($p['objetivo'])?></p>
       </div>
       <?php endif; ?>
@@ -77,7 +77,7 @@
 
     <div class="pf-col">
       <div class="pf-card">
-        <h2><span class="pf-ic"><?=icone('usuario', 13)?></span>Resumo Profissional</h2>
+        <h2><span class="pf-ic"><?=icone('usuario', 15)?></span>Resumo Profissional</h2>
         <?php if ($resumo !== ''): ?>
           <p class="pf-texto"><?=e($resumo)?></p>
         <?php else: ?><p class="pf-vazio">Resumo ainda não informado.</p><?php endif; ?>
@@ -91,7 +91,7 @@
       </div>
       <?php else: ?>
       <div class="pf-card">
-        <h2><span class="pf-ic"><?=icone('maleta', 13)?></span>Experiência Profissional</h2>
+        <h2><span class="pf-ic"><?=icone('maleta', 15)?></span>Experiência Profissional</h2>
         <?php if ($experiencias): ?>
           <ul class="pf-timeline">
             <?php foreach ($experiencias as $x): ?>
@@ -111,7 +111,7 @@
       </div>
 
       <div class="pf-card">
-        <h2><span class="pf-ic"><?=icone('formatura', 13)?></span>Formação</h2>
+        <h2><span class="pf-ic"><?=icone('formatura', 15)?></span>Formação Acadêmica e Técnica</h2>
         <?php if ($formacao): ?>
           <div class="pf-form">
             <?php foreach ($formacao as $f): ?>
@@ -128,7 +128,7 @@
       <?php if ($cursos || $extras): ?>
       <div class="pf-card">
         <?php if ($cursos): ?>
-          <h2><span class="pf-ic"><?=icone('livro', 13)?></span>Cursos Complementares</h2>
+          <h2><span class="pf-ic"><?=icone('livro', 15)?></span>Cursos Complementares</h2>
           <ul class="pf-lista pf-cursos"><?php foreach ($cursos as $c): ?><li><?=e($c)?></li><?php endforeach; ?></ul>
         <?php endif; ?>
         <?php if ($extras): ?>
