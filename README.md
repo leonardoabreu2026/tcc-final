@@ -323,6 +323,7 @@ git config core.hooksPath .githooks
 | Documento | O que tem |
 |---|---|
 | [docs/tcc/TCC_Final_Conecta_Vagas_DF.docx](docs/tcc/TCC_Final_Conecta_Vagas_DF.docx) | o documento do TCC no modelo do professor (Escola Técnica de Ceilândia, PCC 2.2026): requisitos, casos de uso, diagramas, modelo de dados, telas, testes, a seção 8.11 com cada funcionalidade em detalhe e o Apêndice A com o código-fonte explicado |
+| [docs/tcc/TCC_Final_Conecta_Vagas_DF.pdf](docs/tcc/TCC_Final_Conecta_Vagas_DF.pdf) | o mesmo documento em PDF (296 páginas), com sumário e listas atualizados e marcadores para navegar pelos títulos |
 | [docs/ARQUITETURA.md](docs/ARQUITETURA.md) | como o sistema funciona por dentro, camada por camada, com a tabela de rotas |
 | [docs/PADROES_AUTOMATICOS.md](docs/PADROES_AUTOMATICOS.md) | os padrões automáticos das máquinas de extração e como demonstrá-los |
 | [docs/PESQUISA_CURSOS.md](docs/PESQUISA_CURSOS.md) | as fontes oficiais do catálogo e como a pesquisa de cursos funciona |
