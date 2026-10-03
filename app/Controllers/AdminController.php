@@ -80,11 +80,11 @@ final class AdminController extends Controller {
             $id = post_int('id');
 
             if ($acao === 'excluir') {
-                if ($id === $meuId) { flash('erro', 'Você não pode excluir a própria conta.'); redirect('admin/pages/usuarios.php'.painel_qs()); }
+                if ($id === $meuId) { flash('erro', 'Você não pode remover a própria conta.'); redirect('admin/pages/usuarios.php'.painel_qs()); }
                 $alvo = $dao->buscarPorId($id);
                 if ($alvo && $alvo['tipo'] === 'admin' && (int)$alvo['ativo'] && $dao->contarAdminsAtivos() <= 1) { flash('erro', 'É preciso manter pelo menos um administrador ativo.'); redirect('admin/pages/usuarios.php'.painel_qs()); }
                 $ok = $dao->excluir($id);
-                flash($ok ? 'ok' : 'erro', $ok ? 'Usuário excluído (perfil, currículos, vagas e candidaturas foram removidos junto).' : 'Não foi possível excluir o usuário.');
+                flash($ok ? 'ok' : 'erro', $ok ? 'Usuário removido, junto com o perfil, os currículos, as vagas e as candidaturas dele.' : 'Não foi possível remover o usuário.');
                 redirect('admin/pages/usuarios.php'.painel_qs());
             }
 
@@ -115,8 +115,8 @@ final class AdminController extends Controller {
             redirect('admin/pages/usuarios.php'.painel_qs(!$ok && $id ? ['edit' => $id] : []));
         }
 
-        $edit = registro_encontrado(get_str('edit') !== '' ? $dao->buscarPorId((int)get_str('edit')) : null, 'edit', 'admin/pages/usuarios.php', 'Usuário não encontrado (pode ter sido excluído).');
-        $ver = registro_encontrado(get_str('ver') !== '' ? $dao->resumo((int)get_str('ver')) : null, 'ver', 'admin/pages/usuarios.php', 'Usuário não encontrado (pode ter sido excluído).');
+        $edit = registro_encontrado(get_str('edit') !== '' ? $dao->buscarPorId((int)get_str('edit')) : null, 'edit', 'admin/pages/usuarios.php', 'Usuário não encontrado (pode ter sido removido).');
+        $ver = registro_encontrado(get_str('ver') !== '' ? $dao->resumo((int)get_str('ver')) : null, 'ver', 'admin/pages/usuarios.php', 'Usuário não encontrado (pode ter sido removido).');
         $filtroTipo = enum_val(get_str('tipo'), UsuarioDAO::TIPOS, '');
         $busca = get_str('q');
         $filtroSituacao = enum_val(get_str('situacao'), ['ativo', 'bloqueado'], '');
@@ -151,7 +151,7 @@ final class AdminController extends Controller {
             }
             if ($acao === 'excluir') {
                 $ok = $dao->excluir($id);
-                flash($ok ? 'ok' : 'erro', $ok ? 'Assinatura excluída do histórico.' : 'Assinatura não encontrada.');
+                flash($ok ? 'ok' : 'erro', $ok ? 'Assinatura removida do histórico.' : 'Assinatura não encontrada.');
                 redirect('admin/pages/assinaturas.php'.painel_qs());
             }
             if ($acao === 'conceder') {
@@ -180,7 +180,7 @@ final class AdminController extends Controller {
             redirect('admin/pages/assinaturas.php'.painel_qs($erro !== '' ? ['edit' => $id] : []));
         }
 
-        $edit = registro_encontrado(get_str('edit') !== '' ? $dao->buscar((int)get_str('edit')) : null, 'edit', 'admin/pages/assinaturas.php', 'Assinatura não encontrada (pode ter sido excluída).');
+        $edit = registro_encontrado(get_str('edit') !== '' ? $dao->buscar((int)get_str('edit')) : null, 'edit', 'admin/pages/assinaturas.php', 'Assinatura não encontrada (pode ter sido removida).');
         $filtroPlano = enum_val(get_str('plano'), AssinaturaDAO::PLANOS, '');
         $filtroStatus = enum_val(get_str('status'), AssinaturaDAO::STATUS, '');
         $busca = get_str('q');
@@ -208,7 +208,7 @@ final class AdminController extends Controller {
             $id = post_int('id');
             if (post_str('acao') === 'excluir') {
                 $ok = $dao->excluir($id);
-                flash($ok ? 'ok' : 'erro', $ok ? 'Categoria excluída. Vagas e cursos que a usavam ficaram sem categoria.' : ($dao->erro ?: 'Categoria não encontrada.'));
+                flash($ok ? 'ok' : 'erro', $ok ? 'Categoria removida. Vagas e cursos que a usavam ficaram sem categoria.' : ($dao->erro ?: 'Categoria não encontrada.'));
                 redirect('admin/pages/categorias.php'.painel_qs());
             }
             if (in_array(post_str('acao'), ['ativar', 'desativar'], true)) {
@@ -219,13 +219,13 @@ final class AdminController extends Controller {
             }
             $d = ['nome' => mb_substr(post_str('nome'), 0, 100), 'tipo' => enum_val(post_str('tipo'), CategoriaDAO::TIPOS, 'vaga'), 'ativo' => post_int('ativo', 1) ? 1 : 0];
             if ($d['nome'] === '') { flash('erro', 'Informe o nome da categoria.'); redirect('admin/pages/categorias.php'.painel_qs()); }
-            if ($id && !$dao->buscar($id)) { flash('erro', 'Categoria não encontrada (pode ter sido excluída).'); redirect('admin/pages/categorias.php'.painel_qs()); }
+            if ($id && !$dao->buscar($id)) { flash('erro', 'Categoria não encontrada (pode ter sido removida).'); redirect('admin/pages/categorias.php'.painel_qs()); }
             $ok = $dao->salvar($d, $id);
             flash($ok ? 'ok' : 'erro', $ok ? 'Categoria salva.' : $dao->erro);
             redirect('admin/pages/categorias.php'.painel_qs(!$ok && $id ? ['edit' => $id] : []));
         }
 
-        $edit = registro_encontrado(get_str('edit') !== '' ? $dao->buscar((int)get_str('edit')) : null, 'edit', 'admin/pages/categorias.php', 'Categoria não encontrada (pode ter sido excluída).');
+        $edit = registro_encontrado(get_str('edit') !== '' ? $dao->buscar((int)get_str('edit')) : null, 'edit', 'admin/pages/categorias.php', 'Categoria não encontrada (pode ter sido removida).');
         $filtroTipo = enum_val(get_str('tipo'), CategoriaDAO::TIPOS, '');
         $busca = get_str('q');
         $buscaN = Competencias::normalizar($busca);
@@ -264,7 +264,7 @@ final class AdminController extends Controller {
 
             if ($acao === 'excluir') {
                 $ok = $dao->excluir($id);
-                flash($ok ? 'ok' : 'erro', $ok ? 'Conteúdo excluído.' : 'Conteúdo não encontrado.');
+                flash($ok ? 'ok' : 'erro', $ok ? 'Conteúdo removido.' : 'Conteúdo não encontrado.');
                 redirect('admin/pages/cursos.php'.painel_qs());
             }
 
@@ -394,7 +394,7 @@ final class AdminController extends Controller {
                 ];
                 $existente = $id ? $dao->buscar($id) : null;
                 $erros = [];
-                if ($id && !$existente) $erros[] = 'Conteúdo não encontrado (pode ter sido excluído).';
+                if ($id && !$existente) $erros[] = 'Conteúdo não encontrado (pode ter sido removido).';
                 if ($d['titulo'] === '') $erros[] = 'Informe o título.';
                 // Só http/https: impede links "javascript:" no botão do curso.
                 if ($d['url'] !== '' && !url_http_valida($d['url']) && !eh_pdf_biblioteca($d['url'])) $erros[] = 'O link oficial precisa ser um endereço válido começando com http:// ou https://.';
@@ -466,7 +466,7 @@ final class AdminController extends Controller {
             }
         }
 
-        $edit = registro_encontrado(get_str('edit') !== '' ? $dao->buscar((int)get_str('edit')) : null, 'edit', 'admin/pages/cursos.php', 'Conteúdo não encontrado (pode ter sido excluído).');
+        $edit = registro_encontrado(get_str('edit') !== '' ? $dao->buscar((int)get_str('edit')) : null, 'edit', 'admin/pages/cursos.php', 'Conteúdo não encontrado (pode ter sido removido).');
         // "Novo e-book" / "Novo vídeo" (?novo=ebook): o formulário já vem no formato escolhido.
         $novoTipo = enum_val(get_str('novo') ?: get_str('tipo'), CursoDAO::TIPOS, 'curso');
         $form ??= $edit ?? ['id' => 0, 'categoria_id' => null, 'titulo' => '', 'descricao' => '', 'tipo' => $novoTipo, 'modalidade' => 'ead', 'nivel' => 'iniciante', 'duracao' => '', 'gratuito' => 1, 'preco' => null, 'url' => '', 'imagem' => '', 'instituicao' => '', 'ativo' => 1];

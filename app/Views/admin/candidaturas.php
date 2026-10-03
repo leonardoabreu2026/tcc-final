@@ -52,7 +52,7 @@
         <label for="obs-<?=(int)$x['id']?>">Retorno para o candidato</label>
         <textarea id="obs-<?=(int)$x['id']?>" name="observacao" rows="2" maxlength="2000" placeholder="Ex.: Entrevista na segunda às 10h."><?=e($x['observacao_empresa'])?></textarea>
         <div class="actions" style="margin-top:8px"><button class="btn btn-sm">Salvar</button>
-        <?php if (isAdmin()): ?><button class="btn btn-sm btn-danger" name="acao" value="excluir" data-confirm="Excluir esta candidatura? Esta ação não pode ser desfeita.">Excluir</button><?php endif; ?></div>
+        <?php if (isAdmin()): ?><button class="btn btn-sm btn-danger" name="acao" value="excluir" data-confirm="Remover esta candidatura? Esta ação não pode ser desfeita.">Remover candidatura</button><?php endif; ?></div>
     </form>
     <?php endif; ?>
 </article>

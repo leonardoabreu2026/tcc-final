@@ -45,7 +45,7 @@ final class EmpresaController extends Controller {
 
             if ($acao === 'excluir') {
                 $ok = $vagaPermitida($id) && $dao->excluir($id);
-                flash($ok ? 'ok' : 'erro', $ok ? 'Vaga excluída (candidaturas e matches dela também).' : 'Vaga não encontrada ou sem permissão.');
+                flash($ok ? 'ok' : 'erro', $ok ? 'Vaga removida (candidaturas e matches dela também).' : 'Vaga não encontrada ou sem permissão.');
                 redirect('admin/pages/vagas.php'.painel_qs());
             }
 
@@ -197,7 +197,7 @@ final class EmpresaController extends Controller {
             }
         }
 
-        $edit = registro_encontrado(get_str('edit') !== '' ? $vagaPermitida((int)get_str('edit')) : null, 'edit', 'admin/pages/vagas.php', 'Vaga não encontrada (pode ter sido excluída ou ser de outra empresa).');
+        $edit = registro_encontrado(get_str('edit') !== '' ? $vagaPermitida((int)get_str('edit')) : null, 'edit', 'admin/pages/vagas.php', 'Vaga não encontrada (pode ter sido removida ou ser de outra empresa).');
         if (get_str('edit') !== '' && !$edit) negar_acesso('Vaga não encontrada ou sem permissão.');
         $parecida ??= null;
         $relatorioVaga ??= null;
@@ -252,7 +252,7 @@ final class EmpresaController extends Controller {
             $obs = mb_substr(post_str('observacao'), 0, 2000);
             if (post_str('acao') === 'excluir') {
                 $ok = isAdmin() && $dao->excluir($id);
-                flash($ok ? 'ok' : 'erro', $ok ? 'Candidatura excluída.' : (isAdmin() ? 'Candidatura não encontrada.' : 'Somente o administrador pode excluir candidaturas.'));
+                flash($ok ? 'ok' : 'erro', $ok ? 'Candidatura removida.' : (isAdmin() ? 'Candidatura não encontrada.' : 'Somente o administrador pode remover candidaturas.'));
             } else {
                 $ok = $status !== '' && (isAdmin() ? $dao->atualizarStatus($id, $status, $obs) : ($perfil && $dao->atualizarStatusPorEmpresa($id, (int)$perfil['id'], $status, $obs)));
                 flash($ok ? 'ok' : 'erro', $ok ? 'Candidatura atualizada. O candidato vê o novo status e o retorno no perfil dele.' : 'Não foi possível atualizar (candidatura inexistente, de outra empresa ou cancelada pelo candidato).');

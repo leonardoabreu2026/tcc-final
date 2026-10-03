@@ -109,7 +109,7 @@ $modeloFicha = "Título:\nTipo:\nInstituição:\nModalidade:\nCidade:\nNível:\n
 </form>
 <div class="table-wrap"><table class="table">
     <tr><th><span class="sr-only">Imagem</span></th><?=painel_th('titulo', 'Título', $ordem, $dir)?><?=painel_th('tipo', 'Formato', $ordem, $dir)?><?=painel_th('categoria_nome', 'Área', $ordem, $dir)?><?=painel_th('instituicao', 'Instituição', $ordem, $dir)?><?=painel_th('ativo', 'Situação', $ordem, $dir)?><?=painel_th('created_at', 'Cadastro', $ordem, $dir)?><th>Ações</th></tr>
-    <?php foreach ($lista as $x): ?>
+    <?php foreach ($lista as $x): $formato = mb_strtolower(rotulo((string)$x['tipo'])); // "curso", "e-book", "vídeo" ?>
     <tr>
         <td class="pn-td-img"><?=painel_miniatura((string)$x['imagem'], $x['tipo'] === 'ebook' ? 'ebook' : '', pt_secao_formato((string)$x['tipo'])[2])?></td>
         <td class="quebra"><?=e($x['titulo'])?><br><small class="meta">#<?=(int)$x['id']?><?=$x['duracao'] ? ' · '.e($x['duracao']) : ''?> · <?=e(pt_preco($x))?></small></td>
@@ -119,7 +119,7 @@ $modeloFicha = "Título:\nTipo:\nInstituição:\nModalidade:\nCidade:\nNível:\n
         <td><?=painel_botoes([
             ['href' => url('curso.php?id='.(int)$x['id']), 'texto' => 'Ver', 'icone' => 'olho', 'estilo' => 'primario', 'nova_aba' => true],
             ['href' => painel_qs(['edit' => (int)$x['id']]).'#form-curso', 'texto' => 'Editar', 'icone' => 'editar'],
-            ['acao' => 'excluir', 'id' => (int)$x['id'], 'texto' => 'Excluir', 'icone' => 'lixeira', 'estilo' => 'perigo', 'confirmar' => 'Excluir este conteúdo? Esta ação não pode ser desfeita.'],
+            ['acao' => 'excluir', 'id' => (int)$x['id'], 'texto' => 'Remover '.$formato, 'icone' => 'lixeira', 'estilo' => 'perigo', 'confirmar' => 'Remover este '.$formato.'? Esta ação não pode ser desfeita.'],
         ], (string)$x['titulo'])?></td>
     </tr>
     <?php endforeach; ?>

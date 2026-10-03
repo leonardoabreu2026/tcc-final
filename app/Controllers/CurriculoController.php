@@ -260,9 +260,9 @@ final class CurriculoController extends Controller {
             $path = caminho_upload((string)$cv['arquivo_pdf']);
             if ($path !== null && is_file($path)) @unlink($path);
             try { (new MatchService())->recalcular((int)$p['id']); } catch (Throwable) {}
-            flash('ok', 'Currículo excluído. Candidaturas já enviadas com ele continuam registradas, sem o arquivo.');
+            flash('ok', 'Currículo removido. Candidaturas já enviadas com ele continuam registradas, sem o arquivo.');
         } else {
-            flash('erro', 'Não foi possível excluir o currículo.');
+            flash('erro', 'Não foi possível remover o currículo.');
         }
         redirect('view/perfil/index.php');
     }

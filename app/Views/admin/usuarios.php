@@ -7,7 +7,7 @@
 ?>
 <div class="pn">
 <?php require __DIR__.'/../layouts/admin_nav.php'; ?>
-<?=painel_cabecalho('Usuários', 'Cadastre, veja, edite, bloqueie e exclua contas. Você não pode excluir nem rebaixar a própria conta, e o sistema mantém pelo menos um administrador ativo.')?>
+<?=painel_cabecalho('Usuários', 'Cadastre, veja, edite, bloqueie e remova contas. Você não pode remover nem rebaixar a própria conta, e o sistema mantém pelo menos um administrador ativo.')?>
 
 <?php if ($ver): ?>
 <section class="form pn-ficha" aria-labelledby="ficha-titulo">
@@ -81,7 +81,7 @@
         <td><?=painel_botoes([
             ['href' => painel_qs(['ver' => (int)$x['id']]), 'texto' => 'Ver', 'icone' => 'olho', 'estilo' => 'primario'],
             ['href' => painel_qs(['edit' => (int)$x['id']]).'#form-usuario', 'texto' => 'Editar', 'icone' => 'editar'],
-            $eu ? null : ['acao' => 'excluir', 'id' => (int)$x['id'], 'texto' => 'Excluir', 'icone' => 'lixeira', 'estilo' => 'perigo', 'confirmar' => 'Excluir este usuário e todos os dados dele? Esta ação não pode ser desfeita.'],
+            $eu ? null : ['acao' => 'excluir', 'id' => (int)$x['id'], 'texto' => 'Remover usuário', 'icone' => 'lixeira', 'estilo' => 'perigo', 'confirmar' => 'Remover este usuário e todos os dados dele? Esta ação não pode ser desfeita.'],
         ], (string)$x['nome'])?></td>
     </tr>
     <?php endforeach; ?>

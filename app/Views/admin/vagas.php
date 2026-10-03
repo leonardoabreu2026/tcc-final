@@ -14,7 +14,7 @@ $cartazNoForm = !empty($form['imagem']) && str_starts_with((string)$form['imagem
 ?>
 <div class="pn">
 <?php require __DIR__.'/../layouts/admin_nav.php'; ?>
-<?=painel_cabecalho('Vagas', 'Publique pelo cartaz ou pelo texto do anúncio: a máquina de extração preenche o formulário e você só revisa. Ative, pause, edite ou exclua pela lista.', $planoHtml)?>
+<?=painel_cabecalho('Vagas', 'Publique pelo cartaz ou pelo texto do anúncio: a máquina de extração preenche o formulário e você só revisa. Ative, pause, edite ou remova pela lista.', $planoHtml)?>
 
 <div class="form" style="max-width:none">
     <details class="extrator" <?=$extraido || !empty($form['id']) ? '' : 'open'?>>
@@ -159,7 +159,7 @@ $cartazNoForm = !empty($form['imagem']) && str_starts_with((string)$form['imagem
             $x['status'] === 'encerrada'
                 ? ['acao' => 'ativar', 'id' => (int)$x['id'], 'texto' => 'Reabrir a vaga', 'icone' => 'play', 'estilo' => 'sucesso', 'so_icone' => true]
                 : ['acao' => 'encerrar', 'id' => (int)$x['id'], 'texto' => 'Encerrar a vaga', 'icone' => 'encerrar', 'estilo' => 'alerta', 'so_icone' => true, 'confirmar' => 'Encerrar esta vaga? Ela sai da busca e para de receber candidaturas.'],
-            ['acao' => 'excluir', 'id' => (int)$x['id'], 'texto' => 'Excluir', 'icone' => 'lixeira', 'estilo' => 'perigo', 'confirmar' => 'Excluir a vaga e todas as candidaturas dela? Esta ação não pode ser desfeita.'],
+            ['acao' => 'excluir', 'id' => (int)$x['id'], 'texto' => 'Remover vaga', 'icone' => 'lixeira', 'estilo' => 'perigo', 'confirmar' => 'Remover a vaga e todas as candidaturas dela? Esta ação não pode ser desfeita.'],
         ], (string)$x['titulo'])?></td>
     </tr>
     <?php endforeach; ?>

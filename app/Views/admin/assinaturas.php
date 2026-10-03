@@ -12,7 +12,7 @@ $dinheiro = fn($v) => 'R$ '.number_format((float)$v, 2, ',', '.');
 ?>
 <div class="pn">
 <?php require __DIR__.'/../layouts/admin_nav.php'; ?>
-<?=painel_cabecalho('Assinaturas', 'Planos Candidato VIP e Empresa Premium: conceda, veja, edite, cancele e exclua. Cada conta tem no máximo uma assinatura ativa; cobrança demonstrativa.')?>
+<?=painel_cabecalho('Assinaturas', 'Planos Candidato VIP e Empresa Premium: conceda, veja, edite, cancele e remova. Cada conta tem no máximo uma assinatura ativa; cobrança demonstrativa.')?>
 <div class="pn-kpis">
     <?=painel_kpi('Candidato VIP', gf_num($resumo['assinante']['vigentes']), 'vigentes · '.$dinheiro(AssinaturaDAO::PRECOS['assinante']).'/mês', 'planos', 'admin/pages/assinaturas.php?plano=assinante&status=ativa#lista-assinaturas')?>
     <?=painel_kpi('Empresa Premium', gf_num($resumo['empresa']['vigentes']), 'vigentes · '.$dinheiro(AssinaturaDAO::PRECOS['empresa']).'/mês', 'maleta', 'admin/pages/assinaturas.php?plano=empresa&status=ativa#lista-assinaturas')?>
@@ -76,7 +76,7 @@ $dinheiro = fn($v) => 'R$ '.number_format((float)$v, 2, ',', '.');
             ['href' => url('admin/pages/usuarios.php?ver='.(int)$x['usuario_id']), 'texto' => 'Conta', 'icone' => 'usuario', 'estilo' => 'primario'],
             ['href' => painel_qs(['edit' => (int)$x['id']]).'#form-assinatura', 'texto' => 'Editar', 'icone' => 'editar'],
             $x['status'] === 'ativa' ? ['acao' => 'cancelar', 'id' => (int)$x['id'], 'texto' => 'Cancelar', 'icone' => 'encerrar', 'estilo' => 'alerta', 'confirmar' => 'Cancelar esta assinatura? A conta volta ao plano gratuito na hora.'] : null,
-            ['acao' => 'excluir', 'id' => (int)$x['id'], 'texto' => 'Excluir', 'icone' => 'lixeira', 'estilo' => 'perigo', 'confirmar' => 'Excluir esta assinatura do histórico? Para manter o registro, use Cancelar.'],
+            ['acao' => 'excluir', 'id' => (int)$x['id'], 'texto' => 'Remover assinatura', 'icone' => 'lixeira', 'estilo' => 'perigo', 'confirmar' => 'Remover esta assinatura do histórico? Para manter o registro, use Cancelar.'],
         ], 'assinatura #'.(int)$x['id'])?></td>
     </tr>
     <?php endforeach; ?>

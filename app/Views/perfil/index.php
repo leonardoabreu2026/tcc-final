@@ -79,7 +79,7 @@
                     <a class="btn btn-sm btn-outline" href="<?=url('download.php?id='.(int)$cv['id'])?>" target="_blank">Abrir</a>
                     <form method="post" action="<?=url('view/perfil/curriculo_excluir.php')?>">
                         <input type="hidden" name="csrf" value="<?=e(csrf_token())?>"><input type="hidden" name="id" value="<?=(int)$cv['id']?>">
-                        <button class="btn btn-sm btn-danger" data-confirm="Excluir este currículo?">Excluir</button>
+                        <button class="btn btn-sm btn-danger" data-confirm="Remover este currículo?">Remover currículo</button>
                     </form>
                 </div>
             </div>

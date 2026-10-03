@@ -304,7 +304,7 @@ function painel_chave(bool $ligado, string $acaoLigar, string $acaoDesligar, int
  * Barra de botões do CRUD numa linha só (estilo "btn-group" do Bootstrap): ícone + rótulo; em telas menores fica só
  * o ícone (o rótulo aparece ao passar o mouse e é lido pelo leitor de tela). Cada item:
  *  - link:  ['href' => url, 'texto' => 'Ver', 'icone' => 'olho', 'estilo' => 'primario', 'nova_aba' => true]
- *  - ação:  ['acao' => 'excluir', 'id' => 5, 'texto' => 'Excluir', 'icone' => 'lixeira', 'estilo' => 'perigo', 'confirmar' => '...']
+ *  - ação:  ['acao' => 'excluir', 'id' => 5, 'texto' => 'Remover vaga', 'icone' => 'lixeira', 'estilo' => 'perigo', 'confirmar' => '...']
  * Estilos: primario, neutro, sucesso, alerta, perigo. 'so_icone' => true mostra só o ícone (o nome fica na dica e no
  * leitor de tela). $nome entra no texto do leitor de tela ("Editar Atendente").
  */
