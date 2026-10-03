@@ -189,7 +189,7 @@ final class AssinaturaDAO {
         try {
             $sql = "SELECT COUNT(*) FROM candidaturas
                     WHERE perfil_candidato_id = ?
-                      AND status IN ('enviada','em_analise','entrevista')";
+                      AND ".CandidaturaDAO::ATIVAS;
             $s = Database::getConexao()->prepare($sql);
             $s->execute([$perfilCandidatoId]);
             return (int)$s->fetchColumn();
@@ -203,10 +203,9 @@ final class AssinaturaDAO {
      */
     public function contarVagasAtivas(int $perfilEmpresaId): int {
         try {
-            $sql = "SELECT COUNT(*) FROM vagas
-                    WHERE perfil_empresa_id = ?
-                      AND status = 'ativa'
-                      AND (data_expiracao IS NULL OR data_expiracao >= CURDATE())";
+            $sql = "SELECT COUNT(*) FROM vagas v
+                    WHERE v.perfil_empresa_id = ?
+                      AND ".VagaDAO::ATIVA;
             $s = Database::getConexao()->prepare($sql);
             $s->execute([$perfilEmpresaId]);
             return (int)$s->fetchColumn();
@@ -219,6 +218,10 @@ final class AssinaturaDAO {
     public const LIMITE_CANDIDATURAS_GRATIS = 3;
     public const LIMITE_VAGAS_GRATIS = 2;
 
+    /** Aviso de limite atingido (%d = o limite), o mesmo na checagem e quando o envio esbarra no limite. */
+    public const AVISO_LIMITE_CANDIDATURAS = 'Você atingiu o limite de %d candidaturas ativas do Plano Gratuito. Torne-se Candidato VIP para enviar candidaturas ilimitadas!';
+    public const AVISO_LIMITE_VAGAS = 'Sua empresa atingiu o limite de %d vagas ativas do Plano Básico Gratuito. Assine o Plano Empresa Premium para publicar vagas ilimitadas!';
+
     /**
      * Valida se candidato pode se candidatar.
      * Plano gratuito: até 3 candidaturas ativas; Candidato VIP: ilimitado.
@@ -227,8 +230,7 @@ final class AssinaturaDAO {
         if ($this->isCandidatoVip($usuarioId)) {
             return ['permitido' => true, 'motivo' => 'Candidato VIP (Ilimitado)'];
         }
-        return $this->dentroDoLimite($this->contarCandidaturasAtivas($perfilCandidatoId), self::LIMITE_CANDIDATURAS_GRATIS,
-            'Você atingiu o limite de %d candidaturas ativas do Plano Gratuito. Torne-se Candidato VIP para enviar candidaturas ilimitadas!');
+        return $this->dentroDoLimite($this->contarCandidaturasAtivas($perfilCandidatoId), self::LIMITE_CANDIDATURAS_GRATIS, self::AVISO_LIMITE_CANDIDATURAS);
     }
 
     /**
@@ -239,8 +241,7 @@ final class AssinaturaDAO {
         if ($this->isEmpresaPremium($usuarioId)) {
             return ['permitido' => true, 'motivo' => 'Empresa Premium (Ilimitado)'];
         }
-        return $this->dentroDoLimite($this->contarVagasAtivas($perfilEmpresaId), self::LIMITE_VAGAS_GRATIS,
-            'Sua empresa atingiu o limite de %d vagas ativas do Plano Básico Gratuito. Assine o Plano Empresa Premium para publicar vagas ilimitadas!');
+        return $this->dentroDoLimite($this->contarVagasAtivas($perfilEmpresaId), self::LIMITE_VAGAS_GRATIS, self::AVISO_LIMITE_VAGAS);
     }
 
     /** Resposta comum dos dois limites: permitido enquanto houver vaga no limite; senão, o motivo para a tela de planos. */

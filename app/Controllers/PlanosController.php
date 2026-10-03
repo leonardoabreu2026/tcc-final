@@ -58,8 +58,8 @@ final class PlanosController extends Controller {
                 $ok = $dao->cancelar($usuarioId);
                 if ($ok) {
                     flash('info', $assinaturaAtiva['plano'] === 'empresa'
-                        ? 'Sua assinatura foi cancelada. A empresa voltou ao Plano Básico: o destaque das vagas foi removido e novas publicações respeitam o limite de 2 vagas ativas.'
-                        : 'Sua assinatura foi cancelada. Seu plano voltou ao padrão gratuito (até 3 candidaturas ativas).');
+                        ? 'Sua assinatura foi cancelada. A empresa voltou ao Plano Básico: o destaque das vagas foi removido e novas publicações respeitam o limite de '.AssinaturaDAO::LIMITE_VAGAS_GRATIS.' vagas ativas.'
+                        : 'Sua assinatura foi cancelada. Seu plano voltou ao padrão gratuito (até '.AssinaturaDAO::LIMITE_CANDIDATURAS_GRATIS.' candidaturas ativas).');
                 } else {
                     flash('erro', 'Não foi possível cancelar a assinatura.');
                 }

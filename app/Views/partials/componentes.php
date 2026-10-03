@@ -403,10 +403,11 @@ function cv_img(?string $img, string $icone = 'vagas'): string {
 
 /**
  * Paginação numerada (‹ Anterior · 1 … 4 5 6 … 12 · Próxima ›), usada nas listas públicas e nas tabelas do painel.
- * $href(int $pagina) devolve o endereço de cada página já escapado para o atributo href.
+ * $link(int $pagina) devolve o endereço de cada página sem escapar: o escape para o atributo href é feito aqui.
  */
-function cv_paginacao(int $pagina, int $paginas, callable $href, string $rotulo = 'Páginas de resultados', string $classe = ''): string {
+function cv_paginacao(int $pagina, int $paginas, callable $link, string $rotulo = 'Páginas de resultados', string $classe = ''): string {
     if ($paginas <= 1) return '';
+    $href = fn(int $n) => e($link($n));
     $h = '<nav class="an-paginacao'.($classe !== '' ? ' '.e($classe) : '').'" aria-label="'.e($rotulo).'">';
     $h .= $pagina > 1 ? '<a class="an-pag-seta" href="'.$href($pagina - 1).'" rel="prev">‹ Anterior</a>' : '<span class="an-pag-seta" aria-disabled="true">‹ Anterior</span>';
     $antes = 0;

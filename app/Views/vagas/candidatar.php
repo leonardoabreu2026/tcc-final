@@ -44,7 +44,7 @@ $linkVaga = url('vaga.php?id='.$vid);
         </div>
       <?php else: ?>
         <?php if (!$isVip): ?>
-          <div class="notice small an-cand-plano">Plano Gratuito: <b><?=(int)($permissao['ativas'] ?? 0)?>/<?=(int)($permissao['limite'] ?? AssinaturaDAO::LIMITE_CANDIDATURAS_GRATIS)?></b> candidaturas ativas. <a href="<?=url('planos.php')?>">Seja VIP</a> para candidaturas ilimitadas e prioridade para a empresa.</div>
+          <div class="notice small an-cand-plano">Plano Gratuito: <b><?=(int)($permissao['ativas'] ?? 0)?>/<?=(int)$permissao['limite']?></b> candidaturas ativas. <a href="<?=url('planos.php')?>">Seja VIP</a> para candidaturas ilimitadas e prioridade para a empresa.</div>
         <?php else: ?>
           <div class="alert ok small">✓ <b>VIP:</b> sua candidatura aparece no topo da lista da empresa.</div>
         <?php endif; ?>

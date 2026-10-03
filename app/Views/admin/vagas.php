@@ -8,7 +8,7 @@ $planoHtml = '';
 if (isEmpresa()) {
     $planoHtml = $isPremium
         ? '<span class="badge-pro">Empresa Premium — vagas ilimitadas e destaque</span>'
-        : '<span class="tag">Plano Básico: até 2 vagas ativas</span> <a class="btn btn-sm btn-outline" href="'.e(url('planos.php')).'">Fazer upgrade</a>';
+        : '<span class="tag">Plano Básico: até '.AssinaturaDAO::LIMITE_VAGAS_GRATIS.' vagas ativas</span> <a class="btn btn-sm btn-outline" href="'.e(url('planos.php')).'">Fazer upgrade</a>';
 }
 $cartazNoForm = !empty($form['imagem']) && str_starts_with((string)$form['imagem'], 'assets/uploads/cartaz_');
 ?>

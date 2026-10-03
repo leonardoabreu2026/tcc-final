@@ -29,9 +29,9 @@ $ultimo = min($total, $pagina * $porPagina);
   </form>
 
   <nav class="an-abas" aria-label="Áreas">
-    <a href="<?=$qs(['categoria_id' => 0])?>"<?=$catAtual ? '' : ' class="ativo" aria-current="page"'?>>Todas <span><?=count($todas)?></span></a>
+    <a href="<?=e($qs(['categoria_id' => 0]))?>"<?=$catAtual ? '' : ' class="ativo" aria-current="page"'?>>Todas <span><?=count($todas)?></span></a>
     <?php foreach ($categorias as $c): if (empty($contagem[(int)$c['id']])) continue; $ativa = $catAtual && (int)$catAtual['id'] === (int)$c['id']; ?>
-      <a href="<?=$qs(['categoria_id' => (int)$c['id']])?>"<?=$ativa ? ' class="ativo" aria-current="page"' : ''?>><?=e($c['nome'])?> <span><?=$contagem[(int)$c['id']]?></span></a>
+      <a href="<?=e($qs(['categoria_id' => (int)$c['id']]))?>"<?=$ativa ? ' class="ativo" aria-current="page"' : ''?>><?=e($c['nome'])?> <span><?=$contagem[(int)$c['id']]?></span></a>
     <?php endforeach; ?>
   </nav>
 
@@ -47,7 +47,7 @@ $ultimo = min($total, $pagina * $porPagina);
       </ul>
     <?php endif; ?>
     <?php if ($mapaMatch): ?>
-      <a class="cv-btn an-btn-linha an-ordem" href="<?=$qs(['ordem' => $ordenarMatch ? '' : 'match'])?>"><?=icone('alvo', 15)?><?=$ordenarMatch ? 'Ordenar por data' : 'Ordenar pelo meu match'?></a>
+      <a class="cv-btn an-btn-linha an-ordem" href="<?=e($qs(['ordem' => $ordenarMatch ? '' : 'match']))?>"><?=icone('alvo', 15)?><?=$ordenarMatch ? 'Ordenar por data' : 'Ordenar pelo meu match'?></a>
     <?php endif; ?>
   </div>
 
@@ -56,14 +56,14 @@ $ultimo = min($total, $pagina * $porPagina);
       <?php foreach ($vagas as $v): ?><?=cv_card_vaga($v, $mapaMatch[(int)$v['id']] ?? null, $minhas[(int)$v['id']] ?? null)?><?php endforeach; ?>
     </div>
 
-    <?=cv_paginacao($pagina, $paginas, fn(int $n) => e($qs(['pagina' => $n])))?>
+    <?=cv_paginacao($pagina, $paginas, fn(int $n) => $qs(['pagina' => $n]))?>
   <?php elseif (!$dbErro): ?>
     <div class="an-vazio">
       <span class="an-vazio-ic"><?=icone('busca', 34)?></span>
       <h2>Nenhuma vaga encontrada</h2>
       <p>Tente outra palavra-chave, tire algum filtro ou veja todas as oportunidades abertas<?=$catAtual ? ' em outras áreas' : ''?>.</p>
       <p class="an-vazio-acoes">
-        <?php if ($filtrosAtivos && $catAtual): ?><a class="cv-btn an-btn-linha" href="<?=$qs(['q' => '', 'cidade' => '', 'tipo' => '', 'nivel' => '', 'remoto' => ''])?>">Ver todas em <?=e($catAtual['nome'])?></a><?php endif; ?>
+        <?php if ($filtrosAtivos && $catAtual): ?><a class="cv-btn an-btn-linha" href="<?=e($qs(['q' => '', 'cidade' => '', 'tipo' => '', 'nivel' => '', 'remoto' => '']))?>">Ver todas em <?=e($catAtual['nome'])?></a><?php endif; ?>
         <a class="cv-btn cv-btn-azul" href="<?=e(url('vagas.php'))?>">Ver todas as vagas</a>
       </p>
     </div>

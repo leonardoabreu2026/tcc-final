@@ -13,7 +13,7 @@ final class EmpresaController extends Controller {
      *    (cargo, empresa, salário, local, requisitos, benefícios, contato) com o cartaz como imagem;
      *  - "Colar texto": o mesmo a partir do texto do anúncio (WhatsApp, Instagram, site).
      * Nada é salvo sem revisão. Empresa só mexe nas próprias vagas; o limite do plano básico
-     * (2 vagas abertas) vale ao publicar e ao reativar; o mesmo anúncio não é publicado duas vezes.
+     * (AssinaturaDAO::LIMITE_VAGAS_GRATIS vagas abertas) vale ao publicar e ao reativar; o mesmo anúncio não é publicado duas vezes.
      * Ao salvar, o match é recalculado. A extração segue as regras e, onde elas não têm pista, os padrões automáticos das vagas já cadastradas (PadroesExtracao).
      */
     public function vagas(): void {
@@ -61,7 +61,7 @@ final class EmpresaController extends Controller {
                     if (isset($perm['limite'])) $limite = (int)$perm['limite'];
                 }
                 $res = $dao->alterarStatus($id, $novo, $limite);
-                if ($res === 'limite') { flash('erro', "Sua empresa atingiu o limite de {$limite} vagas ativas do Plano Básico Gratuito. Assine o Plano Empresa Premium para publicar vagas ilimitadas!"); redirect('planos.php'); }
+                if ($res === 'limite') { flash('erro', sprintf(AssinaturaDAO::AVISO_LIMITE_VAGAS, $limite)); redirect('planos.php'); }
                 if ($res === 'ok') {
                     $msg = ['ativa' => 'Vaga ativada.', 'pausada' => 'Vaga pausada: saiu da busca, mas continua salva.', 'encerrada' => 'Vaga encerrada.'][$novo];
                     if ($novo === 'ativa') {
@@ -178,7 +178,7 @@ final class EmpresaController extends Controller {
                     $res = $dao->salvarComLimite($d, $id, $limite);
                     if ($res === 'limite') {
                         if ($img) apagar_upload_sem_uso($img);
-                        flash('erro', "Sua empresa atingiu o limite de {$limite} vagas ativas do Plano Básico Gratuito. Assine o Plano Empresa Premium para publicar vagas ilimitadas!");
+                        flash('erro', sprintf(AssinaturaDAO::AVISO_LIMITE_VAGAS, $limite));
                         redirect('planos.php');
                     }
                     $novoId = is_int($res) ? $res : false;

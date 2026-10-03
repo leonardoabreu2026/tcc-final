@@ -70,7 +70,7 @@ $recursos = static function (array $itens): string {
                 <div class="pl-preco">R$ 0 <small>para sempre</small></div>
                 <?=$recursos([
                     ['Perfil profissional e envio de currículo (PDF/DOCX)', true],
-                    ['Até 3 candidaturas ativas ao mesmo tempo', true],
+                    ['Até '.AssinaturaDAO::LIMITE_CANDIDATURAS_GRATIS.' candidaturas ativas ao mesmo tempo', true],
                     ['As 3 vagas mais compatíveis com você', true],
                     ['Acompanhamento do retorno da empresa', true],
                     ['Candidaturas ilimitadas', false],
@@ -130,7 +130,7 @@ $recursos = static function (array $itens): string {
                 <div class="pl-preco">R$ 0 <small>para sempre</small></div>
                 <?=$recursos([
                     ['Perfil da empresa', true],
-                    ['Até 2 vagas ativas ao mesmo tempo', true],
+                    ['Até '.AssinaturaDAO::LIMITE_VAGAS_GRATIS.' vagas ativas ao mesmo tempo', true],
                     ['Recebimento e gestão de candidaturas', true],
                     ['Vagas ilimitadas', false],
                     ['Vagas em destaque', false],

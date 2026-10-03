@@ -70,7 +70,7 @@
       <p><?=$plano ? 'Seu plano: <b>'.($plano['plano'] === 'empresa' ? 'Empresa Premium' : 'Candidato VIP').'</b> até '.date('d/m/Y', strtotime($plano['data_fim'])).'.' : 'Comece grátis e evolua quando quiser.'?></p>
     </div>
     <?php // Cada cartão leva à página de planos, já na aba certa e no plano clicado. ?>
-    <a class="cv-plano" href="<?=url('planos.php?aba=candidato#plano-gratuito')?>"><span>Gratuito</span><b>R$ 0</b><small>até 3 candidaturas ativas</small><i><?=usuarioLogado() ? 'Ver o plano' : 'Começar grátis'?> →</i></a>
+    <a class="cv-plano" href="<?=url('planos.php?aba=candidato#plano-gratuito')?>"><span>Gratuito</span><b>R$ 0</b><small>até <?=AssinaturaDAO::LIMITE_CANDIDATURAS_GRATIS?> candidaturas ativas</small><i><?=usuarioLogado() ? 'Ver o plano' : 'Começar grátis'?> →</i></a>
     <a class="cv-plano cv-plano-dest" href="<?=url('planos.php?aba=candidato#plano-vip')?>"><span>Candidato VIP</span><b>R$ 9,90<small>/mês</small></b><small>candidaturas ilimitadas e destaque</small><i>Quero ser VIP →</i></a>
     <a class="cv-plano" href="<?=url('planos.php?aba=empresa#plano-premium')?>"><span>Empresa Premium</span><b>R$ 49,90<small>/mês</small></b><small>vagas ilimitadas e banco de talentos</small><i>Contratar mais rápido →</i></a>
     <a class="cv-btn cv-btn-dourado" href="<?=url('planos.php')?>">Comparar os planos</a>

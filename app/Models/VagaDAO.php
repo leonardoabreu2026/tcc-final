@@ -20,7 +20,8 @@ final class VagaDAO {
         LEFT JOIN categorias c ON c.id = v.categoria_id
         LEFT JOIN perfis p ON p.id = v.perfil_empresa_id
         LEFT JOIN usuarios u ON u.id = p.usuario_id";
-    private const ATIVA = "v.status = 'ativa' AND (v.data_expiracao IS NULL OR v.data_expiracao >= CURDATE())";
+    /** Vaga aberta (ativa e no prazo), com a tabela vagas apelidada de "v". Também conta no limite do plano básico. */
+    public const ATIVA = "v.status = 'ativa' AND (v.data_expiracao IS NULL OR v.data_expiracao >= CURDATE())";
 
     public function salvar(array $d, int $id = 0): int|false {
         try {

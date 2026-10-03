@@ -69,7 +69,7 @@ final class CursoController extends Controller {
         $paginas = max(1, (int)ceil($encontrados / $porPagina));
         $pagina = min(max(1, (int)get_str('pagina')), $paginas);
         $cursos = array_slice($cursos, ($pagina - 1) * $porPagina, $porPagina);
-        $qs = fn(array $extra) => e($linkLista($tipo, ($extra['pagina'] ?? 0) > 1 ? $extra : []));   // já escapado; página 1 = endereço limpo
+        $qs = fn(array $extra) => $linkLista($tipo, ($extra['pagina'] ?? 0) > 1 ? $extra : []);   // página 1 = endereço limpo
 
         $title = $tipo === 'curso' ? 'Cursos gratuitos' : $tituloPag;
         $layoutLargo = true;

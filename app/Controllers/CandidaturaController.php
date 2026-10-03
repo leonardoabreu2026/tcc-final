@@ -8,7 +8,7 @@ declare(strict_types=1);
 final class CandidaturaController extends Controller {
     /**
      * candidatar.php?vaga_id= — formulário (GET) e envio (POST) da candidatura.
-     * Regra do plano gratuito: até 3 candidaturas ativas (VIP: ilimitado).
+     * Regra do plano gratuito: até AssinaturaDAO::LIMITE_CANDIDATURAS_GRATIS candidaturas ativas (VIP: ilimitado).
      */
     public function candidatar(): void {
         exigirLogin();
@@ -32,8 +32,8 @@ final class CandidaturaController extends Controller {
             redirect('vaga.php?id='.$vid);
         }
 
-        $assinaturaDao = new AssinaturaDAO();
-        $permissao = $assinaturaDao->podeCandidatar($usuarioId, (int)$perfil['id']);
+        $permissao = (new AssinaturaDAO())->podeCandidatar($usuarioId, (int)$perfil['id']);
+        $isVip = !isset($permissao['limite']);   // podeCandidatar() só traz 'limite' no plano gratuito
         $cvDao = new CurriculoDAO();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -47,16 +47,15 @@ final class CandidaturaController extends Controller {
             }
             $carta = mb_substr(post_str('carta_apresentacao'), 0, 5000);
             // Contagem do limite e gravação na mesma transação (evita passar do limite com envios simultâneos).
-            $limite = $assinaturaDao->isCandidatoVip($usuarioId) ? null : (int)($permissao['limite'] ?? AssinaturaDAO::LIMITE_CANDIDATURAS_GRATIS);
+            $limite = $isVip ? null : (int)$permissao['limite'];
             $res = $dao->enviarComLimite((int)$perfil['id'], $vid, $curriculoId, $carta, $limite);
-            if ($res === 'limite') { flash('erro', 'Você atingiu o limite de candidaturas ativas do Plano Gratuito. Torne-se VIP para candidaturas ilimitadas.'); redirect('planos.php'); }
+            if ($res === 'limite') { flash('erro', sprintf(AssinaturaDAO::AVISO_LIMITE_CANDIDATURAS, $limite)); redirect('planos.php'); }
 
             flash($res === 'ok' ? 'ok' : 'erro', $res === 'ok' ? 'Candidatura enviada com sucesso! Acompanhe o status no seu perfil.' : 'Não foi possível enviar a candidatura.');
             redirect('vaga.php?id='.$vid);
         }
 
         $cvs = $cvDao->listarPorPerfil((int)$perfil['id']);
-        $isVip = $assinaturaDao->isCandidatoVip($usuarioId);
         $title = 'Candidatar-se';
         $this->view('vagas/candidatar', get_defined_vars());
     }

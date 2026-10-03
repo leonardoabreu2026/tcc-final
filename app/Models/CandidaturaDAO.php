@@ -10,6 +10,8 @@ final class CandidaturaDAO {
     public const STATUS = ['enviada','em_analise','entrevista','aprovado','rejeitado','cancelada'];
     /** Status que a empresa pode definir ("cancelada" é exclusivo do candidato). */
     public const STATUS_EMPRESA = ['enviada','em_analise','entrevista','aprovado','rejeitado'];
+    /** Candidatura ativa (ainda em andamento): é o que conta no limite do plano gratuito. */
+    public const ATIVAS = "status IN ('enviada','em_analise','entrevista')";
 
     /** Colunas comuns às listagens da empresa e do administrador (inclui o match do candidato com a vaga). */
     private const SELECT_EMPRESA = "SELECT c.*, v.titulo, v.cidade, v.uf, v.perfil_empresa_id,
@@ -41,7 +43,7 @@ final class CandidaturaDAO {
             $db->beginTransaction();
             $db->prepare("SELECT id FROM perfis WHERE id=? FOR UPDATE")->execute([$pid]);
             if ($limite !== null) {
-                $c = $db->prepare("SELECT COUNT(*) FROM candidaturas WHERE perfil_candidato_id=? AND status IN ('enviada','em_analise','entrevista')");
+                $c = $db->prepare("SELECT COUNT(*) FROM candidaturas WHERE perfil_candidato_id=? AND ".self::ATIVAS);
                 $c->execute([$pid]);
                 if ((int)$c->fetchColumn() >= $limite) { $db->rollBack(); return 'limite'; }
             }

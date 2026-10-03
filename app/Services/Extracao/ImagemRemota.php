@@ -13,7 +13,8 @@ declare(strict_types=1);
  *  - pdfs(): baixa o PDF dos e-books (do link direto ou achado na página) para a BIBLIOTECA da plataforma.
  *
  * As buscas saem ao mesmo tempo (curl_multi), com tempo e tamanho limitados.
- * Segurança: só http/https e só servidores públicos — nada de localhost ou rede interna. O HTTPS é sempre
+ * Segurança: só http/https e só servidores públicos — nada de localhost ou rede interna. Os redirecionamentos
+ * são seguidos à mão: cada endereço novo é conferido e a conexão vai ao IP conferido (transferir()). O HTTPS é sempre
  * verificado, com a lista de autoridades certificadoras da Mozilla em config/cacert.pem (https://curl.se/ca/):
  * a que vem no XAMPP é antiga e recusa sites com certificados novos (ex.: ev.org.br, da Fundação Bradesco).
  */
@@ -23,6 +24,7 @@ final class ImagemRemota {
     private const LIMITE_PDF_CAPA = 80 * 1024 * 1024; // PDF baixado na prévia só para tirar a capa (CapaPdf)
     private const LARGURA = 800;
     private const SIMULTANEAS = 16;
+    private const REDIRECIONAMENTOS = 5;
     private const CERTIFICADOS = ROOT_DIR.'/config/cacert.pem';
 
     /**
@@ -196,39 +198,31 @@ final class ImagemRemota {
 
     /**
      * Baixa arquivos grandes direto para o disco (sem guardar tudo na memória), 6 por vez, até $limite bytes e
-     * 180 s cada. Mesmas travas do buscar(): só http/https, só servidor público (inclusive depois dos redirecionamentos).
+     * 180 s cada. Mesmas travas do buscar(): só http/https, só servidor público (inclusive nos redirecionamentos).
      * @return array<string,array{0:string,1:string,2:string}> link => [arquivo temporário, content-type, endereço final]
      */
     private static function baixarArquivos(array $urls, int $limite): array {
-        if (!function_exists('curl_multi_init')) return [];
-        $urls = self::publicos($urls);
+        $arqs = []; $fps = []; $tamanhos = [];
+        // A cada redirecionamento o arquivo recomeça do zero. Sem arquivo temporário (pasta cheia ou sem
+        // permissão), o download desse link para e ele fica de fora — os outros seguem.
+        $saida = function (string $u) use (&$arqs, &$fps, &$tamanhos, $limite): callable {
+            $arqs[$u] ??= (string)tempnam(sys_get_temp_dir(), 'cvdf_pdf_');
+            if (!empty($fps[$u])) fclose($fps[$u]);
+            $fps[$u] = $arqs[$u] !== '' ? @fopen($arqs[$u], 'wb') : false;
+            $tamanhos[$u] = 0;
+            return function ($ch, string $parte) use (&$fps, &$tamanhos, $u, $limite): int {
+                $tamanhos[$u] += strlen($parte);
+                if ($tamanhos[$u] > $limite || !$fps[$u]) return 0;   // grande demais (ou sem arquivo): para de baixar
+                return (int)fwrite($fps[$u], $parte);
+            };
+        };
+        $respostas = self::transferir($urls, 6, 8, 180, $saida);
         $out = [];
-        foreach (array_chunk($urls, 6) as $grupo) {
-            $mh = curl_multi_init();
-            $hs = []; $arqs = []; $fps = []; $tamanhos = [];
-            foreach ($grupo as $u) {
-                $arqs[$u] = (string)tempnam(sys_get_temp_dir(), 'cvdf_pdf_');
-                $fps[$u] = fopen($arqs[$u], 'wb');
-                $tamanhos[$u] = 0;
-                $ch = self::abrir($u, 8, 180, function ($ch, string $parte) use (&$fps, &$tamanhos, $u, $limite): int {
-                    $tamanhos[$u] += strlen($parte);
-                    if ($tamanhos[$u] > $limite) return 0;   // grande demais: para de baixar
-                    return (int)fwrite($fps[$u], $parte);
-                });
-                curl_multi_add_handle($mh, $ch);
-                $hs[$u] = $ch;
-            }
-            self::executar($mh);
-            foreach ($hs as $u => $ch) {
-                fclose($fps[$u]);
-                $ok = (int)curl_getinfo($ch, CURLINFO_RESPONSE_CODE) === 200 && $tamanhos[$u] <= $limite && curl_errno($ch) === 0
-                    && self::ipPublico((string)curl_getinfo($ch, CURLINFO_PRIMARY_IP));
-                if ($ok) $out[$u] = [$arqs[$u], strtolower((string)curl_getinfo($ch, CURLINFO_CONTENT_TYPE)), (string)curl_getinfo($ch, CURLINFO_EFFECTIVE_URL)];
-                else @unlink($arqs[$u]);
-                curl_multi_remove_handle($mh, $ch);
-                curl_close($ch);
-            }
-            curl_multi_close($mh);
+        foreach ($arqs as $u => $arq) {
+            if (!empty($fps[$u])) fclose($fps[$u]);
+            [$codigo, $tipo, $final, $erro] = $respostas[$u] ?? [0, '', '', -1];
+            if ($codigo === 200 && $erro === 0 && $tamanhos[$u] <= $limite && $fps[$u]) $out[$u] = [$arq, $tipo, $final];
+            elseif ($arq !== '') @unlink($arq);
         }
         return $out;
     }
@@ -272,11 +266,16 @@ final class ImagemRemota {
 
     /** Link http(s) de servidor público: o nome precisa apontar só para IPs públicos (nada de rede interna). */
     public static function linkPublico(string $url): bool {
-        if (!url_http_valida($url)) return false;
+        return self::ipConferido($url) !== '';
+    }
+
+    /** O IP público a que o link deve se conectar; '' se não for http(s) ou se o nome apontar para algum IP interno. */
+    private static function ipConferido(string $url): string {
+        if (!url_http_valida($url)) return '';
         $host = trim((string)parse_url($url, PHP_URL_HOST), '[]');
         $ips = filter_var($host, FILTER_VALIDATE_IP) ? [$host] : (gethostbynamel($host) ?: []);
-        foreach ($ips as $ip) if (!self::ipPublico($ip)) return false;
-        return $ips !== [];
+        foreach ($ips as $ip) if (!self::ipPublico($ip)) return '';
+        return $ips[0] ?? '';
     }
 
     private static function ipPublico(string $ip): bool {
@@ -333,52 +332,83 @@ final class ImagemRemota {
      * @return array<string,array{0:string,1:string,2:string}>
      */
     private static function buscar(array $urls, int $limite, bool $parcial): array {
-        if (!function_exists('curl_multi_init')) return [];
-        $urls = self::publicos($urls);
+        $corpos = [];
+        // A cada redirecionamento o conteúdo recomeça do zero. Passou do limite: para de baixar
+        // (a página só precisa do começo; imagem grande demais é recusada).
+        $saida = function (string $u) use (&$corpos, $limite): callable {
+            $corpos[$u] = '';
+            return function ($ch, string $parte) use (&$corpos, $u, $limite): int {
+                $corpos[$u] .= $parte;
+                return strlen($corpos[$u]) > $limite ? 0 : strlen($parte);
+            };
+        };
         $out = [];
-        foreach (array_chunk($urls, self::SIMULTANEAS) as $grupo) {
-            $mh = curl_multi_init();
-            $hs = []; $corpos = [];
-            foreach ($grupo as $u) {
-                $corpos[$u] = '';
-                // Passou do limite: para de baixar (a página só precisa do começo; imagem grande demais é recusada).
-                $ch = self::abrir($u, 6, 15, function ($ch, string $parte) use (&$corpos, $u, $limite): int {
-                    $corpos[$u] .= $parte;
-                    return strlen($corpos[$u]) > $limite ? 0 : strlen($parte);
-                });
-                curl_multi_add_handle($mh, $ch);
-                $hs[$u] = $ch;
-            }
-            self::executar($mh);
-            foreach ($hs as $u => $ch) {
-                $inteiro = strlen($corpos[$u]) <= $limite;
-                // Confere também o IP final: um redirecionamento não pode levar para a rede interna.
-                if ((int)curl_getinfo($ch, CURLINFO_RESPONSE_CODE) === 200 && ($inteiro || $parcial) && self::ipPublico((string)curl_getinfo($ch, CURLINFO_PRIMARY_IP))) {
-                    $out[$u] = [$inteiro ? $corpos[$u] : substr($corpos[$u], 0, $limite), strtolower((string)curl_getinfo($ch, CURLINFO_CONTENT_TYPE)), (string)curl_getinfo($ch, CURLINFO_EFFECTIVE_URL)];
-                }
-                curl_multi_remove_handle($mh, $ch);
-                curl_close($ch);
-            }
-            curl_multi_close($mh);
+        foreach (self::transferir($urls, self::SIMULTANEAS, 6, 15, $saida) as $u => [$codigo, $tipo, $final]) {
+            $inteiro = strlen($corpos[$u]) <= $limite;
+            if ($codigo === 200 && ($inteiro || $parcial)) $out[$u] = [$inteiro ? $corpos[$u] : substr($corpos[$u], 0, $limite), $tipo, $final];
         }
         return $out;
     }
 
-    /** Só os links http(s) de servidor público, sem repetir. */
-    private static function publicos(array $urls): array {
-        return array_values(array_unique(array_filter($urls, fn($u) => $u !== '' && self::linkPublico($u))));
+    /**
+     * Baixa os links ao mesmo tempo ($simultaneas por vez) seguindo os redirecionamentos À MÃO (até 5): cada
+     * endereço novo passa de novo pela conferência de servidor público, e a conexão vai direto ao IP conferido
+     * (CURLOPT_RESOLVE). Assim nem um redirecionamento para a rede interna nem um nome que muda de IP entre a
+     * conferência e o download (DNS rebinding) fazem o servidor abrir um endereço interno.
+     * $saida($u) prepara onde guardar o conteúdo do link $u e devolve a função que recebe cada pedaço; ela é
+     * chamada de novo a cada redirecionamento.
+     * @return array<string,array{0:int,1:string,2:string,3:int}> link => [código HTTP, content-type, endereço final, erro do curl]
+     */
+    private static function transferir(array $urls, int $simultaneas, int $conexao, int $tempo, callable $saida): array {
+        if (!function_exists('curl_multi_init')) return [];
+        $urls = array_values(array_unique(array_filter($urls, fn($u) => is_string($u) && $u !== '')));
+        $out = [];
+        foreach (array_chunk($urls, $simultaneas) as $grupo) {
+            $atual = array_combine($grupo, $grupo);   // link pedido => endereço desta rodada
+            for ($salto = 0; $atual && $salto <= self::REDIRECIONAMENTOS; $salto++) {
+                $mh = curl_multi_init();
+                $hs = [];
+                foreach ($atual as $u => $endereco) {
+                    $ip = self::ipConferido($endereco);
+                    if ($ip === '') continue;   // não é http(s) de servidor público: fica de fora
+                    $hs[$u] = self::abrir($endereco, $ip, $conexao, $tempo, $saida($u));
+                    curl_multi_add_handle($mh, $hs[$u]);
+                }
+                self::executar($mh);
+                $proximo = [];
+                foreach ($hs as $u => $ch) {
+                    $codigo = (int)curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
+                    $destino = (string)curl_getinfo($ch, CURLINFO_REDIRECT_URL);
+                    if ($codigo >= 300 && $codigo < 400 && $destino !== '') $proximo[$u] = $destino;
+                    elseif (self::ipPublico((string)curl_getinfo($ch, CURLINFO_PRIMARY_IP))) {
+                        $out[$u] = [$codigo, strtolower((string)curl_getinfo($ch, CURLINFO_CONTENT_TYPE)), $atual[$u], curl_errno($ch)];
+                    }
+                    curl_multi_remove_handle($mh, $ch);
+                    curl_close($ch);
+                }
+                curl_multi_close($mh);
+                $atual = $proximo;
+            }
+        }
+        return $out;
     }
 
     /**
-     * Prepara o download de um link com as travas comuns: só http/https (também nos redirecionamentos, até 5),
-     * certificados do projeto, tempo de conexão e tempo total. $escrever recebe cada pedaço baixado.
+     * Prepara o download de um link com as travas comuns: só http/https, conexão direto no $ip já conferido,
+     * sem seguir redirecionamento sozinho (transferir() segue e confere cada um), certificados do projeto,
+     * tempo de conexão e tempo total. $escrever recebe cada pedaço baixado.
      */
-    private static function abrir(string $u, int $conexao, int $tempo, callable $escrever): CurlHandle {
+    private static function abrir(string $u, string $ip, int $conexao, int $tempo, callable $escrever): CurlHandle {
         $ch = curl_init($u);
         if (is_file(self::CERTIFICADOS)) curl_setopt($ch, CURLOPT_CAINFO, self::CERTIFICADOS);
+        $host = (string)parse_url($u, PHP_URL_HOST);
+        if (!filter_var(trim($host, '[]'), FILTER_VALIDATE_IP)) {
+            $porta = (int)(parse_url($u, PHP_URL_PORT) ?: (strtolower((string)parse_url($u, PHP_URL_SCHEME)) === 'https' ? 443 : 80));
+            curl_setopt($ch, CURLOPT_RESOLVE, [$host.':'.$porta.':'.$ip]);
+        }
         curl_setopt_array($ch, [
-            CURLOPT_FOLLOWLOCATION => true, CURLOPT_MAXREDIRS => 5,
-            CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS, CURLOPT_REDIR_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
+            CURLOPT_FOLLOWLOCATION => false,
+            CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
             CURLOPT_CONNECTTIMEOUT => $conexao, CURLOPT_TIMEOUT => $tempo, CURLOPT_ENCODING => '',
             CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36',
             CURLOPT_HTTPHEADER => ['Accept-Language: pt-BR,pt;q=0.9'],
@@ -391,7 +421,8 @@ final class ImagemRemota {
     private static function executar(CurlMultiHandle $mh): void {
         do {
             $estado = curl_multi_exec($mh, $ativos);
-            if ($ativos) curl_multi_select($mh, 1.0);
+            // select pode falhar na hora (-1, comum no Windows): espera um pouco em vez de girar a CPU a 100%.
+            if ($ativos && curl_multi_select($mh, 1.0) === -1) usleep(10_000);
         } while ($ativos && $estado === CURLM_OK);
     }
 }

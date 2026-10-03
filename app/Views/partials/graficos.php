@@ -269,7 +269,7 @@ function painel_th(string $campo, string $rotulo, string $ordem, string $dir, st
 
 /** Paginação das tabelas do painel (mantém filtros e ordenação). */
 function painel_paginacao(int $pagina, int $paginas): string {
-    return cv_paginacao($pagina, $paginas, fn(int $n) => e(painel_qs(['pagina' => $n])), 'Páginas da tabela', 'pn-paginacao');
+    return cv_paginacao($pagina, $paginas, fn(int $n) => painel_qs(['pagina' => $n]), 'Páginas da tabela', 'pn-paginacao');
 }
 
 /** Abas internas de uma tela (ex.: Cursos · E-books · Vídeos): [valor => [rótulo, contagem]]. */
