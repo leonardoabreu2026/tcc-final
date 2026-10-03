@@ -260,7 +260,7 @@ As chaves estrangeiras usam `ON DELETE CASCADE`: quando um usuário é excluído
 - as senhas são guardadas com `password_hash` (bcrypt), e o login pausa sozinho depois de muitas tentativas erradas;
 - todo formulário tem um token contra envio forjado (CSRF), toda consulta ao banco usa parâmetros (nunca texto colado direto no SQL) e todo texto mostrado na tela passa pela função `e()`, que impede a injeção de código;
 - cada ação confere a permissão: o candidato só mexe no que é dele, a empresa só nas próprias vagas e candidaturas, e o currículo só abre para o dono, para a empresa que o recebeu ou para empresa Premium;
-- os links das fichas de cursos só são abertos se forem http ou https de servidores públicos, nunca da rede interna (nem depois de um redirecionamento), com limite de tamanho e de tempo;
+- os links das fichas de cursos só são abertos se forem http ou https de servidores públicos, nunca da rede interna. Cada redirecionamento é conferido de novo e a conexão vai direto ao IP conferido, com limite de tamanho e de tempo;
 - só a pasta `public/` é servida pelo Apache, e lá dentro só o `index.php` executa PHP. Configurações, banco, backups e documentos respondem com acesso negado;
 - o site envia cabeçalhos de segurança (`Content-Security-Policy`, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy` e `Permissions-Policy`).
 

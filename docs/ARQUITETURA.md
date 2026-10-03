@@ -301,7 +301,8 @@ Em todas as máquinas, nada é gravado sem revisão: a extração só preenche o
 ## 6. Painel e telas de cadastro
 
 As tabelas do painel (usuários, categorias, cursos, e-books e vídeos, assinaturas e vagas) têm colunas que ordenam com
-um clique (`painel_th()`), filtros e paginação (`painel_paginacao()`). Candidaturas e banco de talentos têm a opção de
+um clique (`painel_th()`), filtros e paginação (`painel_paginacao()`, que usa a mesma `cv_paginacao()` das listas
+públicas; ela mesma escapa cada endereço, então quem chama passa o endereço puro). Candidaturas e banco de talentos têm a opção de
 ordem no filtro. Essa lógica fica em `app/Core/helpers.php` (`lista_ordem()`, `ordenar_linhas()`, `paginar()` e
 `painel_qs()`), e todas as ações, como salvar, publicar e excluir, voltam para a mesma aba, com os mesmos filtros, a mesma
 ordem e a mesma página. Se alguém abre "Editar" ou "Ver" de um registro que não existe mais, o painel avisa e volta para a
@@ -366,6 +367,12 @@ encerrada e ao renovar uma vaga vencida. A Empresa Premium não tem limite, tem 
 talentos completo. Quando o Premium é cancelado ou vence, o destaque sai, mas as vagas abertas continuam abertas. Todas as
 assinaturas são demonstrativas, sem cobrança real.
 
+Os números dos limites ficam num lugar só: `AssinaturaDAO::LIMITE_CANDIDATURAS_GRATIS` (3) e
+`AssinaturaDAO::LIMITE_VAGAS_GRATIS` (2). As telas de planos, a página inicial, o painel e as mensagens leem esses números
+daí, e a mensagem de limite atingido também é uma constante só (`AVISO_LIMITE_CANDIDATURAS` e `AVISO_LIMITE_VAGAS`),
+usada tanto na conferência quanto na transação. O que conta como candidatura ativa (`CandidaturaDAO::ATIVAS`) e como vaga
+aberta (`VagaDAO::ATIVA`) também é escrito uma vez só, então o contador da tela e o limite da gravação nunca discordam.
+
 ## 9. Segurança
 
 No banco de dados, todas as consultas usam PDO com consultas preparadas, e nenhum valor digitado pelo usuário é colado
@@ -405,7 +412,10 @@ pelo `download.php`, para o dono, o administrador, a empresa que recebeu a candi
 é público. As respostas levam os cabeçalhos `X-Content-Type-Options`, `X-Frame-Options` e `Referrer-Policy`. Quando uma
 empresa é bloqueada, as vagas dela saem da área pública e deixam de receber candidaturas, e quando uma candidatura é
 cancelada a empresa perde o acesso ao contato e ao currículo daquele candidato. Os links das fichas de cursos só são
-abertos em servidores públicos, inclusive depois de redirecionamentos.
+abertos em servidores públicos. O cURL não segue redirecionamentos sozinho: `ImagemRemota::transferir` segue cada um à
+mão, até 5, confere o endereço novo e liga direto no IP conferido (`CURLOPT_RESOLVE`). Assim, nem um redirecionamento para
+a rede interna nem um nome que troca de IP entre a conferência e o download (DNS rebinding) fazem o servidor abrir um
+endereço interno.
 
 Pensando na LGPD, o candidato pode excluir a própria conta em `PerfilController::excluirConta`. A tela pede a senha (com a
 mesma tolerância e a mesma pausa do login, em `UsuarioDAO::senhaConfere`) e uma caixa de confirmação. Depois o
