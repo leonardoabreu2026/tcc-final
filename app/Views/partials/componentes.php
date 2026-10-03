@@ -400,3 +400,22 @@ function cv_img(?string $img, string $icone = 'vagas'): string {
     $src = preg_match('#^https?://#i', $img) ? $img : url($img);
     return '<img src="'.e($src).'" alt="" loading="lazy" decoding="async">';
 }
+
+/**
+ * Paginação numerada (‹ Anterior · 1 … 4 5 6 … 12 · Próxima ›), usada nas listas públicas e nas tabelas do painel.
+ * $href(int $pagina) devolve o endereço de cada página já escapado para o atributo href.
+ */
+function cv_paginacao(int $pagina, int $paginas, callable $href, string $rotulo = 'Páginas de resultados', string $classe = ''): string {
+    if ($paginas <= 1) return '';
+    $h = '<nav class="an-paginacao'.($classe !== '' ? ' '.e($classe) : '').'" aria-label="'.e($rotulo).'">';
+    $h .= $pagina > 1 ? '<a class="an-pag-seta" href="'.$href($pagina - 1).'" rel="prev">‹ Anterior</a>' : '<span class="an-pag-seta" aria-disabled="true">‹ Anterior</span>';
+    $antes = 0;
+    for ($n = 1; $n <= $paginas; $n++) {
+        if ($n !== 1 && $n !== $paginas && abs($n - $pagina) > 1) { if ($antes !== -1) $h .= '<span class="an-pag-reticencias" aria-hidden="true">…</span>'; $antes = -1; continue; }
+        $antes = $n;
+        $h .= $n === $pagina ? '<span class="an-pag-num ativo" aria-current="page"><span class="sr-only">Página </span>'.$n.'</span>'
+                             : '<a class="an-pag-num" href="'.$href($n).'"><span class="sr-only">Página </span>'.$n.'</a>';
+    }
+    $h .= $pagina < $paginas ? '<a class="an-pag-seta" href="'.$href($pagina + 1).'" rel="next">Próxima ›</a>' : '<span class="an-pag-seta" aria-disabled="true">Próxima ›</span>';
+    return $h.'</nav>';
+}

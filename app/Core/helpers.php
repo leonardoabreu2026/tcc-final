@@ -35,13 +35,6 @@ function post_int(string $key, int $default=0): int { $v=$_POST[$key]??$default;
 function get_str(string $key, string $default=''): string { $v=$_GET[$key]??$default; return is_scalar($v) ? trim((string)$v) : $default; }
 /** Termo de busca para LIKE: "%termo%" com % e _ digitados tratados como texto (não como curinga). */
 function like(string $termo): string { return '%'.addcslashes($termo, '%_\\').'%'; }
-/** "?tipo=ebook&q=excel": filtros da lista que o formulário da ação reenviou (campos f_tipo, f_q), para voltar à mesma lista. */
-function volta_filtros(array $chaves): string {
-    $q = [];
-    foreach ($chaves as $k) { $v = mb_substr(post_str('f_'.$k), 0, 100); if ($v !== '') $q[$k] = $v; }
-    return $q ? '?'.http_build_query($q) : '';
-}
-
 /**
  * Ordenação das tabelas do painel (?ordem=campo&dir=asc|desc): só aceita os campos permitidos.
  * @return array{0:string,1:string} [campo, direção]

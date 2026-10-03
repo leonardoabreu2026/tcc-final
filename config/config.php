@@ -73,7 +73,7 @@ define('DOACAO_CIDADE', getenv('DOACAO_CIDADE') ?: 'Brasilia');
 define('MAX_FILE_SIZE', 10 * 1024 * 1024);  // currículo: até 10 MB
 
 // Proteção do login contra tentativas repetidas (por IP + e-mail, por e-mail e por IP).
-// Calibrado para não atrapalhar quem erra a senha algumas vezes, mas ainda barrar força-bruta.
+// Ajustado para não atrapalhar quem erra a senha algumas vezes, mas ainda barrar força-bruta.
 define('LOGIN_MAX_TENTATIVAS', 8);       // erros seguidos para o mesmo e-mail, a partir do mesmo IP
 define('LOGIN_MAX_TENTATIVAS_CONTA', 20); // erros para o mesmo e-mail, somando todos os IPs (ataque distribuído)
 define('LOGIN_MAX_TENTATIVAS_IP', 60);   // erros de um mesmo IP, somando todos os e-mails

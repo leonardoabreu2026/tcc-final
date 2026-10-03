@@ -27,9 +27,3 @@ function cv_doacao_qr(string $pix, int $tam = 80): string {
          .'<noscript><p class="small">Ative o JavaScript para ver o QR Code ou use "Copiar código Pix".</p></noscript></div>';
 }
 
-/** Botão "Copiar código Pix" (some enquanto a chave não estiver configurada). */
-function cv_doacao_copiar(string $pix, string $classe = 'cv-doacao-copiar-link'): string {
-    if ($pix === '') return '';
-    return '<button type="button" class="'.e($classe).' cv-doacao-copiar" data-copiar="'.e($pix).'" data-copiado="Copiado!">'
-         .icone('copiar', 13).'<span>Copiar código Pix</span></button>';
-}

@@ -1,4 +1,4 @@
-# Arquitetura do TCC Final (Conecta Vagas DF)
+# Arquitetura do Conecta Vagas DF
 
 Neste documento explicamos como o sistema funciona por dentro, camada por camada. A instalação e a visão geral
 estão no [README](../README.md).
@@ -218,8 +218,8 @@ O leitor de cartaz não precisa de instalação. O OCR roda no navegador de quem
 WebAssembly e o modelo de português `best_int`, tudo servido pelo próprio site (`public/assets/js/leitor-cartaz.js` e
 `public/assets/js/vendor/tesseract/`). Ele faz quatro leituras (a imagem em cinza com gama ajustada e ampliada para cerca
 de 2200 pixels, e o negativo dela, cada uma em dois modos de página) e envia o resultado em TSV junto com o cartaz. No
-servidor, `OcrImagem::leiturasDoNavegador` confere se as leituras são válidas e `OcrImagem::montar` aplica a mesma
-calibragem; leitura forjada ou inválida é ignorada e o servidor lê sozinho. O Tesseract instalado no servidor ficou
+servidor, `OcrImagem::leiturasDoNavegador` confere se as leituras são válidas e `OcrImagem::montar` aplica os mesmos
+ajustes; leitura forjada ou inválida é ignorada e o servidor lê sozinho. O Tesseract instalado no servidor ficou
 apenas como reserva, para quando o navegador não consegue ler. Enquanto o leitor carrega ou lê, um carregador amarelo
 mostra a porcentagem; quando fica pronto, ele fica azul. Esse carregador aparece em todas as máquinas de extração e
 também impede o clique duplo.
@@ -319,8 +319,9 @@ situação (`painel_chave()`, que é um botão num formulário POST com CSRF) e 
 | Categorias | formulário | vagas e cursos da categoria | `?edit=` | ativar e desativar | sim | nenhum |
 | Candidaturas | pelo candidato | portfólio e currículo | status e retorno | não se aplica | administrador | vaga e status |
 
-Toda ação que muda dados é um formulário POST com token CSRF (`painel_acao()`), confere a permissão no servidor e volta
-para a mesma lista filtrada (`volta_filtros()`).
+Toda ação que muda dados é um formulário POST com token CSRF: a chave liga/desliga (`painel_chave()`) e a barra de
+botões do CRUD (`painel_botoes()`). O controller confere a permissão no servidor e volta para a mesma lista, com os
+filtros, a ordenação e a página (`painel_qs()`).
 
 A tela de Assinaturas é só do administrador. Ela concede o plano da conta (Candidato VIP para candidato e Empresa Premium
 para empresa) por um número de dias, edita o valor, as datas e a situação, cancela (mantendo o histórico) e exclui. Cada
@@ -459,36 +460,7 @@ de verdade, espera no máximo 5 segundos, trabalha em utf8mb4 e usa o mesmo fuso
 Quando algo falha, o erro vira uma `DatabaseException` com uma mensagem em português, dizendo se o serviço está desligado,
 se o banco não existe ou se a senha foi recusada.
 
-## 13. O que mudou de lugar na reorganização
-
-Esta tabela foi útil para atualizar o documento do TCC e os diagramas depois que reorganizamos o código.
-
-| Antes | Agora |
-|---|---|
-| páginas na raiz (`vagas.php`, `login.php` e outras), `admin/` e `view/` | lógica em `app/Controllers/` e HTML em `app/Views/` (os endereços continuam os mesmos) |
-| `config/config.php` com configuração, funções e sessão | `config/config.php` só com a configuração, e as funções em `app/Core/` |
-| `config/Conexao.php`, classe `Conexao` | `app/Core/Database.php`, classe `Database` |
-| `model/dao/*.php` | `app/Models/*.php` |
-| `model/dto/*.php` | `app/DTO/*.php` |
-| `controller/match/MatchController.php` | `app/Services/MatchService.php` (classe `MatchService`) |
-| `controller/match/Competencias.php` | `app/Services/Competencias.php` |
-| `controller/portfolio/Portfolio.php` | `app/Services/Portfolio.php` |
-| `controller/extracao/*.php` | `app/Services/Extracao/*.php` (o antigo `LeitorDocumento.php` foi dividido em `LeitorDocumento`, `PdfTexto` e `DocxTexto`) |
-| `view/layout/portal.php` | `app/Views/partials/componentes.php` |
-| `view/layout/icones.php` | `app/Views/partials/icones.php` |
-| `view/perfil/_relatorio_extracao.php` | `app/Views/partials/relatorio_extracao.php` |
-| `download.php` | `ArquivoController::download` |
-| `assets/` | `public/assets/` |
-| `assets/uploads/` | `storage/uploads/` (fora da pasta pública) |
-| `logs/` | `storage/logs/` |
-| `banco/ScriptBD.sql` | `database/schema.sql` e `database/seed.sql` |
-| `docs/ESTRUTURA.txt` e `docs/INSTALACAO.txt` | `README.md` e este documento |
-
-Também removemos o que não era usado: as funções `perfilAtual()`, `pt_data_extenso()`, `pt_leitura()`, `pt_ascii()` e
-`pt_cor_editoria()`, os métodos `CandidaturaDAO::cadastrar()`, `jaCandidatou()` e `reenviar()` (trocados por
-`enviarComLimite()`) e a pasta `assets/img/vagas/originais/`, que tinha cópias dos cartazes antes do recorte.
-
-## 14. Quando algo dá errado
+## 13. Quando algo dá errado
 
 Se o banco falhar, o sistema mostra a página "Banco de dados indisponível" (código 503) com a orientação certa. Nesse caso,
 vale conferir se o Apache e o MySQL estão ligados no XAMPP Control Panel, se o banco `tcc_final` existe (importando o
@@ -499,7 +471,7 @@ abre e as outras dão "Not Found" do Apache, o `mod_rewrite` está desligado: no
 ligado, o detalhe técnico aparece abaixo da mensagem amigável. O teste automático roda com
 `C:\xampp\php\php.exe tests\smoke.php`.
 
-## 15. Fotos do carrossel
+## 14. Fotos do carrossel
 
 Todas as imagens da pasta `public/assets/img/brasilia/` entram no carrossel da página inicial, em ordem de nome. São fotos
 de teste, com licenças livres do Wikimedia Commons, e os créditos ficam em `HomeController::index`.

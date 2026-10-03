@@ -47,7 +47,7 @@ final class CandidaturaController extends Controller {
             }
             $carta = mb_substr(post_str('carta_apresentacao'), 0, 5000);
             // Contagem do limite e gravação na mesma transação (evita passar do limite com envios simultâneos).
-            $limite = $assinaturaDao->isCandidatoVip($usuarioId) ? null : (int)($permissao['limite'] ?? 3);
+            $limite = $assinaturaDao->isCandidatoVip($usuarioId) ? null : (int)($permissao['limite'] ?? AssinaturaDAO::LIMITE_CANDIDATURAS_GRATIS);
             $res = $dao->enviarComLimite((int)$perfil['id'], $vid, $curriculoId, $carta, $limite);
             if ($res === 'limite') { flash('erro', 'Você atingiu o limite de candidaturas ativas do Plano Gratuito. Torne-se VIP para candidaturas ilimitadas.'); redirect('planos.php'); }
 

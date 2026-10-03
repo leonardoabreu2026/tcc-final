@@ -5,7 +5,7 @@
  *
  * Faz as MESMAS 4 leituras do leitor do servidor (OcrImagem): imagem em cinza + gama, ampliada para ~2200 px,
  * e o negativo dela, cada uma em modo "página" (psm 3) e "texto solto" (psm 11). As leituras (TSV: palavra,
- * posição, altura e confiança) vão junto com o cartaz, e o servidor monta o resultado com a mesma calibragem.
+ * posição, altura e confiança) vão junto com o cartaz, e o servidor monta o resultado com os mesmos ajustes.
  * Se o navegador não conseguir ler, o cartaz é enviado sem as leituras e o servidor lê (se tiver o Tesseract).
  *
  * Carregador: AMARELO enquanto carrega o leitor ou lê o cartaz; AZUL quando está pronto.

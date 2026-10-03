@@ -41,7 +41,7 @@ header('Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
 header('Cross-Origin-Opener-Policy: same-origin-allow-popups');
 if (HTTPS_ATIVO) header('Strict-Transport-Security: max-age=31536000');
 
-// 4. Rotas: endereço → [Controller, ação]. Os endereços são os mesmos da versão anterior.
+// 4. Rotas: endereço → [Controller, ação].
 $rotas = new Router();
 
 // Área pública

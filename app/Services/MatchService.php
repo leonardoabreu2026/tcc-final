@@ -14,7 +14,6 @@ declare(strict_types=1);
  *
  * Quando é recalculado: ao enviar/excluir currículo, salvar o perfil, criar/editar vaga
  * ou pelo botão "Recalcular match" do portfólio.
- * (Nas versões anteriores esta classe se chamava MatchController.)
  */
 final class MatchService {
     public const PESOS = ['competencias' => 50, 'cargo' => 20, 'local' => 15, 'nivel' => 15];

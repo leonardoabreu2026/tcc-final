@@ -9,9 +9,8 @@ declare(strict_types=1);
  * O roteador pega o caminho pedido (ex.: "admin/pages/vagas.php"), procura na tabela
  * de rotas e chama o método do controller correspondente.
  *
- * Os caminhos das rotas são os MESMOS endereços da versão anterior do projeto
- * (vagas.php, view/perfil/index.php...): links antigos, favoritos e os links de
- * redefinição de senha continuam funcionando.
+ * Os caminhos das rotas são endereços simples e estáveis (vagas.php, view/perfil/index.php...):
+ * favoritos, links compartilhados e os links de redefinição de senha continuam funcionando.
  */
 final class Router {
     /** @var array<string,array{0:class-string,1:string}> caminho => [Controller, método] */
@@ -48,7 +47,7 @@ final class Router {
 
     /**
      * Caminho pedido pelo navegador, relativo à pasta do projeto e sem a query string.
-     * Ex.: /TCC%20v2/TCC_GUSTAVO/vaga.php?id=3 → "vaga.php".
+     * Ex.: /tcc-final/vaga.php?id=3 → "vaga.php".
      */
     public static function caminhoPedido(): string {
         $uri = rawurldecode((string)(parse_url((string)($_SERVER['REQUEST_URI'] ?? '/'), PHP_URL_PATH) ?? '/'));

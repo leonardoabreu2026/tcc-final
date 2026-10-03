@@ -20,9 +20,9 @@ body.cv a:focus-visible,body.cv button:focus-visible{outline:3px solid #ffbf47;o
 .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
 /* ---------- Cantos: menos arredondado em todo o sistema ---------- */
-body.cv :is(.panel,.form,.card,.stat,.table-wrap,.notice,.empty,.alert,.pricing-card,.cv-machine,.match-box,.extrator,.profile-head,.hero){border-radius:var(--cv-raio)}
+body.cv :is(.panel,.form,.card,.stat,.table-wrap,.notice,.empty,.alert,.cv-machine,.match-box,.extrator,.profile-head,.hero){border-radius:var(--cv-raio)}
 body.cv :is(input,select,textarea){border-radius:4px}
-body.cv :is(.btn,.admin-tabs a,.score-badge){border-radius:5px}
+body.cv :is(.btn,.score-badge){border-radius:5px}
 body.cv :is(.tag,.chip){border-radius:4px}
 body.cv .progress{border-radius:3px}
 
@@ -47,10 +47,8 @@ body.cv .progress{border-radius:3px}
 .cv-btn-azul{background:var(--cv-azul)} .cv-btn-azul:hover{background:var(--cv-azul-hover)}
 .cv-btn-verde{background:var(--cv-verde)} .cv-btn-verde:hover{background:var(--cv-verde-hover)}
 .cv-btn-dourado{background:var(--cv-dourado);color:#1b2433} .cv-btn-dourado:hover{background:#dba600}
-.cv-btn-claro{background:#ffffff14;border:1.5px solid #ffffffb3;color:#fff} .cv-btn-claro:hover{background:#ffffff2e}
 .cv-btn-linha{background:#fff;border:1px solid var(--cv-linha);color:var(--cv-azul)} .cv-btn-linha:hover{background:var(--cv-azul-claro)}
 .cv-btn-g{padding:12px 20px;font-size:15px}
-.cv-btn-bloco{width:100%}
 
 /* ---------- Página inicial: boas-vindas ---------- */
 .cv-hero{color:#fff;padding:46px 0 42px;background:
@@ -59,61 +57,19 @@ body.cv .progress{border-radius:3px}
 .cv-hero h1{margin:0 0 14px;font-size:40px;font-weight:800;line-height:1.1;text-shadow:0 2px 8px #0003}
 .cv-hero h1::after{content:"";display:block;width:88px;height:4px;margin-top:12px;background:var(--cv-dourado);border-radius:2px}
 .cv-hero p{max-width:640px;margin:0 0 8px;font-size:17px;color:#e8f0ff}
-.cv-hero-acoes{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}
 
 /* ---------- Quem somos ---------- */
-.cv-quem{background:#fff;border-bottom:1px solid var(--cv-linha)}
-.cv-quem-in{display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center;padding-top:18px;padding-bottom:18px}
-.cv-quem-tit{display:flex;align-items:center;gap:14px;padding-right:28px;border-right:2px solid var(--cv-linha)}
-.cv-quem-ic{width:66px;height:66px;border-radius:50%;background:var(--cv-azul-claro);color:var(--cv-azul);display:grid;place-items:center}
-.cv-quem-tit h2{margin:0;font-size:24px;line-height:1.1;color:var(--cv-azul)}
-.cv-quem-txt p{margin:0 0 4px;font-size:14.5px;color:#3a4556}
 
 /* ---------- Painel central ---------- */
-.cv-painel{background:var(--cv-fundo);padding:22px 0;border-bottom:1px solid var(--cv-linha)}
-.cv-painel-grade{display:grid;grid-template-columns:1fr 1fr 1.55fr 1fr;gap:16px;align-items:start}
-.cv-coluna{display:grid;gap:16px}
 .cv-bloco{background:#fff;border:1px solid var(--cv-linha);border-radius:var(--cv-raio);padding:16px 18px;box-shadow:0 1px 3px #0f23420d}
 .cv-bloco-tit{display:flex;align-items:center;gap:9px;margin:0 0 10px;font-size:19px;color:var(--cv-azul)}
-.cv-bloco-tit.cv-verde{color:var(--cv-verde)}
-.cv-bloco-tit.cv-dourado{color:#a87800}
-.cv-bloco-sub{margin:-4px 0 10px;font-size:13px;color:var(--cv-cinza)}
-.cv-form{display:grid;gap:8px}
-.cv-form label{display:grid;gap:3px;margin:0;font-size:12.5px;font-weight:700;color:var(--cv-texto)}
-.cv-form input:not([type=radio]):not([type=checkbox]){width:100%;margin:0;padding:8px 10px;border:1px solid #cfd8e4;border-radius:4px;font-size:14px}
-.cv-form input:focus{border-color:var(--cv-azul);outline:2px solid #1257c933}
-.cv-radios{display:flex;gap:16px;font-size:13px}
-.cv-radios label,.cv-aceite{display:flex!important;align-items:center;gap:6px;font-weight:600!important}
-.cv-aceite{font-size:12.5px!important;align-items:flex-start!important}
-.cv-form input[type=radio],.cv-form input[type=checkbox]{width:auto;margin:2px 0 0}
 .cv-senha{position:relative;display:block}
 .cv-senha input{padding-right:38px!important}
 .cv-senha input::-ms-reveal,.cv-senha input::-ms-clear{display:none}   /* Edge: só o olho do site, sem o olho duplicado do navegador */
 .cv-olho{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:0;padding:4px;color:var(--cv-cinza);cursor:pointer}
 .cv-link-peq{display:block;text-align:center;font-size:13px;font-weight:700;color:var(--cv-azul)}
-.cv-atalhos,.cv-lista-match,.cv-planos,.cv-links{list-style:none;margin:0;padding:0}
-.cv-atalhos li a{display:flex;align-items:center;gap:9px;padding:9px 4px;border-bottom:1px solid #eef2f7;color:var(--cv-texto);text-decoration:none;font-weight:600;font-size:14.5px}
-.cv-atalhos li a:hover{color:var(--cv-azul)}
-.cv-atalhos .ic{color:var(--cv-azul)}
-.cv-lista-match li{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #eef2f7;font-size:14px}
-.cv-lista-match a{color:var(--cv-tinta);font-weight:600;text-decoration:none}
-.cv-lista-match .score-badge{min-width:44px;padding:3px 7px;font-size:12.5px}
-.cv-passos{margin:0;padding-left:20px;font-size:14px;display:grid;gap:8px}
-.cv-tabela{width:100%;border-collapse:collapse;font-size:13.5px}
-.cv-tabela th{background:var(--cv-azul);color:#fff;text-align:left;padding:7px 9px;font-size:12.5px;font-weight:700}
-.cv-tabela td{padding:7px 9px;border-bottom:1px solid var(--cv-linha)}
-.cv-tabela tbody tr:nth-child(even) td{background:#f6f9fd}
-.cv-tabela a{color:var(--cv-azul);font-weight:600;text-decoration:none}
-.cv-tabela a:hover{text-decoration:underline}
 .cv-ver{display:inline-flex;align-items:center;gap:5px;margin-top:10px;color:var(--cv-azul);font-weight:700;font-size:14px;text-decoration:none}
 .cv-ver:hover{text-decoration:underline}
-.cv-plano-atual{margin:0 0 8px;padding:6px 8px;border:1px solid #f2d46b;background:#fff8dc;border-radius:4px;font-size:13px}
-.cv-planos{margin-bottom:10px}
-.cv-planos li{display:flex;justify-content:space-between;align-items:baseline;padding:7px 0;border-bottom:1px dashed var(--cv-linha);font-size:14px}
-.cv-planos b{color:var(--cv-azul-esc)}
-.cv-planos small{font-weight:500;color:var(--cv-cinza)}
-.cv-links a{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #eef2f7;color:var(--cv-azul);font-weight:600;font-size:14px;text-decoration:none}
-.cv-links a:hover{text-decoration:underline}
 
 /* ---------- Seções e títulos ---------- */
 .cv-secao{padding:24px 0 30px}
@@ -126,7 +82,6 @@ body.cv .progress{border-radius:3px}
 
 /* ---------- Cartões (vaga / curso) ---------- */
 .cv-grade{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
-.cv-grade-3{grid-template-columns:repeat(3,minmax(0,1fr))}
 .cv-card{position:relative;display:flex;flex-direction:column;background:#fff;border:1px solid var(--cv-linha);border-radius:var(--cv-raio);overflow:hidden;box-shadow:0 1px 3px #0f23420f;transition:box-shadow .15s,transform .15s}
 .cv-card:hover{box-shadow:0 8px 20px #0f234224;transform:translateY(-2px)}
 .cv-card-destaque{border-color:var(--cv-dourado);box-shadow:0 0 0 1px var(--cv-dourado)}
@@ -211,7 +166,6 @@ body.cv .progress{border-radius:3px}
 .cv-compartilhar{display:flex;gap:8px;margin-top:10px}
 .cv-compartilhar .cv-btn{flex:1;padding:7px 8px;font-size:13px}
 .cv-btn.copiado{background:var(--cv-verde);color:#fff;border-color:var(--cv-verde)}
-.cv-match-linha{display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px solid #eef2f7;font-size:13.5px}
 .cv-rel{list-style:none;margin:0;padding:0}
 .cv-rel li{padding:7px 0;border-bottom:1px solid #eef2f7;font-size:14px}
 .cv-rel a{color:var(--cv-azul);font-weight:600;text-decoration:none}
@@ -227,7 +181,6 @@ body.cv .progress{border-radius:3px}
 .cv-rodape a{color:#dbe5f2;text-decoration:none}
 .cv-rodape a:hover{color:#fff;text-decoration:underline}
 .cv-rodape .cv-btn{color:#fff;text-decoration:none}
-.cv-rodape-nota{font-size:12.5px!important;color:#8e9bb0}
 /* Doação no rodapé: um cantinho discreto, alinhado à direita, com QR pequeno */
 .cv-doacao{display:flex;align-items:center;gap:12px;margin-top:18px}
 .cv-rodape .cv-doacao p{margin:0;font-size:12.5px;line-height:1.45;color:#aebbd0}
@@ -239,8 +192,6 @@ body.cv .progress{border-radius:3px}
 .cv-doacao-copiar-link:hover,.cv-doacao-copiar-link.copiado{background:#ffffff14;color:#fff}
 .cv-doacao-pendente{display:grid!important;place-content:center;justify-items:center;gap:2px;color:#d6336c;text-align:center;background:#fff7fa!important}
 .cv-doacao-pendente span{font-size:9.5px;font-weight:700;line-height:1.2;color:#7a2745}
-.cv-doacao-config{margin:0 auto;padding:8px 16px;background:#3a2a00;color:#ffe08a;font-size:12.5px}
-.cv-doacao-config code{color:#fff}
 img.cv-doacao-codigo{display:block;object-fit:contain}
 .cv-rodape-base{border-top:1px solid #ffffff1a;background:#0b1422;font-size:12.5px;color:#8e9bb0}
 .cv-rodape-base .cv-wrap{display:flex;justify-content:space-between;gap:10px;padding-top:12px;padding-bottom:12px}
@@ -249,7 +200,6 @@ img.cv-doacao-codigo{display:block;object-fit:contain}
 
 /* ---------- Responsivo ---------- */
 @media (max-width:1180px){
-  .cv-painel-grade{grid-template-columns:1fr 1fr}
   .cv-grade{grid-template-columns:repeat(3,minmax(0,1fr))}
   .cv-menu a{padding:9px 10px}
 }
@@ -259,7 +209,7 @@ img.cv-doacao-codigo{display:block;object-fit:contain}
   .cv-menu{display:none;width:100%;flex-direction:column;align-items:stretch;padding-bottom:8px}
   body.menu-aberto .cv-menu{display:flex}
   .cv-menu a.cv-menu-perfil{margin:4px 0 0}
-  .cv-grade,.cv-grade-3{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .cv-grade{grid-template-columns:repeat(2,minmax(0,1fr))}
   .cv-detalhe{grid-template-columns:1fr}
   .cv-lateral{position:static}
   .cv-filtros{grid-template-columns:1fr 1fr}
@@ -270,10 +220,7 @@ img.cv-doacao-codigo{display:block;object-fit:contain}
   .cv-hero{padding:30px 0}
   .cv-hero h1{font-size:28px}
   .cv-hero p{font-size:15.5px}
-  .cv-quem-in{grid-template-columns:1fr;gap:10px}
-  .cv-quem-tit{border-right:0;padding-right:0}
-  .cv-quem-tit h2 br{display:none}
-  .cv-painel-grade,.cv-grade,.cv-grade-3{grid-template-columns:1fr}
+  .cv-grade{grid-template-columns:1fr}
   .cv-det-topo{grid-template-columns:1fr}
   .cv-filtros{grid-template-columns:1fr}
   .cv-secao-tit{flex-wrap:wrap}
@@ -286,23 +233,16 @@ img.cv-doacao-codigo{display:block;object-fit:contain}
   .cv-topo,.cv-rodape,.cv-compartilhar,.cv-acoes,.cv-topo-btn{display:none!important}
 }
 /* Ajustes finos */
-.cv-form input:not([type=radio]):not([type=checkbox]){font-weight:400}
-.cv-form input::placeholder{color:#8a94a6;font-weight:400}
 .cv-hero{padding:38px 0 34px}
-.cv-tabela th{white-space:nowrap}
-.cv-tabela td:not(:first-child){white-space:nowrap}
 .cv-card-acoes .cv-btn{white-space:nowrap}
 .cv-detalhe{padding:22px 24px 8px}
 @media (max-width:640px){.cv-detalhe{padding:16px 16px 8px}}
 /* Perfil e painel no mesmo padrão visual do site */
 body.cv main.container{max-width:1280px;padding:24px}
 body.cv .profile-head{background:linear-gradient(90deg,var(--cv-azul-esc),var(--cv-azul))}
-body.cv .admin-tabs a.active{background:var(--cv-azul);border-color:var(--cv-azul)}
 body.cv h1{color:var(--cv-tinta)}
 body.cv .cv-faixa h1,body.cv .cv-hero h1,body.cv .profile-head h1,body.cv .pf-banner h1{color:#fff}
 /* Painel central da página inicial: cursos gratuitos + assinaturas */
-.cv-painel-2{grid-template-columns:minmax(0,2.4fr) minmax(0,1fr)}
-@media (max-width:980px){.cv-painel-2{grid-template-columns:1fr}}
 
 /* =====================================================================
    v5.1 — carrossel de Brasília, cartões no tamanho dos panfletos, assinaturas
@@ -317,7 +257,6 @@ body.cv .cv-faixa h1,body.cv .cv-hero h1,body.cv .profile-head h1,body.cv .pf-ba
 .cv-hero h1{font-size:32px;margin-bottom:10px}
 .cv-hero h1::after{margin-top:10px;width:76px}
 .cv-hero p{font-size:16px;max-width:600px}
-.cv-hero-acoes{margin-top:14px}
 .cv-hero-dots{position:absolute;z-index:3;left:50%;bottom:12px;transform:translateX(-50%);display:flex;gap:7px}
 .cv-hero-dots button{width:9px;height:9px;padding:0;border:0;border-radius:5px;background:#ffffff80;cursor:pointer;transition:width .3s,background .3s}
 .cv-hero-dots button.ativo{width:24px;background:#fff}

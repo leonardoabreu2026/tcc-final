@@ -56,18 +56,7 @@ $ultimo = min($total, $pagina * $porPagina);
       <?php foreach ($vagas as $v): ?><?=cv_card_vaga($v, $mapaMatch[(int)$v['id']] ?? null, $minhas[(int)$v['id']] ?? null)?><?php endforeach; ?>
     </div>
 
-    <?php if ($paginas > 1): ?>
-      <nav class="an-paginacao" aria-label="Páginas de resultados">
-        <?php if ($pagina > 1): ?><a class="an-pag-seta" href="<?=$qs(['pagina' => $pagina - 1])?>" rel="prev">‹ Anterior</a><?php else: ?><span class="an-pag-seta" aria-disabled="true">‹ Anterior</span><?php endif; ?>
-        <?php $antes = 0; for ($n = 1; $n <= $paginas; $n++):
-          if ($n !== 1 && $n !== $paginas && abs($n - $pagina) > 1) { if ($antes !== -1) echo '<span class="an-pag-reticencias" aria-hidden="true">…</span>'; $antes = -1; continue; }
-          $antes = $n; ?>
-          <?php if ($n === $pagina): ?><span class="an-pag-num ativo" aria-current="page"><span class="sr-only">Página </span><?=$n?></span>
-          <?php else: ?><a class="an-pag-num" href="<?=$qs(['pagina' => $n])?>"><span class="sr-only">Página </span><?=$n?></a><?php endif; ?>
-        <?php endfor; ?>
-        <?php if ($pagina < $paginas): ?><a class="an-pag-seta" href="<?=$qs(['pagina' => $pagina + 1])?>" rel="next">Próxima ›</a><?php else: ?><span class="an-pag-seta" aria-disabled="true">Próxima ›</span><?php endif; ?>
-      </nav>
-    <?php endif; ?>
+    <?=cv_paginacao($pagina, $paginas, fn(int $n) => e($qs(['pagina' => $n])))?>
   <?php elseif (!$dbErro): ?>
     <div class="an-vazio">
       <span class="an-vazio-ic"><?=icone('busca', 34)?></span>

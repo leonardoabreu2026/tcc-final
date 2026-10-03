@@ -201,7 +201,7 @@ final class ImagemRemota {
      */
     private static function baixarArquivos(array $urls, int $limite): array {
         if (!function_exists('curl_multi_init')) return [];
-        $urls = array_values(array_unique(array_filter($urls, fn($u) => $u !== '' && self::linkPublico($u))));
+        $urls = self::publicos($urls);
         $out = [];
         foreach (array_chunk($urls, 6) as $grupo) {
             $mh = curl_multi_init();
@@ -210,27 +210,15 @@ final class ImagemRemota {
                 $arqs[$u] = (string)tempnam(sys_get_temp_dir(), 'cvdf_pdf_');
                 $fps[$u] = fopen($arqs[$u], 'wb');
                 $tamanhos[$u] = 0;
-                $ch = curl_init($u);
-                if (is_file(self::CERTIFICADOS)) curl_setopt($ch, CURLOPT_CAINFO, self::CERTIFICADOS);
-                curl_setopt_array($ch, [
-                    CURLOPT_FOLLOWLOCATION => true, CURLOPT_MAXREDIRS => 5,
-                    CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS, CURLOPT_REDIR_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
-                    CURLOPT_CONNECTTIMEOUT => 8, CURLOPT_TIMEOUT => 180, CURLOPT_ENCODING => '',
-                    CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36',
-                    CURLOPT_HTTPHEADER => ['Accept-Language: pt-BR,pt;q=0.9'],
-                    CURLOPT_WRITEFUNCTION => function ($ch, string $parte) use (&$fps, &$tamanhos, $u, $limite): int {
-                        $tamanhos[$u] += strlen($parte);
-                        if ($tamanhos[$u] > $limite) return 0;   // grande demais: para de baixar
-                        return (int)fwrite($fps[$u], $parte);
-                    },
-                ]);
+                $ch = self::abrir($u, 8, 180, function ($ch, string $parte) use (&$fps, &$tamanhos, $u, $limite): int {
+                    $tamanhos[$u] += strlen($parte);
+                    if ($tamanhos[$u] > $limite) return 0;   // grande demais: para de baixar
+                    return (int)fwrite($fps[$u], $parte);
+                });
                 curl_multi_add_handle($mh, $ch);
                 $hs[$u] = $ch;
             }
-            do {
-                $estado = curl_multi_exec($mh, $ativos);
-                if ($ativos) curl_multi_select($mh, 1.0);
-            } while ($ativos && $estado === CURLM_OK);
+            self::executar($mh);
             foreach ($hs as $u => $ch) {
                 fclose($fps[$u]);
                 $ok = (int)curl_getinfo($ch, CURLINFO_RESPONSE_CODE) === 200 && $tamanhos[$u] <= $limite && curl_errno($ch) === 0
@@ -346,34 +334,22 @@ final class ImagemRemota {
      */
     private static function buscar(array $urls, int $limite, bool $parcial): array {
         if (!function_exists('curl_multi_init')) return [];
-        $urls = array_values(array_unique(array_filter($urls, fn($u) => $u !== '' && self::linkPublico($u))));
+        $urls = self::publicos($urls);
         $out = [];
         foreach (array_chunk($urls, self::SIMULTANEAS) as $grupo) {
             $mh = curl_multi_init();
             $hs = []; $corpos = [];
             foreach ($grupo as $u) {
                 $corpos[$u] = '';
-                $ch = curl_init($u);
-                if (is_file(self::CERTIFICADOS)) curl_setopt($ch, CURLOPT_CAINFO, self::CERTIFICADOS);
-                curl_setopt_array($ch, [
-                    CURLOPT_FOLLOWLOCATION => true, CURLOPT_MAXREDIRS => 5,
-                    CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS, CURLOPT_REDIR_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
-                    CURLOPT_CONNECTTIMEOUT => 6, CURLOPT_TIMEOUT => 15, CURLOPT_ENCODING => '',
-                    CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36',
-                    CURLOPT_HTTPHEADER => ['Accept-Language: pt-BR,pt;q=0.9'],
-                    // Passou do limite: para de baixar (a página só precisa do começo; imagem grande demais é recusada).
-                    CURLOPT_WRITEFUNCTION => function ($ch, string $parte) use (&$corpos, $u, $limite): int {
-                        $corpos[$u] .= $parte;
-                        return strlen($corpos[$u]) > $limite ? 0 : strlen($parte);
-                    },
-                ]);
+                // Passou do limite: para de baixar (a página só precisa do começo; imagem grande demais é recusada).
+                $ch = self::abrir($u, 6, 15, function ($ch, string $parte) use (&$corpos, $u, $limite): int {
+                    $corpos[$u] .= $parte;
+                    return strlen($corpos[$u]) > $limite ? 0 : strlen($parte);
+                });
                 curl_multi_add_handle($mh, $ch);
                 $hs[$u] = $ch;
             }
-            do {
-                $estado = curl_multi_exec($mh, $ativos);
-                if ($ativos) curl_multi_select($mh, 1.0);
-            } while ($ativos && $estado === CURLM_OK);
+            self::executar($mh);
             foreach ($hs as $u => $ch) {
                 $inteiro = strlen($corpos[$u]) <= $limite;
                 // Confere também o IP final: um redirecionamento não pode levar para a rede interna.
@@ -386,5 +362,36 @@ final class ImagemRemota {
             curl_multi_close($mh);
         }
         return $out;
+    }
+
+    /** Só os links http(s) de servidor público, sem repetir. */
+    private static function publicos(array $urls): array {
+        return array_values(array_unique(array_filter($urls, fn($u) => $u !== '' && self::linkPublico($u))));
+    }
+
+    /**
+     * Prepara o download de um link com as travas comuns: só http/https (também nos redirecionamentos, até 5),
+     * certificados do projeto, tempo de conexão e tempo total. $escrever recebe cada pedaço baixado.
+     */
+    private static function abrir(string $u, int $conexao, int $tempo, callable $escrever): CurlHandle {
+        $ch = curl_init($u);
+        if (is_file(self::CERTIFICADOS)) curl_setopt($ch, CURLOPT_CAINFO, self::CERTIFICADOS);
+        curl_setopt_array($ch, [
+            CURLOPT_FOLLOWLOCATION => true, CURLOPT_MAXREDIRS => 5,
+            CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS, CURLOPT_REDIR_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
+            CURLOPT_CONNECTTIMEOUT => $conexao, CURLOPT_TIMEOUT => $tempo, CURLOPT_ENCODING => '',
+            CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36',
+            CURLOPT_HTTPHEADER => ['Accept-Language: pt-BR,pt;q=0.9'],
+            CURLOPT_WRITEFUNCTION => $escrever,
+        ]);
+        return $ch;
+    }
+
+    /** Roda os downloads do grupo ao mesmo tempo, até o último terminar. */
+    private static function executar(CurlMultiHandle $mh): void {
+        do {
+            $estado = curl_multi_exec($mh, $ativos);
+            if ($ativos) curl_multi_select($mh, 1.0);
+        } while ($ativos && $estado === CURLM_OK);
     }
 }

@@ -42,7 +42,7 @@ if (!is_dir(UPLOAD_DIR)) @mkdir(UPLOAD_DIR, 0775, true);
 // 4. Endereço base do site.
 // Calculado a partir da pasta do projeto dentro do DocumentRoot: funciona em qualquer
 // pasta do htdocs. No Windows/XAMPP o caminho pode vir com letra de unidade em caixa
-// diferente (C: x c:) e com espaços (ex.: "TCC v2"), por isso a comparação ignora
+// diferente (C: x c:) e com espaços no nome da pasta, por isso a comparação ignora
 // caixa e cada segmento é codificado para uso em URL.
 (function (): void {
     $docRoot = rtrim(str_replace('\\', '/', (string)(realpath($_SERVER['DOCUMENT_ROOT'] ?? '') ?: ($_SERVER['DOCUMENT_ROOT'] ?? ''))), '/');

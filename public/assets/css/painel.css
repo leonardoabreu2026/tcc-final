@@ -191,12 +191,6 @@ body.cv .pn-ficha h2{margin:0;font-size:19px;color:var(--gf-tinta)}
 .ex-destaque.premium{background:#fefce8;border-color:#fde047}
 
 /* ---------- Candidaturas: fatias por status e cartões ---------- */
-.pn-fatias{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
-.pn-fatias a{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;background:#fff;border:1px solid var(--gf-borda);border-radius:var(--cv-raio);
-  color:var(--gf-tinta2);font-size:13.5px;font-weight:600;text-decoration:none}
-.pn-fatias a b{color:var(--gf-tinta);font-variant-numeric:tabular-nums}
-.pn-fatias a:hover{border-color:#b9cdf0}
-.pn-fatias a.ativo{background:var(--cv-azul-claro);border-color:var(--cv-azul);color:var(--cv-azul-esc);box-shadow:inset 0 -2px 0 var(--cv-azul)}
 .pn-cand{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(240px,340px);gap:18px;margin:0 0 12px;padding:16px 18px;
   background:#fff;border:1px solid var(--gf-borda);border-left:4px solid var(--gf-borda);border-radius:var(--cv-raio)}
 .pn-cand.vip{border-left-color:var(--cv-dourado);background:#fffdf5}
@@ -266,11 +260,6 @@ body.cv .pn-talento h3{margin:10px 0 2px;font-size:16.5px;color:var(--gf-tinta)}
 }
 
 /* ---------- Importação em lote de cursos (prompt de pesquisa + fichas) ---------- */
-.imp-passos{margin:12px 0 0;padding-left:20px;display:grid;gap:14px;font-size:14px;color:var(--gf-tinta2)}
-.imp-passos b{color:var(--gf-tinta)}
-.imp-prompt{display:grid;gap:8px;justify-items:start;margin-top:8px}
-.imp-prompt textarea{width:100%;font-family:ui-monospace,Consolas,monospace;font-size:12.5px;background:#fbfcfe}
-.imp-passos form textarea{margin-top:8px}
 .imp-previa{margin-top:16px}
 .imp-previa .table td{vertical-align:top}
 .imp-miniatura{display:block;width:64px;height:48px;object-fit:cover;border:1px solid #dfe5ee;border-radius:4px;background:#eef2f7}
@@ -297,10 +286,6 @@ body.cv .ex-padroes h3{margin:0 0 8px;font-size:14px;color:var(--gf-tinta)}
 .pn-subabas-n{min-width:22px;padding:1px 7px;border-radius:999px;background:#eef2f8;color:var(--gf-tinta2);font-size:12px;text-align:center}
 .pn-subabas a.ativo .pn-subabas-n{background:#ffffff33;color:#fff}
 .pn-paginacao{margin:16px 0 0}
-.imp-direcao{margin:10px 0!important}
-.imp-cobertura{margin:4px 0 0}
-.imp-cobertura > summary{cursor:pointer;font-weight:650;color:var(--cv-azul)}
-.imp-cobertura .table-wrap{margin:10px 0 0}
 .pm-img-link{display:flex;align-items:center;gap:10px}
 .pm-img-link input{flex:1;min-width:0}
 .cx-extrair{margin:0 0 20px;padding:14px 16px;background:#f5f9ff;border:1px dashed #a9c4ee;border-radius:var(--cv-raio)}

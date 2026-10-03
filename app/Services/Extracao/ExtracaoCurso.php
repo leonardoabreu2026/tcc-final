@@ -114,7 +114,7 @@ final class ExtracaoCurso {
      */
     private const CAPAS_INSTITUICAO = [
         'bradesco|ev org br' => 'assets/img/cursos/curso1.png',
-        'sebrae' => 'assets/img/cursos/capas/sebrae.jpg',   // imagem oficial do SEBRAE (a curso2.png tinha marca d'água de outro site)
+        'sebrae' => 'assets/img/cursos/capas/sebrae.jpg',   // imagem oficial do SEBRAE
         'escola virtual gov|escola virtual do governo|escolavirtual gov|enap|evg' => 'assets/img/cursos/curso3.png',
         'google' => 'assets/img/cursos/curso4.png',
         'fgv' => 'assets/img/cursos/curso5.png',

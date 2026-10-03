@@ -20,7 +20,7 @@ Um exemplo com os dados de demonstração: a linha "Café da manhã e lanche da 
 benefício, então, só com a regra, ela cairia na descrição. Mas o par de palavras "café" e "manhã" aparece nos benefícios
 de várias vagas cadastradas, e só nos benefícios. Por isso o padrão manda a linha para Benefícios.
 
-## Por que não é aprendizado de máquina
+## Por que o resultado é previsível
 
 Os padrões automáticos são um dicionário de padrões que o Sistema conta na hora, a partir dos cadastros. Não existe um
 modelo treinado, com pesos ou probabilidades, e nada é guardado à parte: se as vagas que sustentam um padrão forem

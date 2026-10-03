@@ -487,7 +487,7 @@ try {
 // ------------------------------------------------------------
 $base = $argv[1] ?? null;
 if ($base === null) {
-    // Padrão: a pasta do projeto dentro do htdocs (ex.: http://localhost/TCC%20v2/TCC_GUSTAVO/).
+    // Padrão: a pasta do projeto dentro do htdocs (ex.: http://localhost/tcc-final/).
     $rel = preg_split('#[\\\\/]htdocs[\\\\/]#i', ROOT_DIR)[1] ?? '';
     $base = 'http://localhost/'.implode('/', array_map('rawurlencode', preg_split('#[\\\\/]#', $rel) ?: [])).'/';
 }

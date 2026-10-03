@@ -247,19 +247,6 @@ function painel_match(mixed $pontuacao, ?string $nivel): string {
 }
 
 /**
- * Botão de ação de uma linha da tabela (ativar, pausar, excluir...): um mini formulário POST com o
- * token CSRF — ações que mudam dados nunca são links GET. $filtros volta a lista filtrada (campos f_*).
- * $classe: '' (principal), 'btn-outline' ou 'btn-danger'; $confirmar abre a confirmação do app.js.
- */
-function painel_acao(string $acao, int $id, string $texto, string $classe = 'btn-outline', string $confirmar = '', array $filtros = [], array $extras = []): string {
-    $h = '<form method="post"><input type="hidden" name="csrf" value="'.e(csrf_token()).'">'
-       .'<input type="hidden" name="acao" value="'.e($acao).'"><input type="hidden" name="id" value="'.$id.'">';
-    foreach ($filtros as $k => $v) if ((string)$v !== '') $h .= '<input type="hidden" name="f_'.e($k).'" value="'.e($v).'">';
-    foreach ($extras as $k => $v) $h .= '<input type="hidden" name="'.e($k).'" value="'.e($v).'">';
-    return $h.'<button class="btn btn-sm '.e($classe).'"'.($confirmar !== '' ? ' data-confirm="'.e($confirmar).'"' : '').'>'.e($texto).'</button></form>';
-}
-
-/**
  * Cabeçalho das telas do painel: área (administrador/empresa), título, descrição e ações à direita.
  * $acoes é HTML montado pela própria view (botões e selos).
  */
@@ -282,18 +269,7 @@ function painel_th(string $campo, string $rotulo, string $ordem, string $dir, st
 
 /** Paginação das tabelas do painel (mantém filtros e ordenação). */
 function painel_paginacao(int $pagina, int $paginas): string {
-    if ($paginas <= 1) return '';
-    $h = '<nav class="an-paginacao pn-paginacao" aria-label="Páginas da tabela">';
-    $h .= $pagina > 1 ? '<a class="an-pag-seta" href="'.e(painel_qs(['pagina' => $pagina - 1])).'" rel="prev">‹ Anterior</a>' : '<span class="an-pag-seta" aria-disabled="true">‹ Anterior</span>';
-    $antes = 0;
-    for ($n = 1; $n <= $paginas; $n++) {
-        if ($n !== 1 && $n !== $paginas && abs($n - $pagina) > 1) { if ($antes !== -1) $h .= '<span class="an-pag-reticencias" aria-hidden="true">…</span>'; $antes = -1; continue; }
-        $antes = $n;
-        $h .= $n === $pagina ? '<span class="an-pag-num ativo" aria-current="page"><span class="sr-only">Página </span>'.$n.'</span>'
-                             : '<a class="an-pag-num" href="'.e(painel_qs(['pagina' => $n])).'"><span class="sr-only">Página </span>'.$n.'</a>';
-    }
-    $h .= $pagina < $paginas ? '<a class="an-pag-seta" href="'.e(painel_qs(['pagina' => $pagina + 1])).'" rel="next">Próxima ›</a>' : '<span class="an-pag-seta" aria-disabled="true">Próxima ›</span>';
-    return $h.'</nav>';
+    return cv_paginacao($pagina, $paginas, fn(int $n) => e(painel_qs(['pagina' => $n])), 'Páginas da tabela', 'pn-paginacao');
 }
 
 /** Abas internas de uma tela (ex.: Cursos · E-books · Vídeos): [valor => [rótulo, contagem]]. */

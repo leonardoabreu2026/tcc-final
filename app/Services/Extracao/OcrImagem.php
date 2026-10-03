@@ -17,7 +17,7 @@ declare(strict_types=1);
  * LEITOR DA PLATAFORMA (padrão): as 4 leituras são feitas NO NAVEGADOR de quem envia o cartaz, pelo Tesseract.js
  * que vem com o site (public/assets/js/leitor-cartaz.js + assets/js/vendor/tesseract) — nada para instalar no
  * servidor. O navegador manda os TSVs junto com o cartaz (leiturasDoNavegador) e o resultado é montado aqui,
- * com a mesma calibragem (montar).
+ * com os mesmos ajustes (montar).
  *
  * Tesseract no servidor: OPCIONAL, só reserva para quando o navegador não conseguiu ler.
  * Windows: https://github.com/UB-Mannheim/tesseract/wiki (marcar o idioma português).

@@ -431,7 +431,7 @@ final class ExtracaoVaga {
         return implode("\n", $out);
     }
 
-    // ------------------------------------------------------------------ calibragem do OCR de cartaz
+    // ------------------------------------------------------------------ ajustes do OCR de cartaz
 
     /** Linhas do cartaz que foram juntadas no título (não voltam para a descrição). */
     private static array $linhasDoTitulo = [];
