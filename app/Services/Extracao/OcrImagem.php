@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 /**
  * Leitura de texto em imagens (OCR) com o Tesseract instalado no servidor — sem API externa.
- * Usada pela máquina de extração de vagas (cartaz da vaga) e de currículos enviados como foto.
+ * Usada pela máquina de extração de vagas (cartaz da vaga). Currículo escaneado não passa por OCR: o envio avisa
+ * que o texto não foi lido e pede para preencher o perfil à mão.
  *
  * Como funciona:
  *  1. a imagem é preparada com o GD (tons de cinza, correção de gama e ampliação para ~2200 px de
