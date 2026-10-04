@@ -4,7 +4,7 @@
  * para o dono, também a máquina de match com as vagas.
  * Recebe de PerfilController::portfolio(): $p, $ehDono, $verContato, $previa, $nomeExibido, $resumo, $experiencias,
  * $formacao, $habilidades, $cursos, $idiomas, $extras, $links, $ehPcd, $local, $iniciais, $titulo, $relatorio,
- * $matches, $exibirMatches, $cursosAtivos, $isVip e $limiteGratis.
+ * $matches, $exibirMatches, $cursosAtivos, $isVip, $limiteGratis e $cands (candidaturas do dono).
  * Prévia ($previa, sem Premium): nome mascarado, título, local, habilidades e o resumo curto, como no Banco de Talentos.
  * O portfólio é uma folha A4 (.pf-folha): o que aparece na tela é o que sai no "Salvar em PDF" (impressão em A4).
  */
@@ -12,10 +12,38 @@
 <div class="pf">
   <div class="pf-acoes">
     <?php if ($ehDono): ?>
+      <button class="btn btn-sm btn-outline" type="button" aria-controls="pf-candidaturas" aria-expanded="false"
+        onclick="const s = document.getElementById('pf-candidaturas'); s.hidden = !s.hidden; this.setAttribute('aria-expanded', String(!s.hidden)); if (!s.hidden) s.scrollIntoView({behavior: 'smooth', block: 'nearest'});"><?=icone('vagas', 16)?>Visualizar candidaturas (<?=count($cands)?>)</button>
       <a class="btn btn-sm btn-outline" href="<?=url('view/perfil/index.php')?>"><?=icone('editar', 16)?>Editar dados</a>
     <?php endif; ?>
     <button class="btn btn-sm" type="button" onclick="window.print()"><?=icone('download', 16)?>Salvar em PDF</button>
   </div>
+
+  <?php if ($ehDono): ?>
+  <!-- Candidaturas do dono: abre pelo botão "Visualizar candidaturas"; fica fora da folha (não sai no PDF). -->
+  <section class="pf-cands" id="pf-candidaturas" hidden>
+    <h2><?=icone('vagas', 18)?>Minhas candidaturas</h2>
+    <?php if (!$cands): ?>
+      <p class="muted">Você ainda não se candidatou a nenhuma vaga. <a href="<?=url('vagas.php')?>">Ver vagas abertas</a></p>
+    <?php else: ?>
+      <ul class="pf-cands-lista">
+        <?php foreach ($cands as $c): ?>
+          <li>
+            <div class="pf-cands-topo">
+              <div>
+                <a class="pf-cands-vaga" href="<?=url('vaga.php?id='.(int)$c['vaga_id'])?>"><?=e($c['titulo'])?></a>
+                <div class="pf-cands-meta"><?=e($c['empresa_nome'] ?? 'Empresa')?> · <?=e(trim(($c['cidade'] ?? '').'/'.($c['uf'] ?? ''), '/'))?> · enviada em <?=date('d/m/Y', strtotime((string)$c['data_candidatura']))?></div>
+              </div>
+              <span class="tag pf-cands-status <?=e($c['status'])?>"><?=e(rotulo($c['status']))?></span>
+            </div>
+            <?php if (!empty($c['observacao_empresa'])): ?><p class="pf-cands-retorno"><b>Retorno da empresa:</b> <?=e($c['observacao_empresa'])?></p><?php endif; ?>
+          </li>
+        <?php endforeach; ?>
+      </ul>
+      <p class="pf-cands-rodape"><a href="<?=url('view/perfil/index.php#candidaturas')?>">Cancelar ou acompanhar no Meu perfil</a></p>
+    <?php endif; ?>
+  </section>
+  <?php endif; ?>
 
   <?php if ($relatorio) require __DIR__.'/../partials/relatorio_extracao.php'; ?>
 

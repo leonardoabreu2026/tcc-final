@@ -158,6 +158,8 @@ final class PerfilController extends Controller {
         $ehPcd = (bool)preg_match('/pcd|defici|laudo/iu', implode(' ', $extras));
         // Relatório da última extração (só para o dono, logo depois do envio do currículo).
         $relatorio = ($ehDono && isset($_GET['relatorio']) && is_array($_SESSION['relatorio_extracao'] ?? null)) ? $_SESSION['relatorio_extracao'] : null;
+        // Botão "Visualizar candidaturas" (só o dono): as vagas em que ele se candidatou, com o status de cada uma.
+        $cands = $ehDono ? (new CandidaturaDAO())->listarPorCandidato((int)$p['id']) : [];
         // Ex.: "Ceilândia, Brasília - DF" (região administrativa) ou "Goiânia - GO".
         $cidade = trim((string)($p['cidade'] ?? '')); $uf = trim((string)($p['uf'] ?? ''));
         if ($uf === 'DF' && $cidade !== '' && $cidade !== 'Brasília') $cidade .= ', Brasília';

@@ -52,6 +52,8 @@
 
 <div class="profile-layout">
 <div>
+    <?php // Com o relatório da extração aberto, a máquina não aparece de novo: fica só o formulário para completar. ?>
+    <?php if (!$relatorio): ?>
     <div class="panel">
         <div class="section-head" style="margin-top:0"><h3 style="margin:0">📄 Máquina de extração do currículo</h3></div>
         <div class="cv-machine">
@@ -85,8 +87,9 @@
             </div>
         <?php endforeach; else: ?><div class="empty">Nenhum currículo enviado ainda.</div><?php endif; ?>
     </div>
+    <?php endif; ?>
 
-    <form class="panel" id="cadastro" style="margin-top:18px" method="post" action="<?=url('view/perfil/salvar.php')?>" enctype="multipart/form-data">
+    <form class="panel" id="cadastro" style="margin-top:<?=$relatorio ? '0' : '18px'?>" method="post" action="<?=url('view/perfil/salvar.php')?>" enctype="multipart/form-data">
         <input type="hidden" name="csrf" value="<?=e(csrf_token())?>">
         <div class="section-head" style="margin-top:0"><h3 style="margin:0">Cadastro do perfil</h3><small class="muted">Campos com * são obrigatórios para liberar o Portfólio</small></div>
         <div class="form-grid">
@@ -128,7 +131,7 @@
             <a href="<?=url('planos.php')?>" class="btn btn-sm btn-outline" style="width:100%;">Gerenciar plano</a>
         <?php else: ?>
             <span class="tag" style="background:#e2e8f0; color:#475569;">Plano Gratuito</span>
-            <p style="font-size:13px; color:#475569; margin:6px 0;">Candidaturas ativas: <b><?=$candidaturasAtivas?> / 3</b></p>
+            <p style="font-size:13px; color:#475569; margin:6px 0;">Candidaturas ativas: <b><?=$candidaturasAtivas?> / <?=AssinaturaDAO::LIMITE_CANDIDATURAS_GRATIS?></b></p>
             <a href="<?=url('planos.php')?>" class="btn btn-sm btn-gold" style="width:100%;">Virar VIP (R$ 9,90/mês)</a>
         <?php endif; ?>
         <hr style="border:0; border-top:1px solid var(--line); margin:14px 0;">

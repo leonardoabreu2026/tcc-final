@@ -67,7 +67,8 @@ $faltando = array_values(array_filter($itensRel, fn($i) => $i['status'] === 'nao
 
   <?php if ($faltando): ?>
     <p class="pf-rel-falta">Não encontramos no arquivo: <b><?=e(implode(', ', array_map(fn($i) => $i['rotulo'], $faltando)))?></b>.
-      <a href="<?=url('view/perfil/index.php')?>">Completar no perfil</a> para melhorar o portfólio e o match.</p>
+      <?php // No próprio perfil, só desce até o formulário (o relatório continua aberto); no portfólio, abre o perfil. ?>
+      <a href="<?=Router::atual() === 'view/perfil/index.php' ? '#cadastro' : e(url('view/perfil/index.php#cadastro'))?>">Completar no perfil</a> para melhorar o portfólio e o match.</p>
   <?php endif; ?>
   <?php if (!empty($relatorio['match'])): ?><p class="pf-rel-match"><?=e($relatorio['match'])?> <a href="<?=url('view/perfil/portfolio.php#match')?>">Ver vagas compatíveis</a></p><?php endif; ?>
 </section>

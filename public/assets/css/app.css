@@ -95,13 +95,28 @@
 .pf-extra p:first-child{text-transform:uppercase;font-size:11px}
 .pf-vazio{color:#94a3b8;font-style:italic;margin:0}
 .pf-folha .pf-match-vip{font-size:12px}
+/* Candidaturas do dono (botão "Visualizar candidaturas"): fora da folha, com a largura dela. */
+.pf-cands{max-width:var(--pf-folha);margin:0 auto 14px;background:#fff;border:1px solid var(--pf-borda);border-radius:12px;padding:14px 18px;box-shadow:0 4px 16px #0b3f820a}
+.pf-cands h2{display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:17px;color:var(--pf-titulo)}
+.pf-cands h2 .ic{color:var(--pf-azul)}
+.pf-cands-lista{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.pf-cands-lista li{padding:10px 12px;border:1px solid var(--pf-borda);border-radius:8px;background:#fbfdff}
+.pf-cands-topo{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.pf-cands-vaga{font-weight:700;color:var(--pf-titulo);text-decoration:none}
+.pf-cands-vaga:hover{text-decoration:underline}
+.pf-cands-meta{font-size:12.5px;color:#5b6677}
+.pf-cands-status{flex:none;white-space:nowrap}
+.pf-cands-status.em_analise{background:#e0ecff;color:#1e4fa3}.pf-cands-status.entrevista{background:#fef3c7;color:#92400e}
+.pf-cands-status.aprovado{background:#dcfce7;color:#166534}.pf-cands-status.rejeitado,.pf-cands-status.cancelada{background:#f1f5f9;color:#64748b}
+.pf-cands-retorno{margin:6px 0 0;padding:6px 10px;border-radius:6px;background:var(--pf-suave);font-size:13px}
+.pf-cands-rodape{margin:10px 0 0;font-size:13px}
 @media(max-width:860px){.pf-mesa{padding:12px 8px}.pf-folha{width:auto;min-height:0;padding:14px}}
 @media(max-width:640px){.pf-grade{grid-template-columns:1fr}.pf-cursos{grid-template-columns:1fr}
   .pf-banner{flex-direction:column;text-align:center;background:linear-gradient(180deg,#062a5c,#0b3f82)}}
 /* "Salvar em PDF": só a folha, em A4, com a mesma margem de 1 cm da tela. */
 @page folha{size:A4;margin:10mm}
 @media print{
-  .footer,.pf-acoes,.alert{display:none!important}
+  .footer,.pf-acoes,.pf-cands,.alert{display:none!important}
   body,body.cv{background:#fff}
   .container,body.cv main.container{max-width:none!important;padding:0!important;margin:0!important}
   .pf-mesa{background:none;padding:0;border-radius:0}
