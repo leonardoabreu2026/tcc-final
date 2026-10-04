@@ -161,12 +161,20 @@ de rota: não existem mais arquivos como `vagas.php` ou `view/perfil/index.php` 
 O caminho que mais mostramos na apresentação é o do candidato. A tela Meu perfil (`PerfilController::index`) é ao mesmo
 tempo o cadastro e a máquina de extração. O candidato envia o currículo, o `LeitorDocumento` lê o arquivo e a
 `ExtracaoCurriculo` separa os dados. Depois a `AplicacaoCurriculo` preenche o cadastro, e o relatório da extração mostra
-o que foi encontrado, o que foi aplicado, o que foi mantido e o que faltou.
+o que foi encontrado, o que foi aplicado, o que foi mantido e o que faltou. Com o relatório aberto, o Meu perfil não
+repete a caixa da máquina de extração: logo abaixo do relatório vem só o formulário, para completar o que faltou.
 
 Quando o telefone, o título profissional, a cidade, o resumo, o objetivo, a formação e as habilidades estão preenchidos,
 o `Portfolio::validarCadastro` considera o cadastro completo e a aba Portfólio aparece no topo. O portfólio é montado com
 os dados do cadastro e com a máquina de match: o `MatchService` compara o candidato com cada vaga usando o dicionário de
 `Competencias`. O candidato vê a nota e os cursos que cobrem o que falta, e a empresa vê o match em cada candidatura.
+
+O portfólio fica numa folha A4 (`.pf-folha`, 21 cm de largura e 1 cm de margem) e o botão "Salvar em PDF" imprime só
+ela, com `@page folha` na mesma medida, então o PDF sai igual à tela. A faixa do topo é uma imagem só
+(`portfolio-faixa.jpg`, a foto de Brasília com o degradê azul já aplicado), porque camadas transparentes se perdiam no
+PDF. Para o dono, o botão "Visualizar candidaturas" abre acima da folha a lista das vagas em que ele se candidatou
+(`CandidaturaDAO::listarPorCandidato`), com o status e o retorno da empresa. A lista, o relatório da extração e a máquina
+de match ficam fora da folha e não saem no PDF.
 
 A empresa faz um caminho parecido com as vagas. Ela cola o anúncio ou envia o cartaz, a `ExtracaoVaga` preenche o
 formulário, a empresa revisa e publica, e o Sistema recalcula o match com todos os candidatos. Nas extrações de vaga e de

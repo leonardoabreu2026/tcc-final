@@ -51,7 +51,7 @@ Organizamos o projeto em quatro personagens: o **Candidato**, a **Empresa**, o *
 
 O candidato é a pessoa que procura emprego. Mesmo antes de criar uma conta ele já navega pelo site: vê as vagas, filtra por cidade, área, tipo de contratação e nível, abre a página de cada vaga e consulta os cursos e e-books gratuitos. Quem está só olhando o site, sem conta, é para nós um candidato que ainda não se cadastrou.
 
-Depois do cadastro, o candidato monta o perfil profissional. Ele pode digitar tudo ou enviar o currículo em PDF, DOCX ou DOC. Nesse caso o sistema lê o arquivo e preenche o perfil: nome, contato, resumo, objetivo, experiências, formação, cursos, habilidades, idiomas e até a foto, quando o currículo tem uma. No fim aparece um relatório com o que foi encontrado, o que foi aplicado e o que ainda falta, e o candidato revisa antes de salvar.
+Depois do cadastro, o candidato monta o perfil profissional. Ele pode digitar tudo ou enviar o currículo em PDF, DOCX ou DOC. Nesse caso o sistema lê o arquivo e preenche o perfil: nome, contato, resumo, objetivo, experiências, formação, cursos, habilidades, idiomas e até a foto, quando o currículo tem uma. No fim aparece um relatório com o que foi encontrado, o que foi aplicado e o que ainda falta e, logo abaixo, só o formulário do perfil, para o candidato revisar e completar antes de salvar.
 
 Com o perfil completo, o candidato ganha um **portfólio** montado automaticamente e passa a ver o **match**, uma nota de 0 a 100 que mostra o quanto o perfil combina com cada vaga, com a explicação da nota. Ele se candidata às vagas que quiser, pode mandar uma mensagem para a empresa e acompanha o andamento: enviada, em análise, entrevista, aprovado ou rejeitado. Se desistir, ele mesmo cancela a candidatura.
 
@@ -117,7 +117,7 @@ Depois de ler o texto, a extração separa o currículo em partes. Ela reconhece
 
 ### Portfólio
 
-O portfólio é a página profissional do candidato, montada a partir do perfil. As experiências viram uma linha do tempo, a formação é organizada por curso e instituição, e as habilidades e cursos aparecem em listas. Só para o dono, o portfólio mostra as vagas compatíveis com a explicação de cada nota e recomenda cursos do catálogo que ajudam a completar o perfil. O candidato pode compartilhar o link. Qualquer pessoa e os outros candidatos veem o portfólio completo; a empresa sem o plano Premium vê uma prévia.
+O portfólio é a página profissional do candidato, montada a partir do perfil. As experiências viram uma linha do tempo, a formação é organizada por curso e instituição, e as habilidades e cursos aparecem em listas. Ele fica numa folha do tamanho de uma A4: uma faixa com a foto de Brasília, a foto e o nome do candidato, cartões azul-claros à esquerda (contato, habilidades, idiomas e objetivo) e brancos à direita (resumo, experiência, formação e cursos). O botão **Salvar em PDF** imprime só a folha, igual ao que aparece na tela. Só para o dono, o botão **Visualizar candidaturas** abre a lista das vagas em que ele se candidatou, com o status e o retorno da empresa, e o portfólio mostra as vagas compatíveis com a explicação de cada nota e recomenda cursos do catálogo que ajudam a completar o perfil. O candidato pode compartilhar o link. Qualquer pessoa e os outros candidatos veem o portfólio completo; a empresa sem o plano Premium vê uma prévia.
 
 ### Match entre candidato e vaga
 
@@ -312,7 +312,7 @@ git config core.hooksPath .githooks
 2. No XAMPP, dar Start no Apache e no MySQL.
 3. Clique duplo em `tests\verificar.bat` e esperar o TUDO CERTO.
 4. Abrir uma vez o painel de vagas, para o leitor de cartaz já ficar carregado.
-5. Mostrar o **candidato**: enviar um currículo, ver o perfil preenchido, o portfólio e o match com as vagas, e se candidatar.
+5. Mostrar o **candidato**: enviar um currículo, ver o relatório e o perfil preenchido, o portfólio na folha A4 (com o Salvar em PDF) e o match com as vagas, se candidatar e abrir o **Visualizar candidaturas**.
 6. Mostrar a **empresa**: enviar a foto de um cartaz, mostrar o formulário preenchido e o relatório da extração, com o bloco "Padrões automáticos usados". Depois, abrir as candidaturas ordenadas pelo match e mudar um status.
 7. Mostrar o **administrador**: a visão geral com os gráficos e o cadastro de um e-book por ficha, com a capa tirada da primeira página do PDF.
 8. Explicar o papel do **sistema** em cada um desses passos.
