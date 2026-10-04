@@ -324,7 +324,8 @@ git config core.hooksPath .githooks
 |---|---|
 | [docs/tcc/TCC_Final_Conecta_Vagas_DF.docx](docs/tcc/TCC_Final_Conecta_Vagas_DF.docx) | o documento do TCC no modelo do professor (Escola Técnica de Ceilândia, PCC 2.2026): requisitos, casos de uso, diagramas, modelo de dados, telas, testes, a seção 8.11 com cada funcionalidade em detalhe e o Apêndice A com o código-fonte explicado |
 | [docs/tcc/TCC_Final_Conecta_Vagas_DF.pdf](docs/tcc/TCC_Final_Conecta_Vagas_DF.pdf) | o mesmo documento em PDF (296 páginas), com sumário e listas atualizados e marcadores para navegar pelos títulos |
-| [docs/tcc/TCC_Conecta_Vagas_DF_Documentacao.docx](docs/tcc/TCC_Conecta_Vagas_DF_Documentacao.docx) e [.pdf](docs/tcc/TCC_Conecta_Vagas_DF_Documentacao.pdf) | a documentação revisada no modelo do professor (66 páginas): requisitos, casos de uso com especificação, diagramas de classes, sequência e entidade-relacionamento, dicionário de dados e a leitura do cartaz por OCR com o Tesseract |
+| [docs/tcc/TCC_Conecta_Vagas_DF_Documentacao.docx](docs/tcc/TCC_Conecta_Vagas_DF_Documentacao.docx) e [.pdf](docs/tcc/TCC_Conecta_Vagas_DF_Documentacao.pdf) | a documentação revisada no modelo do professor (67 páginas): requisitos, casos de uso com especificação, diagramas de classes, sequência e entidade-relacionamento, dicionário de dados e a leitura do cartaz por OCR com o Tesseract |
+| [docs/telas/](docs/telas/README.md) | capturas de todas as telas do sistema (visitante, candidato, empresa e administrador, no computador e no celular) e o portfólio salvo em PDF |
 | [docs/ARQUITETURA.md](docs/ARQUITETURA.md) | como o sistema funciona por dentro, camada por camada, com a tabela de rotas |
 | [docs/PADROES_AUTOMATICOS.md](docs/PADROES_AUTOMATICOS.md) | os padrões automáticos das máquinas de extração e como demonstrá-los |
 | [docs/PESQUISA_CURSOS.md](docs/PESQUISA_CURSOS.md) | as fontes oficiais do catálogo e como a pesquisa de cursos funciona |
