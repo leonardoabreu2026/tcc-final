@@ -355,6 +355,6 @@ Os backups ficam em `storage/backups/<data>/`, com o banco, os arquivos enviados
 C:\xampp\mysql\bin\mysqldump.exe -u root --single-transaction --databases tcc_final > storage\backups\banco_tcc_final.sql
 ```
 
-As versões estáveis do código são marcadas com tags no Git (`tcc-final-v1.0`, `tcc-final-v1.1` e as seguintes). Para voltar a uma delas, use `git checkout <tag>`.
+As versões estáveis do código são marcadas com tags no Git (`tcc-final-v1.0`, `tcc-final-v1.1`, `tcc-final-v1.2` e as seguintes). Para voltar a uma delas, use `git checkout <tag>`. Cada versão final tem um backup do banco e dos arquivos enviados em `storage/backups/` (fora do Git), com o `COMO_RESTAURAR.txt`.
 
 Quando o site é acessado pelo próprio computador, os erros mostram o detalhe técnico, o que ajuda no desenvolvimento. Quem acessa de outra máquina vê só mensagens amigáveis. Para publicar, defina a variável de ambiente `APP_DEBUG=0`, que desliga o detalhe técnico para todos, inclusive quando o site fica atrás de um proxy.
