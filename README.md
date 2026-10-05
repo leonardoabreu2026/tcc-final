@@ -157,7 +157,7 @@ Os padrões também guardam os **nomes conhecidos**: as empresas (anunciante das
 
 O catálogo de capacitação reúne cursos, e-books e vídeos gratuitos de fontes oficiais, como Fundação Bradesco, Escola Virtual de Governo (Enap), SEBRAE, SENAC, FGV, Banco Central, Ministério do Trabalho e Microsoft Learn.
 
-Para cadastrar um conteúdo novo, o administrador cola na caixa **Extrair** uma **ficha** com os campos Título, Tipo, Instituição, Modalidade, Cidade, Nível, Carga horária, Gratuito, Preço, Área, Link, PDF, Imagem e Descrição. A ficha pode ser preenchida à mão ou com ajuda de uma ferramenta de pesquisa (ChatGPT, Gemini, Perplexity e outras); o texto que usamos para pedir essa pesquisa está em [docs/PROMPTS_PESQUISA.md](docs/PROMPTS_PESQUISA.md). Uma ficha preenche o formulário para revisar. Várias fichas, separadas por `---`, abrem uma prévia para cadastrar todas de uma vez.
+Para cadastrar um conteúdo novo, o administrador cola na caixa **Extrair** uma **ficha** com os campos Título, Tipo, Instituição, Modalidade, Cidade, Nível, Carga horária, Gratuito, Preço, Área, Link, PDF, Imagem e Descrição. Uma ficha preenche o formulário para revisar. Várias fichas, separadas por `---`, abrem uma prévia para cadastrar todas de uma vez.
 
 Na prévia, o sistema **abre cada link da ficha** (o da imagem, o do PDF e o do conteúdo) e descobre o que cada um é:
 
@@ -323,13 +323,12 @@ git config core.hooksPath .githooks
 | Documento | O que tem |
 |---|---|
 | [docs/tcc/TCC_Final_Conecta_Vagas_DF.docx](docs/tcc/TCC_Final_Conecta_Vagas_DF.docx) | o documento do TCC no modelo do professor (Escola Técnica de Ceilândia, PCC 2.2026): requisitos, casos de uso, diagramas, modelo de dados, telas, testes, a seção 8.11 com cada funcionalidade em detalhe e o Apêndice A com o código-fonte explicado |
-| [docs/tcc/TCC_Final_Conecta_Vagas_DF.pdf](docs/tcc/TCC_Final_Conecta_Vagas_DF.pdf) | o mesmo documento em PDF (296 páginas), com sumário e listas atualizados e marcadores para navegar pelos títulos |
+| [docs/tcc/TCC_Final_Conecta_Vagas_DF.pdf](docs/tcc/TCC_Final_Conecta_Vagas_DF.pdf) | o mesmo documento em PDF (293 páginas), com sumário e listas atualizados e marcadores para navegar pelos títulos |
 | [docs/tcc/TCC_Conecta_Vagas_DF_Documentacao.docx](docs/tcc/TCC_Conecta_Vagas_DF_Documentacao.docx) e [.pdf](docs/tcc/TCC_Conecta_Vagas_DF_Documentacao.pdf) | a documentação revisada no modelo do professor (67 páginas): requisitos, casos de uso com especificação, diagramas de classes, sequência e entidade-relacionamento, dicionário de dados e a leitura do cartaz por OCR com o Tesseract |
 | [docs/telas/](docs/telas/README.md) | capturas de todas as telas do sistema (visitante, candidato, empresa e administrador, no computador e no celular) e o portfólio salvo em PDF |
 | [docs/ARQUITETURA.md](docs/ARQUITETURA.md) | como o sistema funciona por dentro, camada por camada, com a tabela de rotas |
 | [docs/PADROES_AUTOMATICOS.md](docs/PADROES_AUTOMATICOS.md) | os padrões automáticos das máquinas de extração e como demonstrá-los |
 | [docs/PESQUISA_CURSOS.md](docs/PESQUISA_CURSOS.md) | as fontes oficiais do catálogo e como a pesquisa de cursos funciona |
-| [docs/PROMPTS_PESQUISA.md](docs/PROMPTS_PESQUISA.md) | o prompt para pedir fichas de cursos a uma IA de pesquisa (gerado por `docs/gerar_prompts.php` com as áreas cadastradas) |
 | `docs/tcc/diagramas/` | casos de uso, classes, sequência, arquitetura e os modelos conceitual e lógico, em `.png` e `.svg` |
 
 Os diagramas de sequência e de arquitetura têm o arquivo `.puml` de origem (PlantUML, com o estilo comum em `estilo.iuml`). Os de caso de uso, o de classes e o modelo lógico são desenhados pelos scripts de `docs/tcc/diagramas/gerador`, com linhas retas e posições controladas, no estilo do Astah.
@@ -356,6 +355,6 @@ Os backups ficam em `storage/backups/<data>/`, com o banco, os arquivos enviados
 C:\xampp\mysql\bin\mysqldump.exe -u root --single-transaction --databases tcc_final > storage\backups\banco_tcc_final.sql
 ```
 
-As versões estáveis do código são marcadas com tags no Git (`tcc-final-v1.0`, `tcc-final-v1.1`, `tcc-final-v1.2` e as seguintes). Para voltar a uma delas, use `git checkout <tag>`. Cada versão final tem um backup do banco e dos arquivos enviados em `storage/backups/` (fora do Git), com o `COMO_RESTAURAR.txt`.
+As versões estáveis do código são marcadas com tags no Git (`tcc-final-v1.0`, `tcc-final-v1.1`, `tcc-final-v1.2`, `tcc-final-v1.3` e as seguintes). Para voltar a uma delas, use `git checkout <tag>`. Cada versão final tem um backup do banco e dos arquivos enviados em `storage/backups/` (fora do Git), com o `COMO_RESTAURAR.txt`.
 
 Quando o site é acessado pelo próprio computador, os erros mostram o detalhe técnico, o que ajuda no desenvolvimento. Quem acessa de outra máquina vê só mensagens amigáveis. Para publicar, defina a variável de ambiente `APP_DEBUG=0`, que desliga o detalhe técnico para todos, inclusive quando o site fica atrás de um proxy.

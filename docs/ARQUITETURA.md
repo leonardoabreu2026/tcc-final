@@ -101,7 +101,7 @@ São 12 controllers ao todo.
 | `Extracao/PadroesExtracao` | Padrões automáticos: onde a regra não tem pista, decide o padrão contado nas vagas e nos cursos já cadastrados. Explicamos em [PADROES_AUTOMATICOS.md](PADROES_AUTOMATICOS.md). |
 | `Extracao/ImagemRemota` | Abre cada link da ficha de curso ou e-book, descobre se é imagem, PDF ou página e baixa o que serve, sempre de servidor público. |
 | `Extracao/CapaPdf` | Tira a capa do e-book da primeira página do PDF, com o leitor de PDF do Windows (via PowerShell) ou, sem ele, com a maior imagem da página. |
-| `Extracao/OcrImagem`, `FontesCursos`, `PromptsPesquisa` | Leitura do cartaz por OCR, fontes oficiais de cursos e o formato da ficha usado no prompt de pesquisa. |
+| `Extracao/OcrImagem`, `FontesCursos` | Leitura do cartaz por OCR e fontes oficiais de cursos. |
 
 ### Views (telas)
 
@@ -244,11 +244,10 @@ OCR pode ser separada quando outra leitura tem as duas partes. Esses cartazes vi
 ### Cursos e e-books
 
 No painel, em Cursos e e-books, existe uma caixa só, chamada Extrair. Uma ficha (ou um texto de divulgação) preenche o
-formulário, e várias fichas separadas por `---` abrem uma prévia para cadastrar de uma vez. O formato da ficha é um só
-(`PromptsPesquisa::formatoFicha`, o mesmo que `ExtracaoCurso::fichas()` lê). O prompt que usamos com as IAs de pesquisa
-fica fora do painel, em [PROMPTS_PESQUISA.md](PROMPTS_PESQUISA.md), e o roteiro da pesquisa está em
-[PESQUISA_CURSOS.md](PESQUISA_CURSOS.md). Antes de ler a ficha, o Sistema tira as marcas de citação que as IAs costumam
-deixar na resposta, como `[1]`, `:contentReference[oaicite:1]{index=1}` e `【4†fonte】`.
+formulário, e várias fichas separadas por `---` abrem uma prévia para cadastrar de uma vez. O formato da ficha é um só,
+com os rótulos que `ExtracaoCurso::fichas()` lê, e as fontes oficiais da pesquisa estão em
+[PESQUISA_CURSOS.md](PESQUISA_CURSOS.md). Antes de ler a ficha, o Sistema tira as marcas de formatação e de citação que
+costumam vir no texto copiado, como o negrito e o `[1]`.
 
 Na prévia, o Sistema abre cada link da ficha (`ImagemRemota::completar`). Ele baixa só o começo de cada endereço, o
 suficiente para descobrir se é uma imagem, um PDF ou uma página, e aproveita o que serve. Se o campo Imagem aponta para

@@ -24,7 +24,7 @@ exit /b 0
 :erro
 echo.
 echo ATENCAO: algo falhou (veja acima).
-echo Para voltar a ultima versao estavel do codigo:  git checkout tcc-final-v1.2
+echo Para voltar a ultima versao estavel do codigo:  git checkout tcc-final-v1.3
 echo Para voltar o banco: veja storage\backups\...\COMO_RESTAURAR.txt
 pause
 exit /b 1
