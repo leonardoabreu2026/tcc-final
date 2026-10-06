@@ -1,5 +1,5 @@
 <?php
-// Desenha diagramas de caso de uso no estilo do Astah UML (SVG), com layout controlado:
+// Desenha diagramas de caso de uso em SVG, com notação UML e layout inspirado no Astah:
 // atores nas laterais, casos de uso em colunas, linhas RETAS, include/extend tracejados com seta aberta.
 // Uso: php ucdraw.php specs.php pasta_saida
 declare(strict_types=1);
@@ -44,13 +44,14 @@ function desenhar(array $d, bool $moldura = true): string {
     $colX = $d['colunas'];
     $colDir = $d['direita'] ?? [];
     $topo = $d['topo'] ?? 110; $passo = $d['passo'] ?? 62;
+    $alturaCabecalho = isset($d['rotulosColunas']) ? 42 : 0;
     $uc = [];
     foreach ($d['casos'] as $id => [$rotulo, $col, $lin]) {
         $linhas = explode("\n", $rotulo);
         $w = max(array_map('larg', $linhas));
         $rx = max(62, $w / 2 + 20); $ry = max(19, (count($linhas) * LH) / 2 + 10);
         $cx = in_array($col, $colDir, true) ? $colX[$col] - $rx : $colX[$col] + $rx;
-        $uc[$id] = ['l' => $linhas, 'x' => $cx, 'y' => $topo + $lin * $passo, 'rx' => $rx, 'ry' => $ry];
+        $uc[$id] = ['l' => $linhas, 'x' => $cx, 'y' => $topo + $lin * $passo, 'rx' => $rx, 'ry' => $ry, 'col' => $col];
     }
     // Atores: posição y = média dos casos ligados a ele (ou y fixo)
     $atores = [];
@@ -62,7 +63,7 @@ function desenhar(array $d, bool $moldura = true): string {
     }
     $minY = min(array_map(fn($u) => $u['y'] - $u['ry'], $uc)); $maxY = max(array_map(fn($u) => $u['y'] + $u['ry'], $uc));
     $minX = min(array_map(fn($u) => $u['x'] - $u['rx'], $uc)); $maxX = max(array_map(fn($u) => $u['x'] + $u['rx'], $uc));
-    $bx1 = $minX - 30; $bx2 = $maxX + 30; $by1 = $minY - 40; $by2 = $maxY + 25;   // a fronteira envolve só os casos de uso
+    $bx1 = $minX - 30; $bx2 = $maxX + 30; $by1 = $minY - 40 - $alturaCabecalho; $by2 = $maxY + 25;   // a fronteira envolve só os casos de uso
     $W = max(array_map(fn($a) => $a['x'], $atores) + [$bx2]) + 70; $H = $by2 + 30;
     foreach ($atores as $a) { $W = max($W, $a['x'] + 60); $H = max($H, $a['y'] + 70); }
 
@@ -78,6 +79,12 @@ function desenhar(array $d, bool $moldura = true): string {
     // fronteira do sistema
     $s .= '<rect x="'.round($bx1).'" y="'.round($by1).'" width="'.round($bx2 - $bx1).'" height="'.round($by2 - $by1).'" fill="#fff" stroke="#000" stroke-width="1"/>'
         .texto(($bx1 + $bx2) / 2, $by1 + 16, [$d['sistema'] ?? 'Sistema Conecta Vagas DF']);
+    foreach ($d['rotulosColunas'] ?? [] as $col => $rotulo) {
+        $casosColuna = array_values(array_filter($uc, fn($u) => $u['col'] === (int)$col));
+        if (!$casosColuna) continue;
+        $centro = array_sum(array_column($casosColuna, 'x')) / count($casosColuna);
+        $s .= texto($centro, $by1 + 38, [(string)$rotulo], 'middle', ' font-weight="bold"');
+    }
     // associações (linhas retas ator → caso de uso)
     foreach ($d['ligacoes'] as [$a, $id]) {
         $A = $atores[$a]; $u = $uc[$id];

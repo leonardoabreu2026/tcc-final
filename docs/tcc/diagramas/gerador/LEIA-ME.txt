@@ -1,6 +1,6 @@
-Desenhistas dos diagramas (estilo Astah UML, linhas retas, posições controladas)
+Geradores de diagramas em SVG (notação UML; disposição visual inspirada no Astah, sem exportação nativa)
 
-- specs_uc.php  : a especificação dos 15 diagramas de caso de uso (casos, colunas, linhas, atores e ligações).
+- specs_uc.php  : a especificação dos 15 diagramas de caso de uso (casos, colunas, linhas, atores e ligações); o diagrama geral reúne os quatro atores, com os três humanos de um lado e o Sistema (ator secundário) do outro, refletindo os fluxos implementados.
 - ucdraw.php    : desenha os casos de uso em SVG.   php ucdraw.php specs_uc.php ..
 - erdraw.php    : desenha o modelo lógico em SVG a partir das tabelas do ../logico.puml.   php erdraw.php ../logico.puml ../logico.svg
 - classdraw.php : desenha o diagrama de classes de domínio a partir das mesmas tabelas.   php classdraw.php ../logico.puml ../classes.svg
