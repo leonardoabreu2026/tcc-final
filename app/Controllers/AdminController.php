@@ -79,12 +79,10 @@ final class AdminController extends Controller {
             $acao = post_str('acao');
             $id = post_int('id');
 
-            if ($acao === 'excluir') {
-                if ($id === $meuId) { flash('erro', 'Você não pode remover a própria conta.'); redirect('admin/pages/usuarios.php'.painel_qs()); }
-                $alvo = $dao->buscarPorId($id);
-                if ($alvo && $alvo['tipo'] === 'admin' && (int)$alvo['ativo'] && $dao->contarAdminsAtivos() <= 1) { flash('erro', 'É preciso manter pelo menos um administrador ativo.'); redirect('admin/pages/usuarios.php'.painel_qs()); }
-                $ok = $dao->excluir($id);
-                flash($ok ? 'ok' : 'erro', $ok ? 'Usuário removido, junto com o perfil, os currículos, as vagas e as candidaturas dele.' : 'Não foi possível remover o usuário.');
+            // "Cancelar conta" não apaga nada: bloqueia o acesso e guarda o perfil, as vagas e as candidaturas.
+            if ($acao === 'cancelar') {
+                $erro = $dao->alterarAtivo($id, false, $meuId);
+                flash($erro === '' ? 'ok' : 'erro', $erro === '' ? 'Conta cancelada: o acesso foi bloqueado, e os dados continuam guardados. Para desfazer, ative a conta de novo.' : $erro);
                 redirect('admin/pages/usuarios.php'.painel_qs());
             }
 
@@ -133,7 +131,7 @@ final class AdminController extends Controller {
     /**
      * admin/pages/assinaturas.php — CRUD de assinaturas (Candidato VIP e Empresa Premium).
      * Criar: concede o plano da conta (candidato → VIP, empresa → Premium) por N dias. Editar: valor, datas e situação.
-     * Cancelar mantém o histórico; excluir apaga. Cada conta tem no máximo uma assinatura ativa.
+     * Cancelar mantém o histórico (nenhuma assinatura é apagada). Cada conta tem no máximo uma assinatura ativa.
      */
     public function assinaturas(): void {
         exigirAdmin();
@@ -147,11 +145,6 @@ final class AdminController extends Controller {
             if ($acao === 'cancelar') {
                 $ok = $dao->cancelarPorId($id);
                 flash($ok ? 'ok' : 'erro', $ok ? 'Assinatura cancelada: a conta voltou ao plano gratuito (o histórico fica guardado).' : 'Só dá para cancelar uma assinatura ativa.');
-                redirect('admin/pages/assinaturas.php'.painel_qs());
-            }
-            if ($acao === 'excluir') {
-                $ok = $dao->excluir($id);
-                flash($ok ? 'ok' : 'erro', $ok ? 'Assinatura removida do histórico.' : 'Assinatura não encontrada.');
                 redirect('admin/pages/assinaturas.php'.painel_qs());
             }
             if ($acao === 'conceder') {
@@ -206,9 +199,9 @@ final class AdminController extends Controller {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             validar_csrf();
             $id = post_int('id');
-            if (post_str('acao') === 'excluir') {
-                $ok = $dao->excluir($id);
-                flash($ok ? 'ok' : 'erro', $ok ? 'Categoria removida. Vagas e cursos que a usavam ficaram sem categoria.' : ($dao->erro ?: 'Categoria não encontrada.'));
+            if (post_str('acao') === 'cancelar') {
+                $ok = $dao->alterarAtivo($id, false);
+                flash($ok ? 'ok' : 'erro', $ok ? 'Categoria cancelada: saiu dos filtros, e as vagas e os cursos continuam com ela. Para desfazer, ative de novo.' : 'Categoria não encontrada.');
                 redirect('admin/pages/categorias.php'.painel_qs());
             }
             if (in_array(post_str('acao'), ['ativar', 'desativar'], true)) {
@@ -262,9 +255,9 @@ final class AdminController extends Controller {
             $id = post_int('id');
             $acao = post_str('acao');
 
-            if ($acao === 'excluir') {
-                $ok = $dao->excluir($id);
-                flash($ok ? 'ok' : 'erro', $ok ? 'Conteúdo removido.' : 'Conteúdo não encontrado.');
+            if ($acao === 'cancelar') {
+                $ok = $dao->alterarAtivo($id, false);
+                flash($ok ? 'ok' : 'erro', $ok ? 'Conteúdo cancelado: saiu da área pública e continua salvo. Para desfazer, publique de novo.' : 'Conteúdo não encontrado.');
                 redirect('admin/pages/cursos.php'.painel_qs());
             }
 

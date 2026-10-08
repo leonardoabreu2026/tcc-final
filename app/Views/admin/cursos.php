@@ -119,7 +119,7 @@ $modeloFicha = "Título:\nTipo:\nInstituição:\nModalidade:\nCidade:\nNível:\n
         <td><?=painel_botoes([
             ['href' => url('curso.php?id='.(int)$x['id']), 'texto' => 'Ver', 'icone' => 'olho', 'estilo' => 'primario', 'nova_aba' => true],
             ['href' => painel_qs(['edit' => (int)$x['id']]).'#form-curso', 'texto' => 'Editar', 'icone' => 'editar'],
-            ['acao' => 'excluir', 'id' => (int)$x['id'], 'texto' => 'Remover '.$formato, 'icone' => 'lixeira', 'estilo' => 'perigo', 'confirmar' => 'Remover este '.$formato.'? Esta ação não pode ser desfeita.'],
+            !$x['ativo'] ? null : ['acao' => 'cancelar', 'id' => (int)$x['id'], 'texto' => 'Cancelar '.$formato, 'icone' => 'fechar', 'estilo' => 'perigo', 'confirmar' => 'Cancelar este '.$formato.'? Ele sai da área pública e continua salvo. Clique em OK para confirmar.'],
         ], (string)$x['titulo'])?></td>
     </tr>
     <?php endforeach; ?>

@@ -43,7 +43,7 @@
         <?php else: ?><span class="meta">match indisponível<br>(vaga inativa)</span><?php endif; ?>
     </div>
     <?php if (!isAdmin() && $cancelada): ?>
-        <div class="notice small pn-cand-aviso">O candidato cancelou esta candidatura. Ela fica só como histórico: o contato e o currículo deixam de ficar disponíveis.</div>
+        <div class="notice small pn-cand-aviso">Esta candidatura foi cancelada. Ela fica só como histórico: o contato e o currículo deixam de ficar disponíveis.</div>
     <?php else: ?>
     <form method="post">
         <input type="hidden" name="csrf" value="<?=e(csrf_token())?>"><input type="hidden" name="id" value="<?=(int)$x['id']?>">
@@ -52,7 +52,7 @@
         <label for="obs-<?=(int)$x['id']?>">Retorno para o candidato</label>
         <textarea id="obs-<?=(int)$x['id']?>" name="observacao" rows="2" maxlength="2000" placeholder="Ex.: Entrevista na segunda às 10h."><?=e($x['observacao_empresa'])?></textarea>
         <div class="actions" style="margin-top:8px"><button class="btn btn-sm">Salvar</button>
-        <?php if (isAdmin()): ?><button class="btn btn-sm btn-danger" name="acao" value="excluir" data-confirm="Remover esta candidatura? Esta ação não pode ser desfeita.">Remover candidatura</button><?php endif; ?></div>
+        <?php if (isAdmin() && !$cancelada): ?><button class="btn btn-sm btn-danger" name="acao" value="cancelar" data-confirm="Cancelar esta candidatura? Ela continua guardada no histórico. Clique em OK para confirmar.">Cancelar candidatura</button><?php endif; ?></div>
     </form>
     <?php endif; ?>
 </article>

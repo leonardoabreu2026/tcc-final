@@ -114,6 +114,7 @@ entity curriculos {
   curriculo_texto : LONGTEXT
   template : VARCHAR(50) NN
   downloads : INT(11) NN
+  ativo : TINYINT(1) NN
   created_at : DATETIME NN
 }
 entity matches {

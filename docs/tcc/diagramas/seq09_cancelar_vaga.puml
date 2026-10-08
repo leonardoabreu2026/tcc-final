@@ -1,0 +1,20 @@
+@startuml
+!include estilo.iuml
+mainframe sd Cancelar vaga
+autonumber "0:"
+hide footbox
+
+actor Empresa as E
+boundary ":TelaVagas" as T
+control ":EmpresaController" as C
+entity ":VagaDAO" as D
+E -> T ++ : clicar em "Cancelar vaga"
+T --> E : "Cancelar esta vaga?"
+E -> T : confirmar (OK)
+T -> C ++ : vagas(acao = cancelar, id)
+C -> C : conferir permissão
+C -> D ++ : alterarStatus(id, 'cancelada')
+D --> C -- : 'ok'
+C --> T -- : "Vaga cancelada."
+T --> E -- : exibir mensagem
+@enduml

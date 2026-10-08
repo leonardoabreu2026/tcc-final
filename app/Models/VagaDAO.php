@@ -10,7 +10,8 @@ final class VagaDAO {
     public const TIPOS = ['clt','pj','estagio','temporario'];
     public const NIVEIS = ['estagiario','junior','pleno','senior'];
     public const MODELOS = ['presencial','remoto','hibrido'];
-    public const STATUS = ['ativa','pausada','encerrada'];
+    /** 'cancelada' é o botão "Cancelar vaga": a vaga sai do ar, mas as candidaturas e os matches dela ficam guardados. */
+    public const STATUS = ['ativa','pausada','encerrada','cancelada'];
 
     /** empresa_nome: o anunciante (vaga publicada pela curadoria, ex.: lida de um cartaz) ou a empresa dona da vaga. */
     private const SELECT = "SELECT v.*, c.nome AS categoria_nome, COALESCE(NULLIF(v.anunciante,''), NULLIF(p.nome_fantasia,''), u.nome) AS empresa_nome,
@@ -130,25 +131,9 @@ final class VagaDAO {
         return $s->fetchAll();
     }
 
-    /** Exclui a vaga; candidaturas e matches dela saem em cascata (FK). A imagem enviada também é apagada. */
-    public function excluir(int $id): bool {
-        try {
-            $db = Database::getConexao();
-            $img = $db->prepare("SELECT imagem FROM vagas WHERE id = ?");
-            $img->execute([$id]);
-            $imagem = (string)($img->fetchColumn() ?: '');
-            $s = $db->prepare("DELETE FROM vagas WHERE id = ?");
-            $s->execute([$id]);
-            if ($s->rowCount() < 1) return false;
-            apagar_upload_sem_uso($imagem);
-            return true;
-        } catch (Throwable) {
-            return false;
-        }
-    }
-
     /**
-     * Ativar / pausar / encerrar com um clique (lista do painel). Ao ATIVAR com $limite (plano básico),
+     * Ativar / pausar / encerrar / cancelar com um clique (lista do painel). Nenhuma delas apaga a vaga:
+     * as candidaturas e os matches continuam guardados. Ao ATIVAR com $limite (plano básico),
      * conta e grava na mesma transação, como salvarComLimite().
      * @return string 'ok' | 'limite' | 'erro'
      */
@@ -185,10 +170,11 @@ final class VagaDAO {
     // $perfilEmpresaId null = todas as vagas (administrador); com id = só as da empresa.
     // ------------------------------------------------------------
 
-    /** Totais das vagas: cadastradas, abertas, pausadas, encerradas, vencidas (ativa com prazo passado), destaque e visualizações. */
+    /** Totais das vagas: cadastradas, abertas, pausadas, encerradas, canceladas, vencidas (ativa com prazo passado), destaque e visualizações. */
     public function resumoPainel(?int $perfilEmpresaId = null): array {
         $sql = "SELECT COUNT(*) AS total, SUM(".self::ATIVA.") AS abertas, SUM(v.status = 'pausada') AS pausadas,
-                       SUM(v.status = 'encerrada') AS encerradas, SUM(v.status = 'ativa' AND v.data_expiracao < CURDATE()) AS vencidas,
+                       SUM(v.status = 'encerrada') AS encerradas, SUM(v.status = 'cancelada') AS canceladas,
+                       SUM(v.status = 'ativa' AND v.data_expiracao < CURDATE()) AS vencidas,
                        SUM(v.destaque = 1) AS destaque, SUM(v.visualizacoes) AS visualizacoes
                 FROM vagas v".($perfilEmpresaId ? " WHERE v.perfil_empresa_id = ?" : '');
         $s = Database::getConexao()->prepare($sql);

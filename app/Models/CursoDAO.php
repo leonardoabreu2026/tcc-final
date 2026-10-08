@@ -76,21 +76,4 @@ final class CursoDAO {
         Database::getConexao()->prepare("UPDATE cursos SET ativo=? WHERE id=?")->execute([$ativo ? 1 : 0, $id]);
         return true;
     }
-
-    public function excluir(int $id): bool {
-        try {
-            $db = Database::getConexao();
-            $arq = $db->prepare("SELECT imagem, url FROM cursos WHERE id=?");
-            $arq->execute([$id]);
-            $antes = $arq->fetch() ?: ['imagem' => '', 'url' => ''];
-            $s = $db->prepare("DELETE FROM cursos WHERE id=?");
-            $s->execute([$id]);
-            if ($s->rowCount() < 1) return false;
-            apagar_upload_sem_uso((string)$antes['imagem']); // só apaga se for upload e ninguém mais usar
-            apagar_upload_sem_uso((string)$antes['url']);    // PDF da biblioteca (link da web é ignorado)
-            return true;
-        } catch (Throwable) {
-            return false;
-        }
-    }
 }

@@ -79,9 +79,9 @@
                 </div>
                 <div class="actions">
                     <a class="btn btn-sm btn-outline" href="<?=url('download.php?id='.(int)$cv['id'])?>" target="_blank">Abrir</a>
-                    <form method="post" action="<?=url('view/perfil/curriculo_excluir.php')?>">
+                    <form method="post" action="<?=url('view/perfil/curriculo_cancelar.php')?>">
                         <input type="hidden" name="csrf" value="<?=e(csrf_token())?>"><input type="hidden" name="id" value="<?=(int)$cv['id']?>">
-                        <button class="btn btn-sm btn-danger" data-confirm="Remover este currículo?">Remover currículo</button>
+                        <button class="btn btn-sm btn-danger" data-confirm="Cancelar este currículo? Ele sai da sua lista, e as empresas que já o receberam continuam com ele. Clique em OK para confirmar.">Cancelar currículo</button>
                     </form>
                 </div>
             </div>
@@ -158,6 +158,7 @@
                 <?php if (!empty($c['observacao_empresa'])): ?>
                     <div class="notice small" style="margin-top:8px; padding:8px 12px;"><b>Retorno da empresa:</b><br><?=e($c['observacao_empresa'])?></div>
                 <?php endif; ?>
+                <?php if (($c['vaga_status'] ?? '') === 'cancelada'): ?><div class="meta" style="margin-top:6px">A empresa cancelou esta vaga. A sua candidatura continua guardada aqui.</div><?php endif; ?>
                 <?php if (in_array($c['status'], ['enviada', 'em_analise'], true)): ?>
                     <form method="post" action="<?=url('view/perfil/candidatura_cancelar.php')?>" style="margin-top:6px">
                         <input type="hidden" name="csrf" value="<?=e(csrf_token())?>"><input type="hidden" name="id" value="<?=(int)$c['id']?>">

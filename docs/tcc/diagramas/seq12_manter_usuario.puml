@@ -15,11 +15,11 @@ C -> D ++ : cadastrar() / atualizar()
 D --> C -- : true
 C --> T -- : "Usuário salvo."
 T --> A -- : exibir mensagem
-A -> T ++ : clicar em "Excluir"
-T -> C ++ : usuarios(acao = excluir, id)
-C -> C : impedir excluir a própria conta\ne o último administrador
-C -> D ++ : excluir(id)
-D --> C -- : true (perfil, currículos, vagas e\ncandidaturas saem junto)
-C --> T -- : "Usuário excluído."
+A -> T ++ : clicar em "Cancelar conta"
+T -> C ++ : usuarios(acao = cancelar, id)
+C -> C : impedir cancelar a própria conta\ne o último administrador
+C -> D ++ : alterarAtivo(id, false)
+D --> C -- : sem erro (nada é apagado:\na conta só é bloqueada)
+C --> T -- : "Conta cancelada."
 T --> A -- : exibir mensagem
 @enduml

@@ -1,6 +1,6 @@
 # Telas do Conecta Vagas DF
 
-Capturas de todas as telas do sistema, tiradas em 04/10/2026 na versão `tcc-final-v1.2`, com os dados do seed.
+Capturas de todas as telas do sistema, tiradas em 08/10/2026 na versão `tcc-final-v1.4`, com os dados do seed.
 O candidato do portfólio e das candidaturas (Maria Eduarda Souza) e a candidata do relatório (Joana Ribeiro) são exemplos fictícios, criados só para as capturas e apagados depois.
 
 | Arquivo | Tela |

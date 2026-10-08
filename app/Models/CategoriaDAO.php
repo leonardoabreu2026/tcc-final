@@ -65,16 +65,4 @@ final class CategoriaDAO {
         Database::getConexao()->prepare("UPDATE categorias SET ativo=? WHERE id=?")->execute([$ativo ? 1 : 0, $id]);
         return true;
     }
-
-    /** Exclui a categoria; vagas/cursos que a usavam ficam sem categoria (FK ON DELETE SET NULL). */
-    public function excluir(int $id): bool {
-        try {
-            $s = Database::getConexao()->prepare("DELETE FROM categorias WHERE id=?");
-            $s->execute([$id]);
-            return $s->rowCount() > 0;
-        } catch (Throwable) {
-            $this->erro = 'Erro ao excluir a categoria.';
-            return false;
-        }
-    }
 }

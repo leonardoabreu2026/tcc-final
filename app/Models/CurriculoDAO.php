@@ -4,10 +4,12 @@ declare(strict_types=1);
 /**
  * Acesso à tabela `curriculos`: arquivos enviados pelo candidato (PDF/DOCX/DOC)
  * e o texto extraído deles (usado pela máquina de match).
+ * "Cancelar currículo" não apaga: o arquivo sai da lista do candidato (ativo = 0) e deixa de ser usado
+ * em novas candidaturas e no match, mas as empresas que já o receberam continuam podendo abri-lo.
  */
 final class CurriculoDAO {
     public function listarPorPerfil(int $pid): array {
-        $s = Database::getConexao()->prepare("SELECT * FROM curriculos WHERE perfil_id=? ORDER BY created_at DESC,id DESC");
+        $s = Database::getConexao()->prepare("SELECT * FROM curriculos WHERE perfil_id=? AND ativo=1 ORDER BY created_at DESC,id DESC");
         $s->execute([$pid]);
         return $s->fetchAll();
     }
@@ -18,15 +20,16 @@ final class CurriculoDAO {
         return $s->fetch() ?: null;
     }
 
+    /** Currículo ativo do candidato (os cancelados não servem para novas candidaturas). */
     public function buscarDoPerfil(int $id, int $pid): ?array {
-        $s = Database::getConexao()->prepare("SELECT * FROM curriculos WHERE id=? AND perfil_id=?");
+        $s = Database::getConexao()->prepare("SELECT * FROM curriculos WHERE id=? AND perfil_id=? AND ativo=1");
         $s->execute([$id, $pid]);
         return $s->fetch() ?: null;
     }
 
     /** Texto extraído do currículo mais recente (usado pela máquina de match). */
     public function ultimoTexto(int $pid): string {
-        $s = Database::getConexao()->prepare("SELECT curriculo_texto FROM curriculos WHERE perfil_id=? AND curriculo_texto IS NOT NULL AND curriculo_texto<>'' ORDER BY created_at DESC,id DESC LIMIT 1");
+        $s = Database::getConexao()->prepare("SELECT curriculo_texto FROM curriculos WHERE perfil_id=? AND ativo=1 AND curriculo_texto IS NOT NULL AND curriculo_texto<>'' ORDER BY created_at DESC,id DESC LIMIT 1");
         $s->execute([$pid]);
         return (string)($s->fetchColumn() ?: '');
     }
@@ -39,7 +42,7 @@ final class CurriculoDAO {
     public function ultimosTextos(): array {
         $sql = "SELECT c.perfil_id, c.curriculo_texto FROM curriculos c
                 WHERE c.id=(SELECT c2.id FROM curriculos c2
-                            WHERE c2.perfil_id=c.perfil_id AND c2.curriculo_texto IS NOT NULL AND c2.curriculo_texto<>''
+                            WHERE c2.perfil_id=c.perfil_id AND c2.ativo=1 AND c2.curriculo_texto IS NOT NULL AND c2.curriculo_texto<>''
                             ORDER BY c2.created_at DESC,c2.id DESC LIMIT 1)";
         $out = [];
         foreach (Database::getConexao()->query($sql)->fetchAll() as $r) $out[(int)$r['perfil_id']] = (string)$r['curriculo_texto'];
@@ -53,9 +56,11 @@ final class CurriculoDAO {
         return (int)$db->lastInsertId();
     }
 
-    public function excluir(int $id, int $pid): bool {
-        if (!$this->buscarDoPerfil($id, $pid)) return false;
-        return Database::getConexao()->prepare("DELETE FROM curriculos WHERE id=? AND perfil_id=?")->execute([$id, $pid]);
+    /** Cancela o currículo do candidato. O registro e o arquivo continuam guardados. */
+    public function cancelar(int $id, int $pid): bool {
+        $s = Database::getConexao()->prepare("UPDATE curriculos SET ativo=0 WHERE id=? AND perfil_id=? AND ativo=1");
+        $s->execute([$id, $pid]);
+        return $s->rowCount() > 0;
     }
 
     /** A empresa pode abrir o currículo que foi enviado em candidatura para uma vaga dela. */

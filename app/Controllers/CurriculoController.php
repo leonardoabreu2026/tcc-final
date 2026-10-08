@@ -244,8 +244,11 @@ final class CurriculoController extends Controller {
         redirect('view/perfil/portfolio.php?relatorio=1');
     }
 
-    /** view/perfil/curriculo_excluir.php (POST) — apaga o currículo (registro e arquivo) e recalcula o match. */
-    public function excluir(): void {
+    /**
+     * view/perfil/curriculo_cancelar.php (POST) — "Cancelar currículo": tira o currículo da lista e recalcula o match.
+     * Nada é apagado: as empresas que já receberam o currículo numa candidatura continuam podendo abri-lo.
+     */
+    public function cancelar(): void {
         exigirLogin();
         if (!isCandidato()) negar_acesso('Acesso negado.');
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') redirect('view/perfil/index.php');
@@ -256,13 +259,11 @@ final class CurriculoController extends Controller {
         $cv = $p ? $dao->buscarDoPerfil(post_int('id'), (int)$p['id']) : null;
         if (!$cv) { flash('erro', 'Currículo não encontrado.'); redirect('view/perfil/index.php'); }
 
-        if ($dao->excluir((int)$cv['id'], (int)$p['id'])) {
-            $path = caminho_upload((string)$cv['arquivo_pdf']);
-            if ($path !== null && is_file($path)) @unlink($path);
+        if ($dao->cancelar((int)$cv['id'], (int)$p['id'])) {
             try { (new MatchService())->recalcular((int)$p['id']); } catch (Throwable) {}
-            flash('ok', 'Currículo removido. Candidaturas já enviadas com ele continuam registradas, sem o arquivo.');
+            flash('ok', 'Currículo cancelado: saiu da sua lista e não é usado em novas candidaturas. As empresas que já o receberam continuam com ele.');
         } else {
-            flash('erro', 'Não foi possível remover o currículo.');
+            flash('erro', 'Não foi possível cancelar o currículo.');
         }
         redirect('view/perfil/index.php');
     }

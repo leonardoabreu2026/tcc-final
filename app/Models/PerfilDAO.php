@@ -87,7 +87,7 @@ final class PerfilDAO {
      */
     public function listarTalentos(string $termo = '', string $cidade = ''): array {
         $sql = "SELECT p.*, u.nome, u.email, u.telefone,
-                       (SELECT id FROM curriculos c WHERE c.perfil_id = p.id ORDER BY c.id DESC LIMIT 1) AS curriculo_id,
+                       (SELECT id FROM curriculos c WHERE c.perfil_id = p.id AND c.ativo = 1 ORDER BY c.id DESC LIMIT 1) AS curriculo_id,
                        (SELECT COUNT(*) FROM assinaturas a
                         WHERE a.usuario_id = u.id AND a.plano = 'assinante' AND a.status = 'ativa'
                         AND a.data_fim >= CURDATE()) AS is_vip

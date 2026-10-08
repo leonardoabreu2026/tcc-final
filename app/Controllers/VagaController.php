@@ -76,7 +76,7 @@ final class VagaController extends Controller {
         $dao = new VagaDAO();
         $vaga = $dao->buscar($id);
         $aberta = $vaga && $dao->estaAberta($vaga);
-        // Vaga pausada/encerrada: só a empresa dona e o admin veem.
+        // Vaga pausada, encerrada ou cancelada: só a empresa dona e o admin veem.
         $ehDona = $vaga && usuarioLogado() && (int)($vaga['empresa_usuario_id'] ?? 0) === (int)$_SESSION['usuario_id'];
         if (!$vaga || (!$aberta && !$ehDona && !isAdmin())) {
             http_response_code(404);

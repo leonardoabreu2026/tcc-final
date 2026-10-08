@@ -43,17 +43,12 @@ final class EmpresaController extends Controller {
             $id = post_int('id');
             $acao = post_str('acao');
 
-            if ($acao === 'excluir') {
-                $ok = $vagaPermitida($id) && $dao->excluir($id);
-                flash($ok ? 'ok' : 'erro', $ok ? 'Vaga removida (candidaturas e matches dela também).' : 'Vaga não encontrada ou sem permissão.');
-                redirect('admin/pages/vagas.php'.painel_qs());
-            }
-
-            // Ativar / pausar / encerrar com um clique. Reativar respeita o limite do plano básico.
-            if (in_array($acao, ['ativar', 'pausar', 'encerrar'], true)) {
+            // Ativar / pausar / encerrar / cancelar com um clique. Nada é apagado: "Cancelar vaga" tira a vaga
+            // do ar e guarda as candidaturas e os matches dela. Reativar respeita o limite do plano básico.
+            if (in_array($acao, ['ativar', 'pausar', 'encerrar', 'cancelar'], true)) {
                 $v = $vagaPermitida($id);
                 if (!$v) negar_acesso('Vaga não encontrada ou sem permissão.');
-                $novo = ['ativar' => 'ativa', 'pausar' => 'pausada', 'encerrar' => 'encerrada'][$acao];
+                $novo = ['ativar' => 'ativa', 'pausar' => 'pausada', 'encerrar' => 'encerrada', 'cancelar' => 'cancelada'][$acao];
                 $limite = null;
                 if ($novo === 'ativa' && !isAdmin() && !$dao->estaAberta($v)) {
                     $perm = $assinaturaDao->podePublicarVaga($usuarioId, (int)$v['perfil_empresa_id']);
@@ -63,7 +58,8 @@ final class EmpresaController extends Controller {
                 $res = $dao->alterarStatus($id, $novo, $limite);
                 if ($res === 'limite') { flash('erro', sprintf(AssinaturaDAO::AVISO_LIMITE_VAGAS, $limite)); redirect('planos.php'); }
                 if ($res === 'ok') {
-                    $msg = ['ativa' => 'Vaga ativada.', 'pausada' => 'Vaga pausada: saiu da busca, mas continua salva.', 'encerrada' => 'Vaga encerrada.'][$novo];
+                    $msg = ['ativa' => 'Vaga ativada.', 'pausada' => 'Vaga pausada: saiu da busca, mas continua salva.', 'encerrada' => 'Vaga encerrada.',
+                            'cancelada' => 'Vaga cancelada: saiu do ar, e as candidaturas dela continuam guardadas. Para desfazer, use Reabrir.'][$novo];
                     if ($novo === 'ativa') {
                         $n = 0;
                         try { $n = (new MatchService())->recalcularVaga($id); } catch (Throwable) {}
@@ -207,7 +203,7 @@ final class EmpresaController extends Controller {
             'nivel_experiencia' => 'junior', 'remoto' => 'presencial', 'cidade' => 'Brasília', 'uf' => 'DF', 'salario_minimo' => null, 'salario_maximo' => null,
             'imagem' => 'assets/img/vagas/vaga1.jpg', 'status' => 'ativa', 'destaque' => 0, 'data_expiracao' => null];
         $todas = isAdmin() ? $dao->listar(false) : ($perfil ? $dao->listarPorEmpresa((int)$perfil['id']) : []);
-        // Filtros da lista: situação (aberta, pausada, encerrada, expirada) e busca por título/empresa/cidade.
+        // Filtros da lista: situação (aberta, pausada, encerrada, cancelada, expirada) e busca por título/empresa/cidade.
         $situacao = fn(array $x) => $x['status'] === 'ativa' && !empty($x['data_expiracao']) && $x['data_expiracao'] < date('Y-m-d') ? 'expirada' : $x['status'];
         $porSituacao = array_count_values(array_map($situacao, $todas));
         $filtroStatus = enum_val(get_str('status'), [...VagaDAO::STATUS, 'expirada'], '');
@@ -250,9 +246,9 @@ final class EmpresaController extends Controller {
             // Empresa não pode marcar "cancelada" (é ação do candidato); admin pode tudo.
             $status = enum_val(post_str('status'), isAdmin() ? CandidaturaDAO::STATUS : CandidaturaDAO::STATUS_EMPRESA, '');
             $obs = mb_substr(post_str('observacao'), 0, 2000);
-            if (post_str('acao') === 'excluir') {
-                $ok = isAdmin() && $dao->excluir($id);
-                flash($ok ? 'ok' : 'erro', $ok ? 'Candidatura removida.' : (isAdmin() ? 'Candidatura não encontrada.' : 'Somente o administrador pode remover candidaturas.'));
+            if (post_str('acao') === 'cancelar') {
+                $ok = isAdmin() && $dao->cancelar($id);
+                flash($ok ? 'ok' : 'erro', $ok ? 'Candidatura cancelada. Ela continua guardada no histórico.' : (isAdmin() ? 'Candidatura não encontrada ou já cancelada.' : 'Somente o administrador pode cancelar candidaturas por aqui.'));
             } else {
                 $ok = $status !== '' && (isAdmin() ? $dao->atualizarStatus($id, $status, $obs) : ($perfil && $dao->atualizarStatusPorEmpresa($id, (int)$perfil['id'], $status, $obs)));
                 flash($ok ? 'ok' : 'erro', $ok ? 'Candidatura atualizada. O candidato vê o novo status e o retorno no perfil dele.' : 'Não foi possível atualizar (candidatura inexistente, de outra empresa ou cancelada pelo candidato).');

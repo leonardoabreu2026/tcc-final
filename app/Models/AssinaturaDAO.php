@@ -336,13 +336,4 @@ final class AssinaturaDAO {
         $this->removerDestaqueSemPremium((int)$a['usuario_id']);
         return true;
     }
-
-    /** Exclui do histórico (use cancelar para manter o registro). */
-    public function excluir(int $id): bool {
-        $a = $this->buscar($id);
-        if (!$a) return false;
-        Database::getConexao()->prepare("DELETE FROM assinaturas WHERE id=?")->execute([$id]);
-        $this->removerDestaqueSemPremium((int)$a['usuario_id']);
-        return true;
-    }
 }

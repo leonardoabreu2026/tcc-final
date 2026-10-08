@@ -109,7 +109,7 @@ final class UsuarioDAO {
                     p.id AS perfil_id, p.nome_fantasia, p.titulo_profissional, p.cidade, p.uf, p.setor, p.publico,
                     (SELECT COUNT(*) FROM vagas v WHERE v.perfil_empresa_id = p.id) AS total_vagas,
                     (SELECT COUNT(*) FROM candidaturas c WHERE c.perfil_candidato_id = p.id) AS total_candidaturas,
-                    (SELECT COUNT(*) FROM curriculos cv WHERE cv.perfil_id = p.id) AS total_curriculos,
+                    (SELECT COUNT(*) FROM curriculos cv WHERE cv.perfil_id = p.id AND cv.ativo = 1) AS total_curriculos,
                     (SELECT a.plano FROM assinaturas a WHERE a.usuario_id = u.id AND a.status = 'ativa' AND a.data_fim >= CURDATE() ORDER BY a.id DESC LIMIT 1) AS plano_ativo
              FROM usuarios u LEFT JOIN perfis p ON p.usuario_id = u.id WHERE u.id = ?");
         $s->execute([$id]);

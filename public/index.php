@@ -68,7 +68,7 @@ $rotas->rota('view/perfil/recalcular_match.php',     [PerfilController::class, '
 $rotas->rota('view/perfil/conta_excluir.php',        [PerfilController::class, 'excluirConta']);
 $rotas->rota('view/perfil/curriculo_upload.php',     [CurriculoController::class, 'upload']);
 $rotas->rota('view/perfil/aplicar_extracao.php',     [CurriculoController::class, 'aplicarExtracao']);
-$rotas->rota('view/perfil/curriculo_excluir.php',    [CurriculoController::class, 'excluir']);
+$rotas->rota('view/perfil/curriculo_cancelar.php',   [CurriculoController::class, 'cancelar']);
 $rotas->rota('candidatar.php',                       [CandidaturaController::class, 'candidatar']);
 $rotas->rota('view/perfil/candidatura_cancelar.php', [CandidaturaController::class, 'cancelar']);
 $rotas->rota('download.php',                         [ArquivoController::class, 'download']);

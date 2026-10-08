@@ -33,7 +33,7 @@ A ideia surgiu de uma situação que vemos todos os dias: as vagas do DF ficam e
 | Serviços de negócio | 4, mais 13 peças das máquinas de extração |
 | Personagens | 4 (Candidato, Empresa, Administrador e Sistema) |
 | Dados de demonstração | 62 vagas com cartaz, 64 cursos e e-books (43 cursos e 21 e-books) e 20 áreas |
-| Testes automáticos | 98 arquivos conferidos, 112 verificações rápidas e 18 verificações de jornada |
+| Testes automáticos | 98 arquivos conferidos, 112 verificações rápidas e 21 verificações de jornada |
 
 ## Tecnologias que usamos
 
@@ -71,7 +71,7 @@ No plano gratuito, a empresa pode ter até 2 vagas ativas ao mesmo tempo. O plan
 
 O administrador cuida da plataforma inteira. A primeira tela do painel é uma visão geral com números e gráficos: candidaturas por dia, usuários novos, vagas por área, situação das candidaturas e assinaturas. A partir dali ele administra:
 
-- os **usuários**: criar, editar, ativar, desativar e excluir contas;
+- os **usuários**: criar, editar, ativar, desativar e cancelar contas;
 - as **categorias**, que são as áreas usadas para agrupar vagas e cursos;
 - as **vagas** de todas as empresas, com a mesma leitura de cartaz e de anúncio que a empresa tem;
 - as **candidaturas** de toda a plataforma;
@@ -130,7 +130,7 @@ O match é uma nota de 0 a 100 dividida em quatro partes:
 | Localização | 15 | mesma cidade, mesma UF ou vaga remota |
 | Nível | 15 | nível de experiência do candidato com o nível pedido |
 
-A nota vem sempre com a explicação de cada parte, para o candidato entender por que combina mais com uma vaga do que com outra e para a empresa entender a ordem da lista de candidatos. O match é recalculado quando o candidato envia ou exclui um currículo, quando salva o perfil e quando a empresa cria ou altera uma vaga. Também existe um botão para recalcular na hora.
+A nota vem sempre com a explicação de cada parte, para o candidato entender por que combina mais com uma vaga do que com outra e para a empresa entender a ordem da lista de candidatos. O match é recalculado quando o candidato envia ou cancela um currículo, quando salva o perfil e quando a empresa cria ou altera uma vaga. Também existe um botão para recalcular na hora.
 
 ### Leitura de cartazes e anúncios de vagas
 
@@ -173,6 +173,18 @@ Os e-books com PDF na biblioteca mostram o botão **Baixar**, e o arquivo vem di
 ### Planos e assinaturas
 
 Existem dois planos pagos, os dois por 30 dias e sem fidelidade: o **Candidato VIP**, por R$ 9,90, e o **Empresa Premium**, por R$ 49,90. Como é um trabalho acadêmico, a assinatura é demonstrativa e não há cobrança de verdade. A tela mostra o plano atual, o histórico e as vantagens de cada um, e o administrador acompanha tudo em Assinaturas.
+
+### Cancelar sem perder dados
+
+Nenhum botão do painel apaga um registro. Onde antes havia "Excluir", agora há **Cancelar**, que tira o item de circulação e guarda tudo o que está ligado a ele:
+
+- **Cancelar vaga**: a vaga sai do ar com a situação *cancelada*, e as candidaturas e o match dela continuam guardados. O candidato vê o aviso "A empresa cancelou esta vaga", e essa candidatura deixa de ocupar o limite do plano gratuito. O botão Reabrir desfaz;
+- **Cancelar candidatura** (administrador): a candidatura fica com o status *cancelada* e continua no histórico;
+- **Cancelar conta**, **Cancelar categoria** e **Cancelar curso** (ou e-book e vídeo): a conta é bloqueada, a categoria sai dos filtros e o conteúdo sai da área pública, e os dados continuam guardados. A chave de ativar desfaz;
+- **Cancelar assinatura**: a conta volta ao plano gratuito, e a assinatura fica no histórico;
+- **Cancelar currículo** (candidato): o currículo sai da lista e não é usado em novas candidaturas nem no match, mas as empresas que já o receberam continuam com ele.
+
+A confirmação de cada botão termina com "Clique em OK para confirmar", para não confundir o Cancelar do botão com o Cancelar da janela de confirmação. O único jeito de apagar dados é o candidato excluir a própria conta, como pede a LGPD.
 
 ### Tarefas automáticas
 
@@ -253,7 +265,7 @@ O banco se chama `tcc_final` e tem 11 tabelas:
 | `tentativas_login` | as senhas erradas, usadas para pausar o login |
 | `redefinicoes_senha` | os pedidos de nova senha (só o resumo do código do link) |
 
-As chaves estrangeiras usam `ON DELETE CASCADE`: quando um usuário é excluído, saem junto o perfil, os currículos, as vagas, as candidaturas e os matches dele. Os padrões automáticos da extração não têm tabela, porque são montados na hora a partir das vagas e dos cursos.
+Os botões Cancelar não apagam nada: a vaga cancelada fica com a situação `cancelada`, a candidatura e a assinatura com o status `cancelada`, e a conta, a categoria, o curso e o currículo cancelados ficam com `ativo = 0`. As chaves estrangeiras usam `ON DELETE CASCADE`, que só entra em ação quando o candidato exclui a própria conta (LGPD): saem junto o perfil, os currículos, as candidaturas e os matches dele. Os padrões automáticos da extração não têm tabela, porque são montados na hora a partir das vagas e dos cursos.
 
 ## Segurança e LGPD
 
@@ -297,18 +309,19 @@ Criamos três testes automáticos, na pasta `tests`:
 
 - o `lint.php` confere a sintaxe de todos os arquivos PHP;
 - o `smoke.php` é o teste rápido: 112 verificações das regras de negócio, das máquinas de extração (com exemplos reais de cartazes, anúncios e currículos), dos padrões automáticos, da capa do PDF, do banco e das páginas;
-- o `jornadas.php` usa o sistema como uma pessoa usaria, pelo navegador. Cria uma conta temporária e passa por cadastro, login, envio de currículo, candidatura, leitura de vaga e de ficha de curso, troca de senha e exclusão da conta. São 18 verificações, e no fim a conta é apagada.
+- o `jornadas.php` usa o sistema como uma pessoa usaria, pelo navegador. Cria uma conta temporária e passa por cadastro, login, envio de currículo, candidatura, leitura de vaga e de ficha de curso, cancelamento (a vaga, a candidatura e o currículo cancelados continuam guardados), troca de senha e exclusão da conta. São 21 verificações, e no fim a conta é apagada e a vaga cancelada volta a ficar aberta.
 
 O jeito mais fácil de rodar tudo é o clique duplo em `tests\verificar.bat`. No fim aparece TUDO CERTO, ou o que quebrou, com o arquivo e a linha. O teste de jornadas precisa da extensão zip do PHP, que vem desligada no XAMPP; o `verificar.bat` liga essa extensão só durante o teste, sem mexer no `php.ini`. O site em si funciona sem ela.
 
 O Git também está protegido: antes de cada commit, o `.githooks/pre-commit` roda os mesmos testes, e se algo quebrar o commit não é feito. Numa cópia nova do projeto, esse gancho é ligado com:
 ```
-git config core.hooksPath .githooks
-```
 
-## Roteiro para a apresentação
 
-1. Deixar o notebook na tomada. Na bateria, o processador fica mais lento e a leitura do cartaz demora o dobro.
+
+
+
+
+processador fica mais lento e a leitura do cartaz demora o dobro.
 2. No XAMPP, dar Start no Apache e no MySQL.
 3. Clique duplo em `tests\verificar.bat` e esperar o TUDO CERTO.
 4. Abrir uma vez o painel de vagas, para o leitor de cartaz já ficar carregado.
@@ -323,8 +336,8 @@ git config core.hooksPath .githooks
 | Documento | O que tem |
 |---|---|
 | [docs/tcc/TCC_Final_Conecta_Vagas_DF.docx](docs/tcc/TCC_Final_Conecta_Vagas_DF.docx) | o documento do TCC no modelo do professor (Escola Técnica de Ceilândia, PCC 2.2026): requisitos, casos de uso, diagramas, modelo de dados, telas, testes, a seção 8.11 com cada funcionalidade em detalhe e o Apêndice A com o código-fonte explicado |
-| [docs/tcc/TCC_Final_Conecta_Vagas_DF.pdf](docs/tcc/TCC_Final_Conecta_Vagas_DF.pdf) | o mesmo documento em PDF (293 páginas), com sumário e listas atualizados e marcadores para navegar pelos títulos |
-| [docs/tcc/TCC_Conecta_Vagas_DF_Documentacao.docx](docs/tcc/TCC_Conecta_Vagas_DF_Documentacao.docx) e [.pdf](docs/tcc/TCC_Conecta_Vagas_DF_Documentacao.pdf) | a documentação revisada no modelo do professor (67 páginas): requisitos, casos de uso com especificação, diagramas de classes, sequência e entidade-relacionamento, dicionário de dados e a leitura do cartaz por OCR com o Tesseract |
+| [docs/tcc/TCC_Final_Conecta_Vagas_DF.pdf](docs/tcc/TCC_Final_Conecta_Vagas_DF.pdf) | o mesmo documento em PDF (296 páginas), com sumário e listas atualizados e marcadores para navegar pelos títulos |
+| [docs/tcc/TCC_Conecta_Vagas_DF_Documentacao.docx](docs/tcc/TCC_Conecta_Vagas_DF_Documentacao.docx) e [.pdf](docs/tcc/TCC_Conecta_Vagas_DF_Documentacao.pdf) | a documentação revisada no modelo do professor (68 páginas): requisitos, casos de uso com especificação, diagramas de classes, sequência e entidade-relacionamento, dicionário de dados e a leitura do cartaz por OCR com o Tesseract |
 | [docs/telas/](docs/telas/README.md) | capturas de todas as telas do sistema (visitante, candidato, empresa e administrador, no computador e no celular) e o portfólio salvo em PDF |
 | [docs/ARQUITETURA.md](docs/ARQUITETURA.md) | como o sistema funciona por dentro, camada por camada, com a tabela de rotas |
 | [docs/PADROES_AUTOMATICOS.md](docs/PADROES_AUTOMATICOS.md) | os padrões automáticos das máquinas de extração e como demonstrá-los |
@@ -355,6 +368,6 @@ Os backups ficam em `storage/backups/<data>/`, com o banco, os arquivos enviados
 C:\xampp\mysql\bin\mysqldump.exe -u root --single-transaction --databases tcc_final > storage\backups\banco_tcc_final.sql
 ```
 
-As versões estáveis do código são marcadas com tags no Git (`tcc-final-v1.0`, `tcc-final-v1.1`, `tcc-final-v1.2`, `tcc-final-v1.3` e as seguintes). Para voltar a uma delas, use `git checkout <tag>`. Cada versão final tem um backup do banco e dos arquivos enviados em `storage/backups/` (fora do Git), com o `COMO_RESTAURAR.txt`.
+As versões estáveis do código são marcadas com tags no Git (`tcc-final-v1.0`, `tcc-final-v1.1`, `tcc-final-v1.2`, `tcc-final-v1.3`, `tcc-final-v1.4` e as seguintes). Para voltar a uma delas, use `git checkout <tag>`. Cada versão final tem um backup do banco e dos arquivos enviados em `storage/backups/` (fora do Git), com o `COMO_RESTAURAR.txt`.
 
 Quando o site é acessado pelo próprio computador, os erros mostram o detalhe técnico, o que ajuda no desenvolvimento. Quem acessa de outra máquina vê só mensagens amigáveis. Para publicar, defina a variável de ambiente `APP_DEBUG=0`, que desliga o detalhe técnico para todos, inclusive quando o site fica atrás de um proxy.

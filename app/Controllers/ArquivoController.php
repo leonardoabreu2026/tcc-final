@@ -39,7 +39,7 @@ final class ArquivoController extends Controller {
      *  - o próprio candidato;
      *  - o administrador;
      *  - a empresa que recebeu uma candidatura com esse currículo;
-     *  - empresa Premium (Banco de Talentos), se o perfil do candidato for público.
+     *  - empresa Premium (Banco de Talentos), se o perfil do candidato for público e o currículo não foi cancelado.
      */
     public function download(): void {
         exigirLogin();
@@ -56,7 +56,7 @@ final class ArquivoController extends Controller {
         $permitido = isAdmin() || $ehDono;
         if (!$permitido && isEmpresa() && $meu) {
             $permitido = $dao->enviadoParaEmpresa((int)$cv['id'], (int)$meu['id'])
-                || ((new AssinaturaDAO())->isEmpresaPremium($usuarioId) && $dono && (int)$dono['publico'] === 1 && (int)$dono['ativo'] === 1);
+                || ((new AssinaturaDAO())->isEmpresaPremium($usuarioId) && (int)$cv['ativo'] === 1 && $dono && (int)$dono['publico'] === 1 && (int)$dono['ativo'] === 1);
         }
         if (!$permitido) pagina_erro(403, 'Acesso restrito', '<p>O currículo só pode ser aberto pelo próprio candidato, pelas empresas que receberam a candidatura ou por empresas com plano Premium (perfis públicos).</p>');
 

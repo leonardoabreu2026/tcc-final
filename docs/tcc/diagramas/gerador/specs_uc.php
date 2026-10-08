@@ -50,7 +50,7 @@ return [
     'relacoes' => [['DV', 'CV', 'extend'], ['NM', 'DV', 'extend'], ['DC', 'CC', 'extend'], ['BP', 'DC', 'extend']]],
 
 'uc05_perfil_candidato' => ['nome' => 'Perfil do candidato', 'colunas' => [185, 455], 'topo' => 100, 'passo' => 62,
-    'casos' => ['EC' => ['Enviar currículo', 0, 0], 'AR' => ["Aplicar dados\ndo relatório", 0, 1], 'XC' => ['Excluir currículo', 0, 2],
+    'casos' => ['EC' => ['Enviar currículo', 0, 0], 'AR' => ["Aplicar dados\ndo relatório", 0, 1], 'XC' => ['Cancelar currículo', 0, 2],
                 'AP' => ["Alterar perfil\n(cadastro)", 0, 3], 'VP' => ['Visualizar portfólio', 0, 4.4], 'XA' => ["Excluir a própria\nconta (LGPD)", 0, 5.6],
                 'EX' => ["Extrair dados e foto\ndo currículo", 1, 0], 'RM' => ['Recalcular match', 1, 3.7], 'CS' => ['Confirmar com a senha', 1, 5.6]],
     'atores' => ['Candidato' => ['x' => 60], 'Sistema' => ['x' => 770, 'y' => 230]],
@@ -65,7 +65,7 @@ return [
     'relacoes' => [['CA', 'VL', 'include']]],
 
 'uc07_manter_vaga' => ['nome' => 'Manter vaga', 'colunas' => [175, 425, 695], 'topo' => 100, 'passo' => 66,
-    'casos' => ['CV' => ['Cadastrar vaga', 0, 1], 'AV' => ['Alterar vaga', 0, 2.6], 'EV' => ['Excluir vaga', 0, 3.6],
+    'casos' => ['CV' => ['Cadastrar vaga', 0, 1], 'AV' => ['Alterar vaga', 0, 2.6], 'EV' => ['Cancelar vaga', 0, 3.6],
                 'XT' => ["Extrair vaga do texto\ndo anúncio", 1, 0], 'LC' => ["Ler o cartaz no navegador\n(OCR, com carregador)", 1, 1.4], 'RM' => ["Recalcular match\nda vaga", 1, 2.6],
                 'CB' => ["Aplicar os padrões\nautomáticos", 2, 0]],
     'atores' => ['Empresa' => ['x' => 60, 'y' => 150], 'Administrador' => ['x' => 60, 'y' => 300], 'Sistema' => ['x' => 1010, 'y' => 230]],
@@ -75,7 +75,7 @@ return [
 
 'uc08_area_empresa' => ['nome' => 'Área da empresa', 'colunas' => [225], 'topo' => 100, 'passo' => 58,
     'casos' => ['MP' => ["Manter perfil\nda empresa", 0, 0], 'BT' => ["Consultar banco\nde talentos", 0, 1], 'ST' => ["Atualizar status e\nretorno da candidatura", 0, 2],
-                'BC' => ['Baixar currículo', 0, 3], 'EX' => ['Excluir candidatura', 0, 4]],
+                'BC' => ['Baixar currículo', 0, 3], 'EX' => ['Cancelar candidatura', 0, 4]],
     'atores' => ['Empresa' => ['x' => 60, 'y' => 160], 'Administrador' => ['x' => 600, 'y' => 270]],
     'ligacoes' => [['Empresa', 'MP'], ['Empresa', 'BT'], ['Empresa', 'ST'], ['Empresa', 'BC'], ['Administrador', 'ST'], ['Administrador', 'BC'], ['Administrador', 'EX']]],
 
@@ -85,17 +85,17 @@ return [
     'ligacoes' => [['Candidato', 'AP'], ['Candidato', 'CA'], ['Empresa', 'AP'], ['Empresa', 'CA']]],
 
 'uc10_manter_usuario' => ['nome' => 'Manter usuário', 'colunas' => [215], 'topo' => 100, 'passo' => 56,
-    'casos' => ['C' => ['Cadastrar usuário', 0, 0], 'U' => ['Alterar usuário', 0, 1], 'T' => ["Ativar ou desativar\nusuário", 0, 2], 'E' => ['Excluir usuário', 0, 3]],
+    'casos' => ['C' => ['Cadastrar usuário', 0, 0], 'U' => ['Alterar usuário', 0, 1], 'T' => ["Ativar ou desativar\nusuário", 0, 2], 'E' => ['Cancelar conta', 0, 3]],
     'atores' => ['Administrador' => ['x' => 60]],
     'ligacoes' => [['Administrador', 'C'], ['Administrador', 'U'], ['Administrador', 'T'], ['Administrador', 'E']]],
 
 'uc11_manter_categoria' => ['nome' => 'Manter categoria', 'colunas' => [215], 'topo' => 100, 'passo' => 56,
-    'casos' => ['C' => ['Cadastrar categoria', 0, 0], 'U' => ['Alterar categoria', 0, 1], 'T' => ["Ativar ou desativar\ncategoria", 0, 2], 'E' => ['Excluir categoria', 0, 3]],
+    'casos' => ['C' => ['Cadastrar categoria', 0, 0], 'U' => ['Alterar categoria', 0, 1], 'T' => ["Ativar ou desativar\ncategoria", 0, 2], 'E' => ['Cancelar categoria', 0, 3]],
     'atores' => ['Administrador' => ['x' => 60]],
     'ligacoes' => [['Administrador', 'C'], ['Administrador', 'U'], ['Administrador', 'T'], ['Administrador', 'E']]],
 
 'uc12_manter_curso' => ['nome' => 'Manter curso/e-book', 'colunas' => [175, 425, 685, 935], 'topo' => 100, 'passo' => 62,
-    'casos' => ['C' => ['Cadastrar curso/e-book', 0, 1], 'U' => ['Alterar curso/e-book', 0, 3], 'P' => ['Publicar ou ocultar', 0, 4], 'E' => ['Excluir curso/e-book', 0, 5],
+    'casos' => ['C' => ['Cadastrar curso/e-book', 0, 1], 'U' => ['Alterar curso/e-book', 0, 3], 'P' => ['Publicar ou ocultar', 0, 4], 'E' => ['Cancelar curso/e-book', 0, 5],
                 'T' => ["Trazer os PDFs para\na biblioteca", 0, 6],
                 'X' => ["Extrair do texto ou da\nficha da pesquisa", 1, 0], 'L' => ["Importar fichas em lote\n(prévia)", 1, 1.2], 'G' => ["Guardar o PDF na\nbiblioteca", 1, 2.4],
                 'CB' => ["Aplicar os padrões\nautomáticos", 2, 0], 'AL' => ["Abrir os links da ficha\n(imagem, PDF ou página)", 2, 1.2],
@@ -113,9 +113,9 @@ return [
 
 'uc14_assinaturas_admin' => ['nome' => 'Gerenciar assinaturas', 'colunas' => [225], 'topo' => 100, 'passo' => 56,
     'casos' => ['L' => ["Consultar assinaturas\n(filtros e ordenação)", 0, 0], 'C' => ['Conceder assinatura', 0, 1], 'U' => ["Alterar assinatura\n(valor, datas e situação)", 0, 2],
-                'X' => ['Cancelar assinatura', 0, 3], 'E' => ['Excluir assinatura', 0, 4]],
+                'X' => ['Cancelar assinatura', 0, 3]],
     'atores' => ['Administrador' => ['x' => 60]],
-    'ligacoes' => [['Administrador', 'L'], ['Administrador', 'C'], ['Administrador', 'U'], ['Administrador', 'X'], ['Administrador', 'E']]],
+    'ligacoes' => [['Administrador', 'L'], ['Administrador', 'C'], ['Administrador', 'U'], ['Administrador', 'X']]],
 
 'uc15_padroes_automaticos' => ['nome' => 'Padrões automáticos das máquinas de extração', 'colunas' => [185, 455, 735], 'topo' => 100, 'passo' => 64,
     'casos' => ['XV' => ["Extrair vaga do anúncio\nou do cartaz", 0, 1], 'XC' => ["Extrair curso/e-book\nda ficha", 0, 2.4], 'RS' => ["Revisar e salvar (o cadastro\nentra nos padrões)", 0, 3.7],

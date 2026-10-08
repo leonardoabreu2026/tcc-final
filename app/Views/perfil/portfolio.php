@@ -37,6 +37,7 @@
               <span class="tag pf-cands-status <?=e($c['status'])?>"><?=e(rotulo($c['status']))?></span>
             </div>
             <?php if (!empty($c['observacao_empresa'])): ?><p class="pf-cands-retorno"><b>Retorno da empresa:</b> <?=e($c['observacao_empresa'])?></p><?php endif; ?>
+            <?php if (($c['vaga_status'] ?? '') === 'cancelada'): ?><p class="pf-cands-retorno">A empresa cancelou esta vaga. A sua candidatura continua guardada aqui.</p><?php endif; ?>
           </li>
         <?php endforeach; ?>
       </ul>

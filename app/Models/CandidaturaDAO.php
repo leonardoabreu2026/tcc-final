@@ -10,8 +10,11 @@ final class CandidaturaDAO {
     public const STATUS = ['enviada','em_analise','entrevista','aprovado','rejeitado','cancelada'];
     /** Status que a empresa pode definir ("cancelada" é exclusivo do candidato). */
     public const STATUS_EMPRESA = ['enviada','em_analise','entrevista','aprovado','rejeitado'];
-    /** Candidatura ativa (ainda em andamento): é o que conta no limite do plano gratuito. */
-    public const ATIVAS = "status IN ('enviada','em_analise','entrevista')";
+    /**
+     * Candidatura ativa (ainda em andamento): é o que conta no limite do plano gratuito.
+     * A candidatura numa vaga que a empresa cancelou fica guardada, mas não ocupa o limite.
+     */
+    public const ATIVAS = "status IN ('enviada','em_analise','entrevista') AND vaga_id NOT IN (SELECT id FROM vagas WHERE status = 'cancelada')";
 
     /** Colunas comuns às listagens da empresa e do administrador (inclui o match do candidato com a vaga). */
     private const SELECT_EMPRESA = "SELECT c.*, v.titulo, v.cidade, v.uf, v.perfil_empresa_id,
@@ -80,7 +83,7 @@ final class CandidaturaDAO {
     }
 
     public function listarPorCandidato(int $pid): array {
-        $sql = "SELECT c.*, v.titulo, v.cidade, v.uf, COALESCE(NULLIF(v.anunciante,''), NULLIF(p.nome_fantasia,''), u.nome) AS empresa_nome
+        $sql = "SELECT c.*, v.titulo, v.cidade, v.uf, v.status AS vaga_status, COALESCE(NULLIF(v.anunciante,''), NULLIF(p.nome_fantasia,''), u.nome) AS empresa_nome
                 FROM candidaturas c
                 JOIN vagas v ON v.id=c.vaga_id
                 JOIN perfis p ON p.id=v.perfil_empresa_id
@@ -139,8 +142,9 @@ final class CandidaturaDAO {
         return $s->rowCount() > 0;
     }
 
-    public function excluir(int $id): bool {
-        $s = Database::getConexao()->prepare("DELETE FROM candidaturas WHERE id=?");
+    /** "Cancelar candidatura" do administrador: muda só o status; a candidatura e o retorno da empresa ficam guardados. */
+    public function cancelar(int $id): bool {
+        $s = Database::getConexao()->prepare("UPDATE candidaturas SET status='cancelada' WHERE id=? AND status<>'cancelada'");
         $s->execute([$id]);
         return $s->rowCount() > 0;
     }

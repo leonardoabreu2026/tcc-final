@@ -64,7 +64,7 @@ A tabela abaixo resume o papel de cada camada e o que ela não deve fazer.
 | `AuthController` | Login, cadastro e sair |
 | `PasswordController` | Esqueci a senha e redefinir a senha |
 | `PerfilController` | Meu perfil, salvar o perfil, portfólio, recalcular o match e excluir a própria conta |
-| `CurriculoController` | Envio do currículo (extração), aplicar os dados do relatório e excluir o currículo |
+| `CurriculoController` | Envio do currículo (extração), aplicar os dados do relatório e cancelar o currículo |
 | `ArquivoController` | Imagens enviadas (`assets/uploads/...`) e download do currículo (`download.php`) |
 | `AdminController` | Painel (`admin/index.php`), usuários, categorias, cursos e assinaturas |
 | `EmpresaController` | Vagas (com extração), candidaturas recebidas, banco de talentos e perfil da empresa |
@@ -138,7 +138,7 @@ São 32 rotas.
 | `view/perfil/conta_excluir.php` | `PerfilController::excluirConta` | (redireciona) | candidato |
 | `view/perfil/curriculo_upload.php` | `CurriculoController::upload` | (redireciona) | candidato |
 | `view/perfil/aplicar_extracao.php` | `CurriculoController::aplicarExtracao` | (redireciona) | candidato |
-| `view/perfil/curriculo_excluir.php` | `CurriculoController::excluir` | (redireciona) | candidato |
+| `view/perfil/curriculo_cancelar.php` | `CurriculoController::cancelar` | (redireciona) | candidato |
 | `candidatar.php?vaga_id=` | `CandidaturaController::candidatar` | `vagas/candidatar` | candidato |
 | `view/perfil/candidatura_cancelar.php` | `CandidaturaController::cancelar` | (redireciona) | candidato |
 | `download.php?id=` | `ArquivoController::download` | (arquivo) | o dono, o administrador e a empresa autorizada |
@@ -311,28 +311,29 @@ As tabelas do painel (usuários, categorias, cursos, e-books e vídeos, assinatu
 um clique (`painel_th()`), filtros e paginação (`painel_paginacao()`, que usa a mesma `cv_paginacao()` das listas
 públicas; ela mesma escapa cada endereço, então quem chama passa o endereço puro). Candidaturas e banco de talentos têm a opção de
 ordem no filtro. Essa lógica fica em `app/Core/helpers.php` (`lista_ordem()`, `ordenar_linhas()`, `paginar()` e
-`painel_qs()`), e todas as ações, como salvar, publicar e excluir, voltam para a mesma aba, com os mesmos filtros, a mesma
+`painel_qs()`), e todas as ações, como salvar, publicar e cancelar, voltam para a mesma aba, com os mesmos filtros, a mesma
 ordem e a mesma página. Se alguém abre "Editar" ou "Ver" de um registro que não existe mais, o painel avisa e volta para a
 lista (`registro_encontrado()`).
 
 Nas listas, cada vaga, curso e e-book aparece com a sua foto (`painel_miniatura()`), uma chave de liga e desliga para a
 situação (`painel_chave()`, que é um botão num formulário POST com CSRF) e uma barra de ações numa linha só
-(`painel_botoes()`, com Ver, Editar, Encerrar ou Reabrir e Excluir).
+(`painel_botoes()`, com Ver, Editar, Encerrar ou Reabrir e Cancelar). Nenhum botão apaga o registro: cancelar muda a
+situação e guarda tudo o que está ligado a ele.
 
-| Tela | Criar | Ver | Editar | Ativar e desativar | Excluir | Filtros |
+| Tela | Criar | Ver | Editar | Ativar e desativar | Cancelar | Filtros |
 |---|---|---|---|---|---|---|
-| Vagas | formulário e extração | página pública da vaga | `?edit=` | ativar, pausar e encerrar (reativar respeita o limite do plano) | sim | situação e busca |
-| Cursos e e-books | formulário e extração | página pública do curso | `?edit=` | publicar e ocultar | sim | formato e busca |
-| Usuários | formulário | ficha da conta (`?ver=`) | `?edit=` | ativar e bloquear (nunca a própria conta nem o último administrador) | sim | tipo e busca |
-| Categorias | formulário | vagas e cursos da categoria | `?edit=` | ativar e desativar | sim | nenhum |
-| Candidaturas | pelo candidato | portfólio e currículo | status e retorno | não se aplica | administrador | vaga e status |
+| Vagas | formulário e extração | página pública da vaga | `?edit=` | ativar, pausar e encerrar (reativar respeita o limite do plano) | situação `cancelada`, com as candidaturas guardadas | situação e busca |
+| Cursos e e-books | formulário e extração | página pública do curso | `?edit=` | publicar e ocultar | oculta e guarda o conteúdo | formato e busca |
+| Usuários | formulário | ficha da conta (`?ver=`) | `?edit=` | ativar e bloquear (nunca a própria conta nem o último administrador) | bloqueia a conta e guarda os dados | tipo e busca |
+| Categorias | formulário | vagas e cursos da categoria | `?edit=` | ativar e desativar | desativa e guarda a categoria | nenhum |
+| Candidaturas | pelo candidato | portfólio e currículo | status e retorno | não se aplica | administrador (status `cancelada`) | vaga e status |
 
 Toda ação que muda dados é um formulário POST com token CSRF: a chave liga/desliga (`painel_chave()`) e a barra de
 botões do CRUD (`painel_botoes()`). O controller confere a permissão no servidor e volta para a mesma lista, com os
 filtros, a ordenação e a página (`painel_qs()`).
 
 A tela de Assinaturas é só do administrador. Ela concede o plano da conta (Candidato VIP para candidato e Empresa Premium
-para empresa) por um número de dias, edita o valor, as datas e a situação, cancela (mantendo o histórico) e exclui. Cada
+para empresa) por um número de dias, edita o valor, as datas e a situação e cancela, mantendo o histórico. Cada
 conta tem no máximo uma assinatura ativa, e se a empresa perde o Premium o destaque das vagas sai. Os preços ficam em
 `AssinaturaDAO::PRECOS`, os mesmos de `planos.php`.
 
@@ -359,7 +360,7 @@ A partir de 75 pontos a compatibilidade é excelente, a partir de 55 é alta, a 
 baixa. O detalhamento fica salvo em `matches.detalhes` (JSON) e aparece para o candidato, no "Por que essa nota?", e para a
 empresa, com as competências atendidas e as que faltam em cada candidatura. Algumas observações explicam a nota sem
 mudá-la, como a CNH pedida pela vaga, a vaga para PCD e as viagens. Os cursos que cobrem as competências que faltam são
-recomendados no portfólio, na página da vaga e em Cursos. O Sistema recalcula o match quando o candidato envia ou exclui
+recomendados no portfólio, na página da vaga e em Cursos. O Sistema recalcula o match quando o candidato envia ou cancela
 um currículo, salva o perfil ou clica em "Recalcular match", e quando uma vaga é criada ou editada.
 
 ## 8. Regras dos planos
@@ -384,15 +385,16 @@ aberta (`VagaDAO::ATIVA`) também é escrito uma vez só, então o contador da t
 
 No banco de dados, todas as consultas usam PDO com consultas preparadas, e nenhum valor digitado pelo usuário é colado
 direto no SQL. As senhas são guardadas com `password_hash` e conferidas com `password_verify` (bcrypt), com limite de 72
-caracteres. As chaves estrangeiras usam exclusão em cascata: quando um usuário é excluído, saem junto o perfil, os
-currículos, as vagas, as candidaturas, os matches, as assinaturas e os pedidos de troca de senha, e os arquivos enviados
-também são apagados. Como os padrões automáticos são montados na hora, as vagas apagadas deixam de contar neles. O
+caracteres. Os botões Cancelar do painel não apagam nada. As chaves estrangeiras usam exclusão em cascata, que só entra em ação
+quando o candidato exclui a própria conta (LGPD): saem junto o perfil, os currículos, as candidaturas, os matches, as
+assinaturas e os pedidos de troca de senha, e os arquivos enviados também são apagados. Como os padrões automáticos são
+montados na hora, cada vaga salva ou alterada já conta neles. O
 cadastro do usuário e do perfil acontece numa transação, e o e-mail é único também por uma chave UNIQUE.
 
 A sessão usa um cookie próprio (`CVDF_SESSAO`), restrito à pasta do projeto, com HttpOnly, SameSite=Lax (e Secure quando
 há HTTPS) e modo estrito, que não aceita um identificador de sessão inventado. A cada login ou cadastro geramos um novo
-identificador e um novo token CSRF. A cada requisição a conta é conferida no banco: se o administrador desativar ou excluir
-o usuário, ou mudar o tipo dele, a sessão aberta perde o acesso na hora.
+identificador e um novo token CSRF. A cada requisição a conta é conferida no banco: se o administrador bloquear ou cancelar
+a conta, ou mudar o tipo dela, a sessão aberta perde o acesso na hora.
 
 Para o login, guardamos as tentativas na tabela `tentativas_login`. Oito senhas erradas para o mesmo e-mail a partir do
 mesmo IP (ou 20 somando todos os IPs, ou 60 de um mesmo IP) em cinco minutos pausam o login por cinco minutos, e a tela
@@ -407,7 +409,7 @@ site; um link vindo de outro site mostra uma confirmação.
 
 Todos os formulários POST têm token CSRF, e um token inválido mostra uma página amigável com o código 403. Cada ação
 confere a permissão: a empresa só altera as próprias vagas e as candidaturas delas, o candidato só mexe no que é dele e o
-administrador não exclui nem rebaixa a própria conta (e sempre sobra pelo menos um administrador ativo). O cadastro
+administrador não cancela nem rebaixa a própria conta (e sempre sobra pelo menos um administrador ativo). O cadastro
 público só cria candidato ou empresa, nunca administrador, e exige o aceite do termo. Todo texto exibido passa pela
 função `e()` (htmlspecialchars), e os links externos só aceitam http e https.
 
@@ -428,7 +430,7 @@ Pensando na LGPD, o candidato pode excluir a própria conta em `PerfilController
 mesma tolerância e a mesma pausa do login, em `UsuarioDAO::senhaConfere`) e uma caixa de confirmação. Depois o
 `UsuarioDAO::excluir` apaga a conta, com o perfil, os currículos, as candidaturas, os matches, as assinaturas e os pedidos
 de troca de senha, além dos arquivos enviados e das tentativas de login do e-mail. As outras sessões abertas da conta caem
-sozinhas (`revalidar_sessao`). Empresas pedem a exclusão ao administrador. O registro do link de troca de senha só existe
+sozinhas (`revalidar_sessao`). Empresas pedem ao administrador o cancelamento da conta. O registro do link de troca de senha só existe
 no modo de demonstração e guarda o e-mail mascarado (`mascarar_email`).
 
 A recuperação de senha é demonstrativa, porque não enviamos e-mail. O link vale por 30 minutos, pode ser usado uma vez e é
@@ -446,8 +448,9 @@ navegador, sem chamar nenhum serviço externo.
 O `tests/lint.php` confere a sintaxe de todos os arquivos PHP. O `tests/smoke.php` é o teste rápido: confere as classes,
 as regras de negócio, as máquinas de extração (inclusive os padrões automáticos e a capa do PDF), o banco e as páginas.
 O `tests/jornadas.php` usa o sistema como uma pessoa usaria, pelo HTTP: uma conta temporária faz cadastro, saída e login,
-envia um currículo DOCX, se candidata, testa a extração de vagas e cursos, troca a senha e exclui a conta, e tudo o que
-ela criou é apagado no fim, mesmo se algum passo falhar. O `tests/verificar.bat` roda os três com um clique duplo, e o
+envia um currículo DOCX, se candidata, testa a extração de vagas e cursos, cancela a vaga, a candidatura e o currículo
+(conferindo que nada foi apagado), troca a senha e exclui a conta, e tudo o que ela criou é apagado no fim, mesmo se
+algum passo falhar. O `tests/verificar.bat` roda os três com um clique duplo, e o
 gancho `.githooks/pre-commit` (ligado com `git config core.hooksPath .githooks`) roda a mesma verificação antes de cada
 commit e barra o commit se algo quebrar. O `.gitattributes` mantém o gancho com quebra de linha LF e o `.bat` com CRLF.
 

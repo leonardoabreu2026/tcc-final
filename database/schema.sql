@@ -12,7 +12,9 @@
 -- Tabelas: usuarios (contas) → perfis (1:1, candidato ou empresa) → curriculos, vagas;
 -- categorias; cursos; candidaturas (candidato × vaga); matches (nota candidato × vaga);
 -- assinaturas (planos); tentativas_login e redefinicoes_senha (segurança da conta);
--- São 11 tabelas. As chaves estrangeiras usam ON DELETE CASCADE: excluir um usuário remove tudo dele.
+-- São 11 tabelas. Os botões "Cancelar" do sistema não apagam nada: a vaga fica com a situação 'cancelada',
+-- a candidatura e a assinatura também, e a conta, a categoria, o curso e o currículo ficam com ativo = 0.
+-- As chaves estrangeiras usam ON DELETE CASCADE: quando o candidato exclui a própria conta (LGPD), sai tudo dele.
 -- As máquinas de extração não têm tabela própria: os padrões automáticos delas são tirados na hora das
 -- vagas e dos cursos já cadastrados (app/Services/Extracao/PadroesExtracao.php).
 -- ============================================================
@@ -96,7 +98,7 @@ CREATE TABLE vagas (
  salario_minimo DECIMAL(10,2) NULL,
  salario_maximo DECIMAL(10,2) NULL,
  imagem VARCHAR(255),
- status ENUM('ativa','pausada','encerrada') NOT NULL DEFAULT 'ativa',
+ status ENUM('ativa','pausada','encerrada','cancelada') NOT NULL DEFAULT 'ativa',
  destaque TINYINT(1) NOT NULL DEFAULT 0,
  data_publicacao DATE NULL,
  data_expiracao DATE NULL,
@@ -141,6 +143,7 @@ CREATE TABLE curriculos (
  curriculo_texto LONGTEXT,
  template VARCHAR(50) NOT NULL DEFAULT 'moderno',
  downloads INT NOT NULL DEFAULT 0,
+ ativo TINYINT(1) NOT NULL DEFAULT 1,
  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
  FOREIGN KEY(perfil_id) REFERENCES perfis(id) ON DELETE CASCADE,
  INDEX idx_cv_perfil(perfil_id)

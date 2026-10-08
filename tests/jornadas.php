@@ -15,11 +15,14 @@ declare(strict_types=1);
  *  3. candidatura a uma vaga da empresa de teste → a empresa vê a candidatura;
  *  4. empresa: extração pelo texto do anúncio, pelo cartaz (leituras reais do navegador) e "Extrair" vazio barrado;
  *  5. administrador: ficha de curso extraída para o formulário;
- *  6. "Esqueci minha senha": o log não guarda o e-mail inteiro;
- *  7. LGPD: o candidato exclui a própria conta (senha errada recusada; depois a conta, os arquivos e as
+ *  6. "Cancelar" não apaga nada: a empresa cancela a vaga, o administrador cancela a candidatura e o candidato
+ *     cancela o currículo, e a candidatura, o registro e o arquivo continuam guardados;
+ *  7. "Esqueci minha senha": o log não guarda o e-mail inteiro;
+ *  8. LGPD: o candidato exclui a própria conta (senha errada recusada; depois a conta, os arquivos e as
  *     tentativas de login somem e o login deixa de funcionar).
- * Nada é salvo além disso: a conta temporária é apagada no fim (mesmo se algum passo falhar), o cartaz lido é
- * descartado e a linha que o teste escreve no log de senhas é retirada. Termina com código 1 se algo falhar.
+ * Nada é salvo além disso: a conta temporária é apagada no fim (mesmo se algum passo falhar), a vaga cancelada
+ * volta a ficar aberta, o cartaz lido é descartado e a linha que o teste escreve no log de senhas é retirada.
+ * Termina com código 1 se algo falhar.
  */
 
 require __DIR__.'/../app/Core/bootstrap.php';
@@ -177,7 +180,29 @@ try {
     confere('ficha colada → formulário preenchido (nada salvo)', $adm->campo('titulo') === 'Curso da Jornada de Teste', $adm->campo('titulo') ?: 'status '.$adm->status);
 
     // --------------------------------------------------------
-    echo PHP_EOL.'6. Esqueci minha senha'.PHP_EOL;
+    echo PHP_EOL.'6. Cancelar não apaga nada'.PHP_EOL;
+    $candDao = new CandidaturaDAO();
+    $candidatura = ($vaga && $perfil) ? $candDao->buscarDoCandidato((int)$perfil['id'], (int)$vaga) : null;
+    if ($candidatura && $cvs) {
+        $emp->enviar('admin/pages/vagas.php', ['acao' => 'cancelar', 'id' => (string)$vaga]);
+        $vagaCancelada = (new VagaDAO())->buscar((int)$vaga)['status'] ?? '';
+        confere('a empresa cancela a vaga: ela sai do ar e a candidatura continua guardada', $vagaCancelada === 'cancelada'
+            && $candDao->buscarDoCandidato((int)$perfil['id'], (int)$vaga) !== null && str_contains($cand->abrir('view/perfil/index.php'), 'A empresa cancelou esta vaga'), $emp->aviso());
+        // A vaga é do seed: volta a ficar aberta como estava (sem recalcular nada).
+        Database::getConexao()->prepare("UPDATE vagas SET status='ativa' WHERE id=? AND status='cancelada'")->execute([(int)$vaga]);
+        $adm->enviar('admin/pages/candidaturas.php', ['acao' => 'cancelar', 'id' => (string)$candidatura['id'], 'status' => '', 'observacao' => '']);
+        confere('o administrador cancela a candidatura: ela continua guardada, com o status Cancelada',
+            ($candDao->buscarDoCandidato((int)$perfil['id'], (int)$vaga)['status'] ?? '') === 'cancelada', $adm->aviso());
+        $cand->enviar('view/perfil/curriculo_cancelar.php', ['id' => (string)$cvs[0]['id']], 'view/perfil/index.php');
+        $cvCancelado = (new CurriculoDAO())->buscar((int)$cvs[0]['id']);
+        confere('o candidato cancela o currículo: sai da lista, e o registro e o arquivo continuam guardados', $cvCancelado !== null && (int)$cvCancelado['ativo'] === 0
+            && !(new CurriculoDAO())->listarPorPerfil((int)$perfil['id']) && $cvArquivo !== null && is_file($cvArquivo), $cand->aviso());
+    } else {
+        confere('há candidatura e currículo para cancelar', false, 'veja os passos 2 e 3');
+    }
+
+    // --------------------------------------------------------
+    echo PHP_EOL.'7. Esqueci minha senha'.PHP_EOL;
     (new Navegador($base))->enviar('esqueci_senha.php', ['email' => $email]);
     clearstatcache();
     $novo = is_file($logSenhas) ? (string)file_get_contents($logSenhas, false, null, $tamanhoLog) : '';
@@ -189,7 +214,7 @@ try {
         trim($novo) ?: '(nada gravado)');
 
     // --------------------------------------------------------
-    echo PHP_EOL.'7. LGPD: o candidato exclui a própria conta'.PHP_EOL;
+    echo PHP_EOL.'8. LGPD: o candidato exclui a própria conta'.PHP_EOL;
     $cand->enviar('view/perfil/conta_excluir.php', ['senha' => 'SenhaErrada@1', 'confirmo' => '1'], 'view/perfil/index.php');
     confere('senha errada: a conta NÃO é excluída', $dao->buscarPorEmail($email) !== null && str_contains($cand->aviso(), 'Senha incorreta'), $cand->aviso());
     $cand->enviar('view/perfil/conta_excluir.php', ['senha' => $senha], 'view/perfil/index.php');
@@ -205,6 +230,7 @@ try {
     confere('jornadas sem erro inesperado', false, $e->getMessage().' em '.basename($e->getFile()).':'.$e->getLine());
 } finally {
     // Limpeza: nada do teste fica para trás, mesmo se algum passo falhou no meio.
+    if (!empty($vaga)) Database::getConexao()->prepare("UPDATE vagas SET status='ativa' WHERE id=? AND status='cancelada'")->execute([(int)$vaga]);
     $sobrou = $dao->buscarPorEmail($email);
     if ($sobrou) { $dao->excluir((int)$sobrou['id']); }
     // A tentativa de entrar com a conta já excluída (último passo) também fica registrada: sai junto.

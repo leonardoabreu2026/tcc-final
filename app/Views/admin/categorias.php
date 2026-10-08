@@ -7,7 +7,7 @@
 ?>
 <div class="pn">
 <?php require __DIR__.'/../layouts/admin_nav.php'; ?>
-<?=painel_cabecalho('Categorias', 'Áreas usadas para agrupar vagas e cursos. Desativar esconde a categoria dos filtros; remover deixa os itens dela sem categoria.')?>
+<?=painel_cabecalho('Categorias', 'Áreas usadas para agrupar vagas e cursos. Desativar ou cancelar esconde a categoria dos filtros, e as vagas e os cursos continuam com ela.')?>
 <div class="form">
     <h2 class="pn-form-titulo" id="form-categoria"><?=$edit ? 'Editar categoria' : 'Nova categoria'?></h2>
     <form method="post">
@@ -38,7 +38,7 @@
         <td><?=painel_botoes([
             ['href' => url($linkPublico), 'texto' => 'Ver', 'icone' => 'olho', 'estilo' => 'primario', 'nova_aba' => true],
             ['href' => painel_qs(['edit' => (int)$x['id']]).'#form-categoria', 'texto' => 'Editar', 'icone' => 'editar'],
-            ['acao' => 'excluir', 'id' => (int)$x['id'], 'texto' => 'Remover categoria', 'icone' => 'lixeira', 'estilo' => 'perigo', 'confirmar' => (int)$x['em_uso'] ? 'Esta categoria é usada por '.(int)$x['em_uso'].' item(ns), que ficarão sem categoria. Remover?' : 'Remover esta categoria?'],
+            !$x['ativo'] ? null : ['acao' => 'cancelar', 'id' => (int)$x['id'], 'texto' => 'Cancelar categoria', 'icone' => 'fechar', 'estilo' => 'perigo', 'confirmar' => 'Cancelar esta categoria? Ela sai dos filtros, e as vagas e os cursos continuam com ela. Clique em OK para confirmar.'],
         ], (string)$x['nome'])?></td>
     </tr>
     <?php endforeach; ?>

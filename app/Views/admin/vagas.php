@@ -14,7 +14,7 @@ $cartazNoForm = !empty($form['imagem']) && str_starts_with((string)$form['imagem
 ?>
 <div class="pn">
 <?php require __DIR__.'/../layouts/admin_nav.php'; ?>
-<?=painel_cabecalho('Vagas', 'Publique pelo cartaz ou pelo texto do anúncio: a máquina de extração preenche o formulário e você só revisa. Ative, pause, edite ou remova pela lista.', $planoHtml)?>
+<?=painel_cabecalho('Vagas', 'Publique pelo cartaz ou pelo texto do anúncio: a máquina de extração preenche o formulário e você só revisa. Ative, pause, edite ou cancele pela lista.', $planoHtml)?>
 
 <div class="form" style="max-width:none">
     <details class="extrator" <?=$extraido || !empty($form['id']) ? '' : 'open'?>>
@@ -132,7 +132,7 @@ $cartazNoForm = !empty($form['imagem']) && str_starts_with((string)$form['imagem
     <input name="q" placeholder="Buscar por título, empresa ou cidade" value="<?=e($busca)?>" aria-label="Buscar por título, empresa ou cidade">
     <select name="status" aria-label="Situação da vaga">
         <option value="">Todas as situações</option>
-        <?php foreach (['ativa' => 'Abertas', 'pausada' => 'Pausadas', 'encerrada' => 'Encerradas', 'expirada' => 'Expiradas'] as $st => $rot): ?>
+        <?php foreach (['ativa' => 'Abertas', 'pausada' => 'Pausadas', 'encerrada' => 'Encerradas', 'cancelada' => 'Canceladas', 'expirada' => 'Expiradas'] as $st => $rot): ?>
             <option value="<?=$st?>" <?=$filtroStatus === $st ? 'selected' : ''?>><?=$rot?> (<?=(int)($porSituacao[$st] ?? 0)?>)</option>
         <?php endforeach; ?>
     </select>
@@ -143,12 +143,13 @@ $cartazNoForm = !empty($form['imagem']) && str_starts_with((string)$form['imagem
 <div class="table-wrap"><table class="table">
     <tr><th><span class="sr-only">Imagem</span></th><?=painel_th('titulo', 'Vaga', $ordem, $dir)?><?php if (isAdmin()): ?><?=painel_th('empresa_nome', 'Empresa', $ordem, $dir)?><?php endif; ?><?=painel_th('situacao', 'Situação', $ordem, $dir)?><?=isAdmin() ? '<th class="num">Candidaturas</th>' : painel_th('total_candidaturas', 'Candidaturas', $ordem, $dir, 'num')?><?=painel_th('visualizacoes', 'Visualizações', $ordem, $dir, 'num')?><?=painel_th('created_at', 'Publicada em', $ordem, $dir)?><th>Ações</th></tr>
     <?php foreach ($lista as $x):
-        $expirada = $x['status'] === 'ativa' && !empty($x['data_expiracao']) && $x['data_expiracao'] < date('Y-m-d'); ?>
+        $expirada = $x['status'] === 'ativa' && !empty($x['data_expiracao']) && $x['data_expiracao'] < date('Y-m-d');
+        $fechada = in_array($x['status'], ['encerrada', 'cancelada'], true); ?>
     <tr>
         <td class="pn-td-img"><?=painel_miniatura((string)($x['imagem'] ?? ''), 'cartaz', 'vagas')?></td>
         <td class="quebra"><?=e($x['titulo'])?><?=$x['destaque'] ? ' <span class="badge-vip" title="Vaga em destaque">Destaque</span>' : ''?><br><small class="meta"><?=e($x['categoria_nome'] ?? 'Sem categoria')?> · <?=e($x['cidade'] ?? '')?><?=!empty($x['uf']) ? '/'.e($x['uf']) : ''?></small></td>
         <?php if (isAdmin()): ?><td class="quebra"><?=e($x['empresa_nome'] ?? '')?></td><?php endif; ?>
-        <td><?php if ($x['status'] === 'encerrada'): ?><?=painel_status('encerrada', 'Encerrada')?>
+        <td><?php if ($fechada): ?><?=painel_status((string)$x['status'])?>
             <?php else: ?><?=painel_chave($x['status'] === 'ativa', 'ativar', 'pausar', (int)$x['id'], 'Aberta', 'Pausada', '', (string)$x['titulo'])?><?=$expirada ? '<span class="pn-chave-nota">prazo vencido</span>' : ''?><?php endif; ?></td>
         <td class="num"><a href="<?=url('admin/pages/candidaturas.php?vaga_id='.(int)$x['id'])?>"><?=isset($x['total_candidaturas']) ? (int)$x['total_candidaturas'] : 'ver'?></a></td>
         <td class="num"><?=(int)$x['visualizacoes']?></td>
@@ -156,10 +157,11 @@ $cartazNoForm = !empty($form['imagem']) && str_starts_with((string)$form['imagem
         <td><?=painel_botoes([
             ['href' => url('vaga.php?id='.(int)$x['id']), 'texto' => 'Ver', 'icone' => 'olho', 'estilo' => 'primario', 'nova_aba' => true],
             ['href' => painel_qs(['edit' => (int)$x['id']]).'#form-vaga', 'texto' => 'Editar', 'icone' => 'editar'],
-            $x['status'] === 'encerrada'
+            $fechada
                 ? ['acao' => 'ativar', 'id' => (int)$x['id'], 'texto' => 'Reabrir a vaga', 'icone' => 'play', 'estilo' => 'sucesso', 'so_icone' => true]
                 : ['acao' => 'encerrar', 'id' => (int)$x['id'], 'texto' => 'Encerrar a vaga', 'icone' => 'encerrar', 'estilo' => 'alerta', 'so_icone' => true, 'confirmar' => 'Encerrar esta vaga? Ela sai da busca e para de receber candidaturas.'],
-            ['acao' => 'excluir', 'id' => (int)$x['id'], 'texto' => 'Remover vaga', 'icone' => 'lixeira', 'estilo' => 'perigo', 'confirmar' => 'Remover a vaga e todas as candidaturas dela? Esta ação não pode ser desfeita.'],
+            $x['status'] === 'cancelada' ? null
+                : ['acao' => 'cancelar', 'id' => (int)$x['id'], 'texto' => 'Cancelar vaga', 'icone' => 'fechar', 'estilo' => 'perigo', 'confirmar' => 'Cancelar esta vaga? Ela sai do ar, e as candidaturas dela continuam guardadas. Clique em OK para confirmar.'],
         ], (string)$x['titulo'])?></td>
     </tr>
     <?php endforeach; ?>
