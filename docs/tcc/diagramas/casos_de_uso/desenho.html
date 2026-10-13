@@ -1,0 +1,105 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>diagrama</title>
+<style>html,body{margin:0;padding:0;background:#fff}svg{display:block}</style></head>
+<body>
+<script src="diagramas.js"></script>
+<script>
+// Desenha um diagrama de casos de uso no estilo do Astah. Uso: desenho.html?d=<nome em diagramas.js>
+const D = DIAGRAMAS[new URLSearchParams(location.search).get('d')];
+const NS = 'http://www.w3.org/2000/svg';
+const svg = document.createElementNS(NS, 'svg');
+svg.setAttribute('width', D.w); svg.setAttribute('height', D.h); svg.setAttribute('viewBox', `0 0 ${D.w} ${D.h}`);
+svg.setAttribute('font-family', 'Arial, Helvetica, sans-serif'); svg.setAttribute('font-size', 15);
+document.body.appendChild(svg);
+svg.innerHTML = `<defs><marker id="seta" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto">
+  <path d="M1,1 L11,6 L1,11" fill="none" stroke="#000" stroke-width="1.2"/></marker></defs>`;
+
+const LINHA = 1.2;
+const el = (tag, at, pai = svg) => { const e = document.createElementNS(NS, tag); for (const k in at) e.setAttribute(k, at[k]); pai.appendChild(e); return e; };
+const txt = (x, y, t, at = {}) => { const e = el('text', Object.assign({ x, y, 'text-anchor': 'middle' }, at)); e.textContent = t; return e; };
+const larg = t => { const e = txt(-999, -999, t); const w = e.getComputedTextLength(); e.remove(); return w; };
+const g = { stroke: '#000', 'stroke-width': LINHA, fill: 'none' };
+const camada = () => el('g', {});
+const fundo = camada(), linhas = camada(), formas = camada(), rotulos = camada();
+
+// Moldura com a aba "uc <nome>" e o limite do sistema
+el('rect', { x: 1, y: 1, width: D.w - 2, height: D.h - 2, fill: 'none', stroke: '#000', 'stroke-width': LINHA }, fundo);
+const aba = larg('uc ' + D.titulo) + 34;
+el('path', { d: `M1,1 H${aba} V20 L${aba - 10},30 H1`, fill: '#fff', stroke: '#000', 'stroke-width': LINHA }, fundo);
+const t0 = el('text', { x: 8, y: 21 }, fundo); t0.innerHTML = `<tspan font-weight="bold">uc</tspan> ${D.titulo}`;
+el('rect', { x: D.lim[0], y: D.lim[1], width: D.lim[2], height: D.lim[3], fill: 'none', stroke: '#000', 'stroke-width': LINHA }, fundo);
+
+// Casos de uso
+const UC = {};
+for (const [k, [texto, x, y]] of Object.entries(D.uc)) {
+  const ls = texto.split('\n');
+  UC[k] = { ls, x, y, rx: Math.max(...ls.map(larg)) / 2 + 24, ry: ls.length > 1 ? 27 : 20 };
+}
+// Atores: y = altura dos braços
+const AT = {};
+for (const [k, [nome, x, y]] of Object.entries(D.at)) AT[k] = { nome, x, y };
+
+const borda = (u, px, py) => {
+  const dx = px - u.x, dy = py - u.y, t = 1 / Math.sqrt((dx * dx) / (u.rx * u.rx) + (dy * dy) / (u.ry * u.ry));
+  return [u.x + dx * t, u.y + dy * t];
+};
+
+// Segmentos desenhados, para conferir se algum passa por cima de uma elipse que não é a dele
+const SEG = [];
+// Associação: da mão do ator (lado do caso de uso) até a borda da elipse
+for (const [a, k] of D.as) {
+  const A = AT[a], u = UC[k], lado = u.x > A.x ? 1 : -1, ax = A.x + 16 * lado, ay = A.y;
+  const [bx, by] = borda(u, ax, ay);
+  el('line', Object.assign({ x1: ax, y1: ay, x2: bx, y2: by }, g), linhas);
+  SEG.push({ nome: `${a}-${k}`, x1: ax, y1: ay, x2: bx, y2: by, ignora: [k] });
+}
+// Generalização: do topo da cabeça do filho até embaixo do nome do pai, com triângulo vazado no pai
+for (const [f, p] of D.her || []) {
+  const F = AT[f], P = AT[p];
+  const [x1, y1] = [F.x, F.y - 32], [x2, y2] = [P.x, P.y + 62];
+  const c = Math.hypot(x2 - x1, y2 - y1), ux = (x2 - x1) / c, uy = (y2 - y1) / c;
+  const bxs = x2 - ux * 15, bys = y2 - uy * 15;
+  el('line', Object.assign({ x1, y1, x2: bxs, y2: bys }, g), linhas);
+  el('path', { d: `M${x2},${y2} L${bxs - uy * 8},${bys + ux * 8} L${bxs + uy * 8},${bys - ux * 8} Z`, fill: '#fff', stroke: '#000', 'stroke-width': LINHA }, formas);
+}
+// «include» e «extend»: seta tracejada de "de" para "para"
+for (const [de, para, rot, dx = 0, dy = -7] of D.dep || []) {
+  const a = UC[de], b = UC[para];
+  const [x1, y1] = borda(a, b.x, b.y), [x2, y2] = borda(b, a.x, a.y);
+  el('line', Object.assign({ x1, y1, x2, y2, 'stroke-dasharray': '6 4', 'marker-end': 'url(#seta)' }, g), linhas);
+  SEG.push({ nome: `${de}>${para}`, x1, y1, x2, y2, ignora: [de, para] });
+  const r = txt((x1 + x2) / 2 + dx, (y1 + y2) / 2 + dy, rot, { 'font-size': 13 });
+  rotulos.appendChild(r);
+  const bb = r.getBBox();
+  rotulos.insertBefore(el('rect', { x: bb.x - 2, y: bb.y, width: bb.width + 4, height: bb.height, fill: '#fff' }), r);
+}
+// Elipses por cima das linhas
+for (const u of Object.values(UC)) {
+  el('ellipse', { cx: u.x, cy: u.y, rx: u.rx, ry: u.ry, fill: '#FFFFE0', stroke: '#000', 'stroke-width': LINHA }, formas);
+  u.ls.forEach((t, i) => formas.appendChild(txt(u.x, u.y + 5 + (i - (u.ls.length - 1) / 2) * 18, t)));
+}
+// Bonecos
+for (const a of Object.values(AT)) {
+  el('circle', { cx: a.x, cy: a.y - 22, r: 10, fill: '#fff', stroke: '#000', 'stroke-width': LINHA }, formas);
+  el('path', Object.assign({ d: `M${a.x},${a.y - 12} V${a.y + 12} M${a.x - 16},${a.y} H${a.x + 16} M${a.x},${a.y + 12} L${a.x - 13},${a.y + 36} M${a.x},${a.y + 12} L${a.x + 13},${a.y + 36}` }, g), formas);
+  formas.appendChild(txt(a.x, a.y + 54, a.nome));
+}
+// Avisa no título se alguma elipse sair do limite do sistema ou se sobrepuser a outra
+const prob = [];
+const L = D.lim, us = Object.entries(UC);
+for (const [k, u] of us) if (u.x - u.rx < L[0] + 4 || u.x + u.rx > L[0] + L[2] - 4 || u.y - u.ry < L[1] + 4 || u.y + u.ry > L[1] + L[3] - 4) prob.push('fora:' + k);
+for (let i = 0; i < us.length; i++) for (let j = i + 1; j < us.length; j++) {
+  const [a, u] = us[i], [b, v] = us[j];
+  if (Math.abs(u.x - v.x) < u.rx + v.rx - 4 && Math.abs(u.y - v.y) < u.ry + v.ry + 2) prob.push(`sobrepoe:${a}/${b}`);
+}
+// Linha que passa a menos de ~8 px de uma elipse alheia (elipse "inflada" em 8 px)
+for (const s of SEG) for (const [k, u] of us) {
+  if (s.ignora.includes(k)) continue;
+  for (let t = 0; t <= 1; t += 0.01) {
+    const x = s.x1 + (s.x2 - s.x1) * t, y = s.y1 + (s.y2 - s.y1) * t;
+    if (((x - u.x) / (u.rx + 8)) ** 2 + ((y - u.y) / (u.ry + 8)) ** 2 < 1) { prob.push(`linha:${s.nome}@${k}`); break; }
+  }
+}
+document.title = prob.length ? 'PROBLEMAS ' + prob.join(' ') : 'ok';
+</script>
+</body></html>

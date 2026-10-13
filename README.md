@@ -8,7 +8,7 @@ A ideia surgiu de uma situação que vemos todos os dias: as vagas do DF ficam e
 
 1. [O projeto em números](#o-projeto-em-números)
 2. [Tecnologias que usamos](#tecnologias-que-usamos)
-3. [Os personagens do sistema](#os-personagens-do-sistema)
+3. [Os atores do sistema](#os-atores-do-sistema)
 4. [O sistema peça por peça](#o-sistema-peça-por-peça)
 5. [Como o código está organizado](#como-o-código-está-organizado)
 6. [Banco de dados](#banco-de-dados)
@@ -43,13 +43,13 @@ Não usamos frameworks (como Laravel) de propósito. Num projeto de conclusão d
 
 O projeto não depende de pacotes externos. O leitor de cartazes (Tesseract.js) e o gerador de QR Code vêm junto com o site, na pasta `public/assets/js/vendor`, e os arquivos PDF e DOCX são lidos com código PHP feito por nós. O sistema foi testado no PHP 8.0.30 que vem no XAMPP. Para publicar na internet, recomendamos o PHP 8.2 ou mais novo, porque o 8.0 não recebe mais correções de segurança.
 
-## Os personagens do sistema
+## Os atores do sistema
 
-Organizamos o projeto em quatro personagens: o **Candidato**, a **Empresa**, o **Administrador** e o **Sistema**. Os três primeiros são pessoas que usam a plataforma. O quarto é o próprio sistema, que faz uma parte do trabalho sozinho, sem ninguém clicar em nada. Todos os diagramas e toda a documentação usam esses quatro personagens.
+Organizamos o projeto em três atores: o **Usuário**, que é o candidato, a pessoa que procura emprego; a **Empresa**; e o **Administrador**. Entre eles há herança (generalização): a Empresa herda as funções do Usuário, e o Administrador herda as da Empresa. O sistema não é um ator. As tarefas que ele faz sozinho aparecem nos diagramas como casos de uso incluídos («include»), sem ator. Os diagramas e a documentação usam esses três atores.
 
-### Candidato
+### Usuário (candidato)
 
-O candidato é a pessoa que procura emprego. Mesmo antes de criar uma conta ele já navega pelo site: vê as vagas, filtra por cidade, área, tipo de contratação e nível, abre a página de cada vaga e consulta os cursos e e-books gratuitos. Quem está só olhando o site, sem conta, é para nós um candidato que ainda não se cadastrou.
+O usuário é o candidato, a pessoa que procura emprego. Mesmo antes de criar uma conta ele já navega pelo site: vê as vagas, filtra por cidade, área, tipo de contratação e nível, abre a página de cada vaga e consulta os cursos e e-books gratuitos. Quem está só olhando o site, sem conta, é para nós um candidato que ainda não se cadastrou.
 
 Depois do cadastro, o candidato monta o perfil profissional. Ele pode digitar tudo ou enviar o currículo em PDF, DOCX ou DOC. Nesse caso o sistema lê o arquivo e preenche o perfil: nome, contato, resumo, objetivo, experiências, formação, cursos, habilidades, idiomas e até a foto, quando o currículo tem uma. No fim aparece um relatório com o que foi encontrado, o que foi aplicado e o que ainda falta e, logo abaixo, só o formulário do perfil, para o candidato revisar e completar antes de salvar.
 
@@ -78,9 +78,9 @@ O administrador cuida da plataforma inteira. A primeira tela do painel é uma vi
 - os **cursos, e-books e vídeos** do catálogo de capacitação;
 - as **assinaturas** dos planos.
 
-### Sistema
+### O que o sistema faz sozinho
 
-O quarto personagem é o próprio sistema. Ele faz várias tarefas sozinho, sempre em resposta a alguma coisa que os outros personagens fizeram:
+O sistema não é um ator, mas faz várias tarefas sozinho, sempre em resposta a alguma coisa que um ator fez:
 
 - **lê os documentos**: o currículo do candidato, o cartaz e o anúncio da empresa e a ficha de curso do administrador;
 - **calcula o match** entre candidatos e vagas quando um currículo é enviado, um perfil é salvo ou uma vaga é criada ou alterada;
@@ -335,16 +335,18 @@ processador fica mais lento e a leitura do cartaz demora o dobro.
 
 | Documento | O que tem |
 |---|---|
-| [docs/tcc/TCC_Final_Conecta_Vagas_DF.docx](docs/tcc/TCC_Final_Conecta_Vagas_DF.docx) | o documento do TCC no modelo do professor (Escola Técnica de Ceilândia, PCC 2.2026): requisitos, casos de uso, diagramas, modelo de dados, telas, testes, a seção 8.11 com cada funcionalidade em detalhe e o Apêndice A com o código-fonte explicado |
-| [docs/tcc/TCC_Final_Conecta_Vagas_DF.pdf](docs/tcc/TCC_Final_Conecta_Vagas_DF.pdf) | o mesmo documento em PDF (274 páginas), com sumário e listas atualizados e marcadores para navegar pelos títulos |
-| [docs/tcc/TCC_Conecta_Vagas_DF_Documentacao.docx](docs/tcc/TCC_Conecta_Vagas_DF_Documentacao.docx) e [.pdf](docs/tcc/TCC_Conecta_Vagas_DF_Documentacao.pdf) | a documentação revisada no modelo do professor (70 páginas): requisitos, casos de uso com especificação, diagramas de classes, sequência e entidade-relacionamento, dicionário de dados e a leitura do cartaz por OCR com o Tesseract |
+| [docs/tcc/TCC_Conecta_Vagas_DF.pdf](docs/tcc/TCC_Conecta_Vagas_DF.pdf) e [.docx](docs/tcc/TCC_Conecta_Vagas_DF.docx) | **a documentação do TCC**, enxuta (59 páginas), no modelo do professor: introdução, metodologia, requisitos, casos de uso com os três atores, especificações, diagramas de sequência e de classes, modelos conceitual e lógico, telas, testes, conclusão e, no Apêndice A, como instalar e usar o sistema |
+| [docs/tcc/TCC_Final_Conecta_Vagas_DF.docx](docs/tcc/TCC_Final_Conecta_Vagas_DF.docx) | versão anterior e completa do documento do TCC no modelo do professor (Escola Técnica de Ceilândia, PCC 2.2026): requisitos, casos de uso, diagramas, modelo de dados, telas, testes, a seção 8.11 com cada funcionalidade em detalhe e o Apêndice A com o código-fonte explicado |
+| [docs/tcc/TCC_Final_Conecta_Vagas_DF.pdf](docs/tcc/TCC_Final_Conecta_Vagas_DF.pdf) | a versão anterior completa em PDF (274 páginas), com sumário e listas atualizados e marcadores para navegar pelos títulos |
+| [docs/tcc/TCC_Conecta_Vagas_DF_Documentacao.docx](docs/tcc/TCC_Conecta_Vagas_DF_Documentacao.docx) e [.pdf](docs/tcc/TCC_Conecta_Vagas_DF_Documentacao.pdf) | versão anterior da documentação revisada no modelo do professor (70 páginas): requisitos, casos de uso com especificação, diagramas de classes, sequência e entidade-relacionamento, dicionário de dados e a leitura do cartaz por OCR com o Tesseract |
 | [docs/telas/](docs/telas/README.md) | capturas de todas as telas do sistema (visitante, candidato, empresa e administrador, no computador e no celular) e o portfólio salvo em PDF |
 | [docs/ARQUITETURA.md](docs/ARQUITETURA.md) | como o sistema funciona por dentro, camada por camada, com a tabela de rotas |
 | [docs/PADROES_AUTOMATICOS.md](docs/PADROES_AUTOMATICOS.md) | os padrões automáticos das máquinas de extração e como demonstrá-los |
 | [docs/PESQUISA_CURSOS.md](docs/PESQUISA_CURSOS.md) | as fontes oficiais do catálogo e como a pesquisa de cursos funciona |
-| `docs/tcc/diagramas/` | casos de uso, classes, sequência, arquitetura e os modelos conceitual e lógico, em `.png` e `.svg` |
+| `docs/tcc/diagramas/casos_de_uso/` | os diagramas de caso de uso da documentação atual: o geral e os cinco específicos, em `.png`, com o desenho em `diagramas.js` |
+| `docs/tcc/diagramas/` | classes, sequência, arquitetura e os modelos conceitual e lógico, em `.png` e `.svg`, e os casos de uso da versão anterior (`uc01` a `uc15`) |
 
-O diagrama geral de casos de uso apresenta, em uma única visão, os quatro atores do projeto — Candidato, Empresa, Administrador e Sistema — e os casos de uso que correspondem às funções e regras implementadas na plataforma. Os três atores humanos ficam de um lado; o Sistema, ator secundário, fica do lado oposto. O acesso público sem conta é representado pelo Candidato ainda não cadastrado; não há um quinto ator “Visitante”. A limpeza de uploads órfãos aparece como comportamento automático do Sistema, disparado ao abrir o painel administrativo e executado no máximo uma vez por dia. Este diagrama descreve as interações da aplicação; o banco continua com as mesmas 11 tabelas listadas acima. Os demais diagramas detalham os fluxos por assunto. Os diagramas de sequência e de arquitetura têm o arquivo `.puml` de origem (PlantUML, com o estilo comum em `estilo.iuml`). Os de caso de uso, o de classes e o modelo lógico são representações SVG próprias, geradas pelos scripts de `docs/tcc/diagramas/gerador` e inspiradas na notação UML e na organização visual do Astah; não são arquivos nem exportações nativas do Astah ou do MySQL Workbench.
+O diagrama geral de casos de uso (`docs/tcc/diagramas/casos_de_uso/geral.png`) mostra os dez casos de uso principais com os três atores. O Usuário realiza o login (o Recuperar senha estende o login), mantém a conta, insere o currículo e mantém as candidaturas. A Empresa herda do Usuário, acessa o painel da empresa e mantém as vagas. O Administrador herda da Empresa, acessa o painel administrativo e mantém os usuários. O Calcular match é incluído ao inserir um currículo ou manter vagas. Os cinco diagramas específicos detalham o perfil do usuário, as candidaturas, as vagas, os usuários e os padrões automáticos da extração. Os diagramas de caso de uso são desenhados por `desenho.html` a partir de `diagramas.js`, e `node render.js` gera as imagens com o Chrome. Os diagramas de sequência e de arquitetura têm o arquivo `.puml` de origem (PlantUML, com o estilo comum em `estilo.iuml`). Os casos de uso da versão anterior, o de classes e o modelo lógico são representações SVG próprias, geradas pelos scripts de `docs/tcc/diagramas/gerador` e inspiradas na notação UML e na organização visual do Astah; não são arquivos nem exportações nativas do Astah ou do MySQL Workbench.
 
 Antes de entregar o documento do TCC, a equipe completa no Word os campos que dependem dela (nomes completos, data da defesa e banca), atualiza o sumário e as listas de figuras, tabelas e quadros (selecionar tudo com Ctrl+A e apertar F9, ou clicar com o botão direito no sumário e escolher Atualizar campo) e exporta o PDF pelo próprio Word.
 
