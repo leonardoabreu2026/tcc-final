@@ -41,7 +41,7 @@ O sistema foi escrito em **PHP 8** puro, no padrão **MVC** (Model, View e Contr
 
 Não usamos frameworks (como Laravel) de propósito. Num projeto de conclusão de curso queríamos mostrar que entendemos o que acontece por baixo: como uma requisição chega ao servidor, como a rota é escolhida e como os dados vão do formulário até o banco e voltam para a tela. Todas essas partes foram escritas por nós e ficam na pasta `app/Core`.
 
-O projeto não depende de pacotes externos. O leitor de cartazes (Tesseract.js) e o gerador de QR Code vêm junto com o site, na pasta `public/assets/js/vendor`, e os arquivos PDF e DOCX são lidos com código PHP feito por nós. O sistema foi testado no PHP 8.0.30 que vem no XAMPP. Para publicar na internet, recomendamos o PHP 8.2 ou mais novo, porque o 8.0 não recebe mais correções de segurança.
+O projeto não depende de pacotes externos. O leitor de cartazes (Tesseract.js) e o gerador de QR Code vêm junto com o site, na pasta `public/assets/js/vendor`, e os arquivos PDF e DOCX são lidos com código PHP feito por nós. O sistema foi testado no PHP 8.0.30 e no PHP 8.2.12, as versões que vêm no XAMPP. Para publicar na internet, recomendamos o PHP 8.2 ou mais novo, porque o 8.0 não recebe mais correções de segurança.
 
 ## Os atores do sistema
 
