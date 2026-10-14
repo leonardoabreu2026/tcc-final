@@ -4,7 +4,7 @@ mainframe sd Assinar plano
 autonumber "0:"
 hide footbox
 
-actor Candidato as U
+actor "Usuário" as U
 boundary ":TelaPlanos" as T
 control ":PlanosController" as C
 entity ":AssinaturaDAO" as D

@@ -4,7 +4,7 @@ mainframe sd Candidatar-se à vaga
 autonumber "0:"
 hide footbox
 
-actor Candidato as A
+actor "Usuário" as A
 boundary ":TelaVaga" as T
 control ":CandidaturaController" as C
 entity ":AssinaturaDAO" as S

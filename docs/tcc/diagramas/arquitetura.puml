@@ -2,7 +2,7 @@
 !include estilo.iuml
 mainframe cmp Arquitetura MVC
 skinparam componentStyle uml2
-actor "Navegador\n(Candidato / Empresa /\nAdministrador)" as NAV
+actor "Navegador\n(Usuário / Empresa /\nAdministrador)" as NAV
 node "Navegador do usuário" {
   [assets/js/app.js\n(carregador, confirmações)] as JS
   [Leitor de cartaz\n(Tesseract.js em WebAssembly)] as OCR

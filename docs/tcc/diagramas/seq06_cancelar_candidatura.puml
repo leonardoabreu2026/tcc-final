@@ -4,7 +4,7 @@ mainframe sd Cancelar candidatura
 autonumber "0:"
 hide footbox
 
-actor Candidato as A
+actor "Usuário" as A
 boundary ":TelaPerfil" as T
 control ":CandidaturaController" as C
 entity ":CandidaturaDAO" as D

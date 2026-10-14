@@ -4,7 +4,7 @@ mainframe sd Excluir a própria conta (LGPD)
 autonumber "0:"
 hide footbox
 
-actor Candidato as A
+actor "Usuário" as A
 boundary ":TelaPerfil" as T
 control ":PerfilController" as C
 entity ":UsuarioDAO" as D
