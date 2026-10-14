@@ -33,7 +33,7 @@ A ideia surgiu de uma situação que vemos todos os dias: as vagas do DF ficam e
 | Serviços de negócio | 4, mais 13 peças das máquinas de extração |
 | Personagens | 4 (Candidato, Empresa, Administrador e Sistema) |
 | Dados de demonstração | 62 vagas com cartaz, 64 cursos e e-books (43 cursos e 21 e-books) e 20 áreas |
-| Testes automáticos | 98 arquivos conferidos, 112 verificações rápidas e 21 verificações de jornada |
+| Testes automáticos | 96 arquivos conferidos, 112 verificações rápidas e 21 verificações de jornada |
 
 ## Tecnologias que usamos
 
